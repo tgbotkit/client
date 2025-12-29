@@ -11,7 +11,9 @@ Package docs: https://pkg.go.dev/github.com/tgbotkit/client
 
 ## Supported Telegram Bot API version
 
-- [Telegram Bot API 9.2 (August 15, 2025)](https://core.telegram.org/bots/api "Telegram Bot API")
+| Package Version | API Version | API Release Date |
+|-----------------| --- | --- |
+| latest          | [9.2](https://core.telegram.org/bots/api#august-15-2025) | August 15, 2025 |
 
 ## Tooling
 
