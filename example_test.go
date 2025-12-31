@@ -72,7 +72,7 @@ func ExampleClientWithResponses_GetMeWithResponse() {
 		return
 	}
 
-	resp, err := c.GetMeWithResponse(context.Background(), client.GetMeJSONRequestBody{})
+	resp, err := c.GetMeWithResponse(context.Background())
 	if err != nil {
 		return
 	}
