@@ -2,6 +2,8 @@ openapi: 3.0.0
 info:
   title: "Telegram Bot API"
   version: "9.2"
+  description: |-
+    This OpenAPI specification was generated using the [tgbotspec](https://github.com/metalagman/tgbotspec) tool.
 servers:
   - url: "https://api.telegram.org/bot{botToken}"
     description: Telegram Bot API endpoint; substitute {botToken} with your bot token.
@@ -25,6 +27,31 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                name:
+                  type: string
+                sticker:
+                  $ref: '#/components/schemas/InputSticker'
+                user_id:
+                  type: integer
+              required:
+                - name
+                - sticker
+                - user_id
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                sticker:
+                  $ref: '#/components/schemas/InputSticker'
+                user_id:
+                  type: integer
+              required:
+                - name
+                - sticker
+                - user_id
       responses:
         '200':
           description: OK
@@ -65,6 +92,23 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                cache_time:
+                  type: integer
+                callback_query_id:
+                  type: string
+                show_alert:
+                  type: boolean
+                text:
+                  type: string
+                url:
+                  type: string
+              required:
+                - cache_time
+                - callback_query_id
+                - show_alert
+                - text
+                - url
       responses:
         '200':
           description: OK
@@ -105,6 +149,28 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                button:
+                  $ref: '#/components/schemas/InlineQueryResultsButton'
+                cache_time:
+                  type: integer
+                inline_query_id:
+                  type: string
+                is_personal:
+                  type: boolean
+                next_offset:
+                  type: string
+                results:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/InlineQueryResult'
+              required:
+                - button
+                - cache_time
+                - inline_query_id
+                - is_personal
+                - next_offset
+                - results
       responses:
         '200':
           description: OK
@@ -145,6 +211,17 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                error_message:
+                  type: string
+                ok:
+                  type: boolean
+                pre_checkout_query_id:
+                  type: string
+              required:
+                - error_message
+                - ok
+                - pre_checkout_query_id
       responses:
         '200':
           description: OK
@@ -185,6 +262,22 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                error_message:
+                  type: string
+                ok:
+                  type: boolean
+                shipping_options:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/ShippingOption'
+                shipping_query_id:
+                  type: string
+              required:
+                - error_message
+                - ok
+                - shipping_options
+                - shipping_query_id
       responses:
         '200':
           description: OK
@@ -225,6 +318,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                result:
+                  $ref: '#/components/schemas/InlineQueryResult'
+                web_app_query_id:
+                  type: string
+              required:
+                - result
+                - web_app_query_id
       responses:
         '200':
           description: OK
@@ -264,6 +365,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                user_id:
+                  type: integer
+              required:
+                - chat_id
+                - user_id
       responses:
         '200':
           description: OK
@@ -304,6 +413,17 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                message_id:
+                  type: integer
+                send_date:
+                  type: integer
+              required:
+                - chat_id
+                - message_id
+                - send_date
       responses:
         '200':
           description: OK
@@ -344,6 +464,20 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                revoke_messages:
+                  type: boolean
+                until_date:
+                  type: integer
+                user_id:
+                  type: integer
+              required:
+                - chat_id
+                - revoke_messages
+                - until_date
+                - user_id
       responses:
         '200':
           description: OK
@@ -384,6 +518,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                sender_chat_id:
+                  type: integer
+              required:
+                - chat_id
+                - sender_chat_id
       responses:
         '200':
           description: OK
@@ -418,12 +560,6 @@ paths:
         - Available methods
       description: |-
         Use this method to close the bot instance before moving it from one local server to another. You need to delete the webhook before calling this method to ensure that the bot isn't launched again after server restart. The method will return error 429 in the first 10 minutes after the bot is launched. Returns True on success. Requires no parameters.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
       responses:
         '200':
           description: OK
@@ -464,6 +600,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                message_thread_id:
+                  type: integer
+              required:
+                - chat_id
+                - message_thread_id
       responses:
         '200':
           description: OK
@@ -504,6 +648,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
       responses:
         '200':
           description: OK
@@ -544,6 +693,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                owned_gift_id:
+                  type: string
+              required:
+                - business_connection_id
+                - owned_gift_id
       responses:
         '200':
           description: OK
@@ -584,6 +741,64 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                from_chat_id:
+                  anyOf:
+                      - type: integer
+                      - type: string
+                message_id:
+                  type: integer
+                message_thread_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                show_caption_above_media:
+                  type: boolean
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                video_start_timestamp:
+                  type: integer
+              required:
+                - allow_paid_broadcast
+                - caption
+                - caption_entities
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - from_chat_id
+                - message_id
+                - message_thread_id
+                - parse_mode
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - show_caption_above_media
+                - suggested_post_parameters
+                - video_start_timestamp
       responses:
         '200':
           description: OK
@@ -623,6 +838,36 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                from_chat_id:
+                  anyOf:
+                      - type: integer
+                      - type: string
+                message_ids:
+                  type: array
+                  items:
+                      type: integer
+                message_thread_id:
+                  type: integer
+                protect_content:
+                  type: boolean
+                remove_caption:
+                  type: boolean
+              required:
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - from_chat_id
+                - message_ids
+                - message_thread_id
+                - protect_content
+                - remove_caption
       responses:
         '200':
           description: OK
@@ -664,6 +909,23 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                creates_join_request:
+                  type: boolean
+                expire_date:
+                  type: integer
+                member_limit:
+                  type: integer
+                name:
+                  type: string
+              required:
+                - chat_id
+                - creates_join_request
+                - expire_date
+                - member_limit
+                - name
       responses:
         '200':
           description: OK
@@ -703,6 +965,20 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                name:
+                  type: string
+                subscription_period:
+                  type: integer
+                subscription_price:
+                  type: integer
+              required:
+                - chat_id
+                - name
+                - subscription_period
+                - subscription_price
       responses:
         '200':
           description: OK
@@ -742,6 +1018,20 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                icon_color:
+                  type: integer
+                icon_custom_emoji_id:
+                  type: string
+                name:
+                  type: string
+              required:
+                - chat_id
+                - icon_color
+                - icon_custom_emoji_id
+                - name
       responses:
         '200':
           description: OK
@@ -781,6 +1071,78 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                currency:
+                  type: string
+                description:
+                  type: string
+                is_flexible:
+                  type: boolean
+                max_tip_amount:
+                  type: integer
+                need_email:
+                  type: boolean
+                need_name:
+                  type: boolean
+                need_phone_number:
+                  type: boolean
+                need_shipping_address:
+                  type: boolean
+                payload:
+                  type: string
+                photo_height:
+                  type: integer
+                photo_size:
+                  type: integer
+                photo_url:
+                  type: string
+                photo_width:
+                  type: integer
+                prices:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/LabeledPrice'
+                provider_data:
+                  type: string
+                provider_token:
+                  type: string
+                send_email_to_provider:
+                  type: boolean
+                send_phone_number_to_provider:
+                  type: boolean
+                subscription_period:
+                  type: integer
+                suggested_tip_amounts:
+                  type: array
+                  items:
+                      type: integer
+                title:
+                  type: string
+              required:
+                - business_connection_id
+                - currency
+                - description
+                - is_flexible
+                - max_tip_amount
+                - need_email
+                - need_name
+                - need_phone_number
+                - need_shipping_address
+                - payload
+                - photo_height
+                - photo_size
+                - photo_url
+                - photo_width
+                - prices
+                - provider_data
+                - provider_token
+                - send_email_to_provider
+                - send_phone_number_to_provider
+                - subscription_period
+                - suggested_tip_amounts
+                - title
       responses:
         '200':
           description: OK
@@ -820,6 +1182,53 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                name:
+                  type: string
+                needs_repainting:
+                  type: boolean
+                sticker_type:
+                  type: string
+                stickers:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/InputSticker'
+                title:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+                - name
+                - needs_repainting
+                - sticker_type
+                - stickers
+                - title
+                - user_id
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                needs_repainting:
+                  type: boolean
+                sticker_type:
+                  type: string
+                stickers:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/InputSticker'
+                title:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+                - name
+                - needs_repainting
+                - sticker_type
+                - stickers
+                - title
+                - user_id
       responses:
         '200':
           description: OK
@@ -860,6 +1269,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                user_id:
+                  type: integer
+              required:
+                - chat_id
+                - user_id
       responses:
         '200':
           description: OK
@@ -900,6 +1317,17 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                comment:
+                  type: string
+                message_id:
+                  type: integer
+              required:
+                - chat_id
+                - comment
+                - message_id
       responses:
         '200':
           description: OK
@@ -940,6 +1368,16 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                message_ids:
+                  type: array
+                  items:
+                      type: integer
+              required:
+                - business_connection_id
+                - message_ids
       responses:
         '200':
           description: OK
@@ -980,6 +1418,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
       responses:
         '200':
           description: OK
@@ -1020,6 +1463,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
       responses:
         '200':
           description: OK
@@ -1060,6 +1508,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                message_thread_id:
+                  type: integer
+              required:
+                - chat_id
+                - message_thread_id
       responses:
         '200':
           description: OK
@@ -1100,6 +1556,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                message_id:
+                  type: integer
+              required:
+                - chat_id
+                - message_id
       responses:
         '200':
           description: OK
@@ -1141,6 +1605,16 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                message_ids:
+                  type: array
+                  items:
+                      type: integer
+              required:
+                - chat_id
+                - message_ids
       responses:
         '200':
           description: OK
@@ -1181,6 +1655,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                language_code:
+                  type: string
+                scope:
+                  $ref: '#/components/schemas/BotCommandScope'
+              required:
+                - language_code
+                - scope
       responses:
         '200':
           description: OK
@@ -1221,6 +1703,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                sticker:
+                  type: string
+              required:
+                - sticker
       responses:
         '200':
           description: OK
@@ -1263,6 +1750,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
       responses:
         '200':
           description: OK
@@ -1303,6 +1795,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                story_id:
+                  type: integer
+              required:
+                - business_connection_id
+                - story_id
       responses:
         '200':
           description: OK
@@ -1343,6 +1843,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                drop_pending_updates:
+                  type: boolean
+              required:
+                - drop_pending_updates
       responses:
         '200':
           description: OK
@@ -1383,6 +1888,26 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                creates_join_request:
+                  type: boolean
+                expire_date:
+                  type: integer
+                invite_link:
+                  type: string
+                member_limit:
+                  type: integer
+                name:
+                  type: string
+              required:
+                - chat_id
+                - creates_join_request
+                - expire_date
+                - invite_link
+                - member_limit
+                - name
       responses:
         '200':
           description: OK
@@ -1422,6 +1947,17 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                invite_link:
+                  type: string
+                name:
+                  type: string
+              required:
+                - chat_id
+                - invite_link
+                - name
       responses:
         '200':
           description: OK
@@ -1461,6 +1997,20 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                icon_custom_emoji_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                name:
+                  type: string
+              required:
+                - chat_id
+                - icon_custom_emoji_id
+                - message_thread_id
+                - name
       responses:
         '200':
           description: OK
@@ -1501,6 +2051,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                name:
+                  type: string
+              required:
+                - chat_id
+                - name
       responses:
         '200':
           description: OK
@@ -1541,6 +2099,37 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                chat_id:
+                  type: integer
+                inline_message_id:
+                  type: string
+                message_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                reply_markup:
+                  $ref: '#/components/schemas/InlineKeyboardMarkup'
+                show_caption_above_media:
+                  type: boolean
+              required:
+                - business_connection_id
+                - caption
+                - caption_entities
+                - chat_id
+                - inline_message_id
+                - message_id
+                - parse_mode
+                - reply_markup
+                - show_caption_above_media
       responses:
         '200':
           description: OK
@@ -1583,6 +2172,23 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                checklist:
+                  $ref: '#/components/schemas/InputChecklist'
+                message_id:
+                  type: integer
+                reply_markup:
+                  $ref: '#/components/schemas/InlineKeyboardMarkup'
+              required:
+                - business_connection_id
+                - chat_id
+                - checklist
+                - message_id
+                - reply_markup
       responses:
         '200':
           description: OK
@@ -1622,6 +2228,41 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                heading:
+                  type: integer
+                horizontal_accuracy:
+                  type: number
+                inline_message_id:
+                  type: string
+                latitude:
+                  type: number
+                live_period:
+                  type: integer
+                longitude:
+                  type: number
+                message_id:
+                  type: integer
+                proximity_alert_radius:
+                  type: integer
+                reply_markup:
+                  $ref: '#/components/schemas/InlineKeyboardMarkup'
+              required:
+                - business_connection_id
+                - chat_id
+                - heading
+                - horizontal_accuracy
+                - inline_message_id
+                - latitude
+                - live_period
+                - longitude
+                - message_id
+                - proximity_alert_radius
+                - reply_markup
       responses:
         '200':
           description: OK
@@ -1664,6 +2305,49 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                inline_message_id:
+                  type: string
+                media:
+                  $ref: '#/components/schemas/InputMedia'
+                message_id:
+                  type: integer
+                reply_markup:
+                  $ref: '#/components/schemas/InlineKeyboardMarkup'
+              required:
+                - business_connection_id
+                - chat_id
+                - inline_message_id
+                - media
+                - message_id
+                - reply_markup
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                inline_message_id:
+                  type: string
+                media:
+                  $ref: '#/components/schemas/InputMedia'
+                message_id:
+                  type: integer
+                reply_markup:
+                  $ref: '#/components/schemas/InlineKeyboardMarkup'
+              required:
+                - business_connection_id
+                - chat_id
+                - inline_message_id
+                - media
+                - message_id
+                - reply_markup
       responses:
         '200':
           description: OK
@@ -1706,6 +2390,23 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                inline_message_id:
+                  type: string
+                message_id:
+                  type: integer
+                reply_markup:
+                  $ref: '#/components/schemas/InlineKeyboardMarkup'
+              required:
+                - business_connection_id
+                - chat_id
+                - inline_message_id
+                - message_id
+                - reply_markup
       responses:
         '200':
           description: OK
@@ -1748,6 +2449,37 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                inline_message_id:
+                  type: string
+                link_preview_options:
+                  $ref: '#/components/schemas/LinkPreviewOptions'
+                message_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                reply_markup:
+                  $ref: '#/components/schemas/InlineKeyboardMarkup'
+                text:
+                  type: string
+              required:
+                - business_connection_id
+                - chat_id
+                - entities
+                - inline_message_id
+                - link_preview_options
+                - message_id
+                - parse_mode
+                - reply_markup
+                - text
       responses:
         '200':
           description: OK
@@ -1790,6 +2522,33 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                areas:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/StoryArea'
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                content:
+                  $ref: '#/components/schemas/InputStoryContent'
+                parse_mode:
+                  type: string
+                story_id:
+                  type: integer
+              required:
+                - areas
+                - business_connection_id
+                - caption
+                - caption_entities
+                - content
+                - parse_mode
+                - story_id
       responses:
         '200':
           description: OK
@@ -1829,6 +2588,17 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                is_canceled:
+                  type: boolean
+                telegram_payment_charge_id:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+                - is_canceled
+                - telegram_payment_charge_id
+                - user_id
       responses:
         '200':
           description: OK
@@ -1869,6 +2639,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
       responses:
         '200':
           description: OK
@@ -1908,6 +2683,37 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                from_chat_id:
+                  anyOf:
+                      - type: integer
+                      - type: string
+                message_id:
+                  type: integer
+                message_thread_id:
+                  type: integer
+                protect_content:
+                  type: boolean
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                video_start_timestamp:
+                  type: integer
+              required:
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - from_chat_id
+                - message_id
+                - message_thread_id
+                - protect_content
+                - suggested_post_parameters
+                - video_start_timestamp
       responses:
         '200':
           description: OK
@@ -1947,6 +2753,33 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                from_chat_id:
+                  anyOf:
+                      - type: integer
+                      - type: string
+                message_ids:
+                  type: array
+                  items:
+                      type: integer
+                message_thread_id:
+                  type: integer
+                protect_content:
+                  type: boolean
+              required:
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - from_chat_id
+                - message_ids
+                - message_thread_id
+                - protect_content
       responses:
         '200':
           description: OK
@@ -1982,12 +2815,6 @@ paths:
         - Available methods
       description: |-
         Returns the list of gifts that can be sent by the bot to users and channel chats. Requires no parameters. Returns a Gifts object.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
       responses:
         '200':
           description: OK
@@ -2027,6 +2854,35 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                exclude_limited:
+                  type: boolean
+                exclude_saved:
+                  type: boolean
+                exclude_unique:
+                  type: boolean
+                exclude_unlimited:
+                  type: boolean
+                exclude_unsaved:
+                  type: boolean
+                limit:
+                  type: integer
+                offset:
+                  type: string
+                sort_by_price:
+                  type: boolean
+              required:
+                - business_connection_id
+                - exclude_limited
+                - exclude_saved
+                - exclude_unique
+                - exclude_unlimited
+                - exclude_unsaved
+                - limit
+                - offset
+                - sort_by_price
       responses:
         '200':
           description: OK
@@ -2066,6 +2922,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+              required:
+                - business_connection_id
       responses:
         '200':
           description: OK
@@ -2105,6 +2966,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+              required:
+                - business_connection_id
       responses:
         '200':
           description: OK
@@ -2144,6 +3010,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
       responses:
         '200':
           description: OK
@@ -2183,6 +3054,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
       responses:
         '200':
           description: OK
@@ -2224,6 +3100,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                user_id:
+                  type: integer
+              required:
+                - chat_id
+                - user_id
       responses:
         '200':
           description: OK
@@ -2263,6 +3147,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
       responses:
         '200':
           description: OK
@@ -2302,6 +3191,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
       responses:
         '200':
           description: OK
@@ -2341,6 +3235,13 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                custom_emoji_ids:
+                  type: array
+                  items:
+                      type: string
+              required:
+                - custom_emoji_ids
       responses:
         '200':
           description: OK
@@ -2383,6 +3284,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                file_id:
+                  type: string
+              required:
+                - file_id
       responses:
         '200':
           description: OK
@@ -2416,12 +3322,6 @@ paths:
         - Available methods
       description: |-
         Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user. Requires no parameters. Returns an Array of Sticker objects.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
       responses:
         '200':
           description: OK
@@ -2463,6 +3363,20 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                inline_message_id:
+                  type: string
+                message_id:
+                  type: integer
+                user_id:
+                  type: integer
+              required:
+                - chat_id
+                - inline_message_id
+                - message_id
+                - user_id
       responses:
         '200':
           description: OK
@@ -2498,12 +3412,6 @@ paths:
         - Available methods
       description: |-
         A simple method for testing your bot's authentication token. Requires no parameters. Returns basic information about the bot in form of a User object.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
       responses:
         '200':
           description: OK
@@ -2543,6 +3451,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                language_code:
+                  type: string
+                scope:
+                  $ref: '#/components/schemas/BotCommandScope'
+              required:
+                - language_code
+                - scope
       responses:
         '200':
           description: OK
@@ -2584,6 +3500,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                for_channels:
+                  type: boolean
+              required:
+                - for_channels
       responses:
         '200':
           description: OK
@@ -2623,6 +3544,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                language_code:
+                  type: string
+              required:
+                - language_code
       responses:
         '200':
           description: OK
@@ -2662,6 +3588,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                language_code:
+                  type: string
+              required:
+                - language_code
       responses:
         '200':
           description: OK
@@ -2701,6 +3632,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                language_code:
+                  type: string
+              required:
+                - language_code
       responses:
         '200':
           description: OK
@@ -2734,12 +3670,6 @@ paths:
         - Payments
       description: |-
         A method to get the current Telegram Stars balance of the bot. Requires no parameters. On success, returns a StarAmount object.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
       responses:
         '200':
           description: OK
@@ -2779,6 +3709,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                limit:
+                  type: integer
+                offset:
+                  type: integer
+              required:
+                - limit
+                - offset
       responses:
         '200':
           description: OK
@@ -2818,6 +3756,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
       responses:
         '200':
           description: OK
@@ -2857,6 +3800,22 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allowed_updates:
+                  type: array
+                  items:
+                      type: string
+                limit:
+                  type: integer
+                offset:
+                  type: integer
+                timeout:
+                  type: integer
+              required:
+                - allowed_updates
+                - limit
+                - offset
+                - timeout
       responses:
         '200':
           description: OK
@@ -2898,6 +3857,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                user_id:
+                  type: integer
+              required:
+                - chat_id
+                - user_id
       responses:
         '200':
           description: OK
@@ -2937,6 +3904,17 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                limit:
+                  type: integer
+                offset:
+                  type: integer
+                user_id:
+                  type: integer
+              required:
+                - limit
+                - offset
+                - user_id
       responses:
         '200':
           description: OK
@@ -2970,12 +3948,6 @@ paths:
         - Getting updates
       description: |-
         Use this method to get current webhook status. Requires no parameters. On success, returns a WebhookInfo object. If the bot is using getUpdates, will return an object with the url field empty.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
       responses:
         '200':
           description: OK
@@ -3015,6 +3987,28 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                month_count:
+                  type: integer
+                star_count:
+                  type: integer
+                text:
+                  type: string
+                text_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                text_parse_mode:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+                - month_count
+                - star_count
+                - text
+                - text_entities
+                - text_parse_mode
+                - user_id
       responses:
         '200':
           description: OK
@@ -3055,6 +4049,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
       responses:
         '200':
           description: OK
@@ -3095,6 +4094,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
       responses:
         '200':
           description: OK
@@ -3129,12 +4133,6 @@ paths:
         - Available methods
       description: |-
         Use this method to log out from the cloud Bot API server before launching the bot locally. You must log out the bot before running it locally, otherwise there is no guarantee that the bot will receive updates. After a successful call, you can immediately log in on a local server, but will not be able to log in back to the cloud Bot API server for 10 minutes. Returns True on success. Requires no parameters.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
       responses:
         '200':
           description: OK
@@ -3175,6 +4173,20 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                message_id:
+                  type: integer
+              required:
+                - business_connection_id
+                - chat_id
+                - disable_notification
+                - message_id
       responses:
         '200':
           description: OK
@@ -3215,6 +4227,39 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                active_period:
+                  type: integer
+                areas:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/StoryArea'
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                content:
+                  $ref: '#/components/schemas/InputStoryContent'
+                parse_mode:
+                  type: string
+                post_to_chat_page:
+                  type: boolean
+                protect_content:
+                  type: boolean
+              required:
+                - active_period
+                - areas
+                - business_connection_id
+                - caption
+                - caption_entities
+                - content
+                - parse_mode
+                - post_to_chat_page
+                - protect_content
       responses:
         '200':
           description: OK
@@ -3254,6 +4299,62 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                can_change_info:
+                  type: boolean
+                can_delete_messages:
+                  type: boolean
+                can_delete_stories:
+                  type: boolean
+                can_edit_messages:
+                  type: boolean
+                can_edit_stories:
+                  type: boolean
+                can_invite_users:
+                  type: boolean
+                can_manage_chat:
+                  type: boolean
+                can_manage_direct_messages:
+                  type: boolean
+                can_manage_topics:
+                  type: boolean
+                can_manage_video_chats:
+                  type: boolean
+                can_pin_messages:
+                  type: boolean
+                can_post_messages:
+                  type: boolean
+                can_post_stories:
+                  type: boolean
+                can_promote_members:
+                  type: boolean
+                can_restrict_members:
+                  type: boolean
+                chat_id:
+                  type: integer
+                is_anonymous:
+                  type: boolean
+                user_id:
+                  type: integer
+              required:
+                - can_change_info
+                - can_delete_messages
+                - can_delete_stories
+                - can_edit_messages
+                - can_edit_stories
+                - can_invite_users
+                - can_manage_chat
+                - can_manage_direct_messages
+                - can_manage_topics
+                - can_manage_video_chats
+                - can_pin_messages
+                - can_post_messages
+                - can_post_stories
+                - can_promote_members
+                - can_restrict_members
+                - chat_id
+                - is_anonymous
+                - user_id
       responses:
         '200':
           description: OK
@@ -3294,6 +4395,17 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                message_id:
+                  type: integer
+              required:
+                - business_connection_id
+                - chat_id
+                - message_id
       responses:
         '200':
           description: OK
@@ -3334,6 +4446,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                telegram_payment_charge_id:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+                - telegram_payment_charge_id
+                - user_id
       responses:
         '200':
           description: OK
@@ -3374,6 +4494,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                is_public:
+                  type: boolean
+              required:
+                - business_connection_id
+                - is_public
       responses:
         '200':
           description: OK
@@ -3414,6 +4542,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
       responses:
         '200':
           description: OK
@@ -3454,6 +4587,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
       responses:
         '200':
           description: OK
@@ -3494,6 +4632,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                message_thread_id:
+                  type: integer
+              required:
+                - chat_id
+                - message_thread_id
       responses:
         '200':
           description: OK
@@ -3534,6 +4680,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
       responses:
         '200':
           description: OK
@@ -3574,6 +4725,37 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                name:
+                  type: string
+                old_sticker:
+                  type: string
+                sticker:
+                  $ref: '#/components/schemas/InputSticker'
+                user_id:
+                  type: integer
+              required:
+                - name
+                - old_sticker
+                - sticker
+                - user_id
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                old_sticker:
+                  type: string
+                sticker:
+                  $ref: '#/components/schemas/InputSticker'
+                user_id:
+                  type: integer
+              required:
+                - name
+                - old_sticker
+                - sticker
+                - user_id
       responses:
         '200':
           description: OK
@@ -3614,6 +4796,23 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                permissions:
+                  $ref: '#/components/schemas/ChatPermissions'
+                until_date:
+                  type: integer
+                use_independent_chat_permissions:
+                  type: boolean
+                user_id:
+                  type: integer
+              required:
+                - chat_id
+                - permissions
+                - until_date
+                - use_independent_chat_permissions
+                - user_id
       responses:
         '200':
           description: OK
@@ -3654,6 +4853,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                invite_link:
+                  type: string
+              required:
+                - chat_id
+                - invite_link
       responses:
         '200':
           description: OK
@@ -3693,6 +4900,26 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_bot_chats:
+                  type: boolean
+                allow_channel_chats:
+                  type: boolean
+                allow_group_chats:
+                  type: boolean
+                allow_user_chats:
+                  type: boolean
+                result:
+                  $ref: '#/components/schemas/InlineQueryResult'
+                user_id:
+                  type: integer
+              required:
+                - allow_bot_chats
+                - allow_channel_chats
+                - allow_group_chats
+                - allow_user_chats
+                - result
+                - user_id
       responses:
         '200':
           description: OK
@@ -3732,6 +4959,153 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                animation:
+                  type: string
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                duration:
+                  type: integer
+                has_spoiler:
+                  type: boolean
+                height:
+                  type: integer
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                show_caption_above_media:
+                  type: boolean
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                thumbnail:
+                  type: string
+                width:
+                  type: integer
+              required:
+                - allow_paid_broadcast
+                - animation
+                - business_connection_id
+                - caption
+                - caption_entities
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - duration
+                - has_spoiler
+                - height
+                - message_effect_id
+                - message_thread_id
+                - parse_mode
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - show_caption_above_media
+                - suggested_post_parameters
+                - thumbnail
+                - width
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                animation:
+                  type: string
+                  format: binary
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                duration:
+                  type: integer
+                has_spoiler:
+                  type: boolean
+                height:
+                  type: integer
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                show_caption_above_media:
+                  type: boolean
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                thumbnail:
+                  type: string
+                  format: binary
+                width:
+                  type: integer
+              required:
+                - allow_paid_broadcast
+                - animation
+                - business_connection_id
+                - caption
+                - caption_entities
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - duration
+                - has_spoiler
+                - height
+                - message_effect_id
+                - message_thread_id
+                - parse_mode
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - show_caption_above_media
+                - suggested_post_parameters
+                - thumbnail
+                - width
       responses:
         '200':
           description: OK
@@ -3772,6 +5146,141 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                audio:
+                  type: string
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                duration:
+                  type: integer
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                performer:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                thumbnail:
+                  type: string
+                title:
+                  type: string
+              required:
+                - allow_paid_broadcast
+                - audio
+                - business_connection_id
+                - caption
+                - caption_entities
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - duration
+                - message_effect_id
+                - message_thread_id
+                - parse_mode
+                - performer
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - suggested_post_parameters
+                - thumbnail
+                - title
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                audio:
+                  type: string
+                  format: binary
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                duration:
+                  type: integer
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                performer:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                thumbnail:
+                  type: string
+                  format: binary
+                title:
+                  type: string
+              required:
+                - allow_paid_broadcast
+                - audio
+                - business_connection_id
+                - caption
+                - caption_entities
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - duration
+                - message_effect_id
+                - message_thread_id
+                - parse_mode
+                - performer
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - suggested_post_parameters
+                - thumbnail
+                - title
       responses:
         '200':
           description: OK
@@ -3812,6 +5321,20 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                action:
+                  type: string
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                message_thread_id:
+                  type: integer
+              required:
+                - action
+                - business_connection_id
+                - chat_id
+                - message_thread_id
       responses:
         '200':
           description: OK
@@ -3852,6 +5375,32 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                checklist:
+                  $ref: '#/components/schemas/InputChecklist'
+                disable_notification:
+                  type: boolean
+                message_effect_id:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  $ref: '#/components/schemas/InlineKeyboardMarkup'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+              required:
+                - business_connection_id
+                - chat_id
+                - checklist
+                - disable_notification
+                - message_effect_id
+                - protect_content
+                - reply_markup
+                - reply_parameters
       responses:
         '200':
           description: OK
@@ -3891,6 +5440,57 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                phone_number:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                vcard:
+                  type: string
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - first_name
+                - last_name
+                - message_effect_id
+                - message_thread_id
+                - phone_number
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - suggested_post_parameters
+                - vcard
       responses:
         '200':
           description: OK
@@ -3930,6 +5530,48 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                emoji:
+                  type: string
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - emoji
+                - message_effect_id
+                - message_thread_id
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - suggested_post_parameters
       responses:
         '200':
           description: OK
@@ -3969,6 +5611,129 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_content_type_detection:
+                  type: boolean
+                disable_notification:
+                  type: boolean
+                document:
+                  type: string
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                thumbnail:
+                  type: string
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - caption
+                - caption_entities
+                - chat_id
+                - direct_messages_topic_id
+                - disable_content_type_detection
+                - disable_notification
+                - document
+                - message_effect_id
+                - message_thread_id
+                - parse_mode
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - suggested_post_parameters
+                - thumbnail
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_content_type_detection:
+                  type: boolean
+                disable_notification:
+                  type: boolean
+                document:
+                  type: string
+                  format: binary
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                thumbnail:
+                  type: string
+                  format: binary
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - caption
+                - caption_entities
+                - chat_id
+                - direct_messages_topic_id
+                - disable_content_type_detection
+                - disable_notification
+                - document
+                - message_effect_id
+                - message_thread_id
+                - parse_mode
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - suggested_post_parameters
+                - thumbnail
       responses:
         '200':
           description: OK
@@ -4008,6 +5773,38 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                game_short_name:
+                  type: string
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  $ref: '#/components/schemas/InlineKeyboardMarkup'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - chat_id
+                - disable_notification
+                - game_short_name
+                - message_effect_id
+                - message_thread_id
+                - protect_content
+                - reply_markup
+                - reply_parameters
       responses:
         '200':
           description: OK
@@ -4047,6 +5844,31 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                gift_id:
+                  type: string
+                pay_for_upgrade:
+                  type: boolean
+                text:
+                  type: string
+                text_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                text_parse_mode:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+                - chat_id
+                - gift_id
+                - pay_for_upgrade
+                - text
+                - text_entities
+                - text_parse_mode
+                - user_id
       responses:
         '200':
           description: OK
@@ -4087,6 +5909,105 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                chat_id:
+                  type: integer
+                currency:
+                  type: string
+                description:
+                  type: string
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                is_flexible:
+                  type: boolean
+                max_tip_amount:
+                  type: integer
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                need_email:
+                  type: boolean
+                need_name:
+                  type: boolean
+                need_phone_number:
+                  type: boolean
+                need_shipping_address:
+                  type: boolean
+                payload:
+                  type: string
+                photo_height:
+                  type: integer
+                photo_size:
+                  type: integer
+                photo_url:
+                  type: string
+                photo_width:
+                  type: integer
+                prices:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/LabeledPrice'
+                protect_content:
+                  type: boolean
+                provider_data:
+                  type: string
+                provider_token:
+                  type: string
+                reply_markup:
+                  $ref: '#/components/schemas/InlineKeyboardMarkup'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                send_email_to_provider:
+                  type: boolean
+                send_phone_number_to_provider:
+                  type: boolean
+                start_parameter:
+                  type: string
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                suggested_tip_amounts:
+                  type: array
+                  items:
+                      type: integer
+                title:
+                  type: string
+              required:
+                - allow_paid_broadcast
+                - chat_id
+                - currency
+                - description
+                - direct_messages_topic_id
+                - disable_notification
+                - is_flexible
+                - max_tip_amount
+                - message_effect_id
+                - message_thread_id
+                - need_email
+                - need_name
+                - need_phone_number
+                - need_shipping_address
+                - payload
+                - photo_height
+                - photo_size
+                - photo_url
+                - photo_width
+                - prices
+                - protect_content
+                - provider_data
+                - provider_token
+                - reply_markup
+                - reply_parameters
+                - send_email_to_provider
+                - send_phone_number_to_provider
+                - start_parameter
+                - suggested_post_parameters
+                - suggested_tip_amounts
+                - title
       responses:
         '200':
           description: OK
@@ -4126,6 +6047,63 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                heading:
+                  type: integer
+                horizontal_accuracy:
+                  type: number
+                latitude:
+                  type: number
+                live_period:
+                  type: integer
+                longitude:
+                  type: number
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                protect_content:
+                  type: boolean
+                proximity_alert_radius:
+                  type: integer
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - heading
+                - horizontal_accuracy
+                - latitude
+                - live_period
+                - longitude
+                - message_effect_id
+                - message_thread_id
+                - protect_content
+                - proximity_alert_radius
+                - reply_markup
+                - reply_parameters
+                - suggested_post_parameters
       responses:
         '200':
           description: OK
@@ -4165,6 +6143,85 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                media:
+                  type: array
+                  items:
+                      anyOf:
+                          - $ref: '#/components/schemas/InputMediaAudio'
+                          - $ref: '#/components/schemas/InputMediaDocument'
+                          - $ref: '#/components/schemas/InputMediaPhoto'
+                          - $ref: '#/components/schemas/InputMediaVideo'
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                protect_content:
+                  type: boolean
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - media
+                - message_effect_id
+                - message_thread_id
+                - protect_content
+                - reply_parameters
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                media:
+                  type: array
+                  items:
+                      anyOf:
+                          - $ref: '#/components/schemas/InputMediaAudio'
+                          - $ref: '#/components/schemas/InputMediaDocument'
+                          - $ref: '#/components/schemas/InputMediaPhoto'
+                          - $ref: '#/components/schemas/InputMediaVideo'
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                protect_content:
+                  type: boolean
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - media
+                - message_effect_id
+                - message_thread_id
+                - protect_content
+                - reply_parameters
       responses:
         '200':
           description: OK
@@ -4206,6 +6263,59 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                link_preview_options:
+                  $ref: '#/components/schemas/LinkPreviewOptions'
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                text:
+                  type: string
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - entities
+                - link_preview_options
+                - message_effect_id
+                - message_thread_id
+                - parse_mode
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - suggested_post_parameters
+                - text
       responses:
         '200':
           description: OK
@@ -4245,6 +6355,67 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                media:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/InputPaidMedia'
+                message_thread_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                payload:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                show_caption_above_media:
+                  type: boolean
+                star_count:
+                  type: integer
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - caption
+                - caption_entities
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - media
+                - message_thread_id
+                - parse_mode
+                - payload
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - show_caption_above_media
+                - star_count
+                - suggested_post_parameters
       responses:
         '200':
           description: OK
@@ -4284,6 +6455,128 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                has_spoiler:
+                  type: boolean
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                photo:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                show_caption_above_media:
+                  type: boolean
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - caption
+                - caption_entities
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - has_spoiler
+                - message_effect_id
+                - message_thread_id
+                - parse_mode
+                - photo
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - show_caption_above_media
+                - suggested_post_parameters
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                has_spoiler:
+                  type: boolean
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                photo:
+                  type: string
+                  format: binary
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                show_caption_above_media:
+                  type: boolean
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - caption
+                - caption_entities
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - has_spoiler
+                - message_effect_id
+                - message_thread_id
+                - parse_mode
+                - photo
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - show_caption_above_media
+                - suggested_post_parameters
       responses:
         '200':
           description: OK
@@ -4323,6 +6616,87 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                allows_multiple_answers:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                close_date:
+                  type: integer
+                correct_option_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                explanation:
+                  type: string
+                explanation_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                explanation_parse_mode:
+                  type: string
+                is_anonymous:
+                  type: boolean
+                is_closed:
+                  type: boolean
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                open_period:
+                  type: integer
+                options:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/InputPollOption'
+                protect_content:
+                  type: boolean
+                question:
+                  type: string
+                question_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                question_parse_mode:
+                  type: string
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                type:
+                  type: string
+              required:
+                - allow_paid_broadcast
+                - allows_multiple_answers
+                - business_connection_id
+                - chat_id
+                - close_date
+                - correct_option_id
+                - disable_notification
+                - explanation
+                - explanation_entities
+                - explanation_parse_mode
+                - is_anonymous
+                - is_closed
+                - message_effect_id
+                - message_thread_id
+                - open_period
+                - options
+                - protect_content
+                - question
+                - question_entities
+                - question_parse_mode
+                - reply_markup
+                - reply_parameters
+                - type
       responses:
         '200':
           description: OK
@@ -4362,6 +6736,100 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                emoji:
+                  type: string
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                sticker:
+                  type: string
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - emoji
+                - message_effect_id
+                - message_thread_id
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - sticker
+                - suggested_post_parameters
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                emoji:
+                  type: string
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                sticker:
+                  type: string
+                  format: binary
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - emoji
+                - message_effect_id
+                - message_thread_id
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - sticker
+                - suggested_post_parameters
       responses:
         '200':
           description: OK
@@ -4401,6 +6869,69 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                address:
+                  type: string
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                foursquare_id:
+                  type: string
+                foursquare_type:
+                  type: string
+                google_place_id:
+                  type: string
+                google_place_type:
+                  type: string
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                title:
+                  type: string
+              required:
+                - address
+                - allow_paid_broadcast
+                - business_connection_id
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - foursquare_id
+                - foursquare_type
+                - google_place_id
+                - google_place_type
+                - latitude
+                - longitude
+                - message_effect_id
+                - message_thread_id
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - suggested_post_parameters
+                - title
       responses:
         '200':
           description: OK
@@ -4440,6 +6971,172 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                chat_id:
+                  type: integer
+                cover:
+                  type: string
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                duration:
+                  type: integer
+                has_spoiler:
+                  type: boolean
+                height:
+                  type: integer
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                show_caption_above_media:
+                  type: boolean
+                start_timestamp:
+                  type: integer
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                supports_streaming:
+                  type: boolean
+                thumbnail:
+                  type: string
+                video:
+                  type: string
+                width:
+                  type: integer
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - caption
+                - caption_entities
+                - chat_id
+                - cover
+                - direct_messages_topic_id
+                - disable_notification
+                - duration
+                - has_spoiler
+                - height
+                - message_effect_id
+                - message_thread_id
+                - parse_mode
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - show_caption_above_media
+                - start_timestamp
+                - suggested_post_parameters
+                - supports_streaming
+                - thumbnail
+                - video
+                - width
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                chat_id:
+                  type: integer
+                cover:
+                  type: string
+                  format: binary
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                duration:
+                  type: integer
+                has_spoiler:
+                  type: boolean
+                height:
+                  type: integer
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                show_caption_above_media:
+                  type: boolean
+                start_timestamp:
+                  type: integer
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                supports_streaming:
+                  type: boolean
+                thumbnail:
+                  type: string
+                  format: binary
+                video:
+                  type: string
+                  format: binary
+                width:
+                  type: integer
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - caption
+                - caption_entities
+                - chat_id
+                - cover
+                - direct_messages_topic_id
+                - disable_notification
+                - duration
+                - has_spoiler
+                - height
+                - message_effect_id
+                - message_thread_id
+                - parse_mode
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - show_caption_above_media
+                - start_timestamp
+                - suggested_post_parameters
+                - supports_streaming
+                - thumbnail
+                - video
+                - width
       responses:
         '200':
           description: OK
@@ -4479,6 +7176,113 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                duration:
+                  type: integer
+                length:
+                  type: integer
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                thumbnail:
+                  type: string
+                video_note:
+                  type: string
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - duration
+                - length
+                - message_effect_id
+                - message_thread_id
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - suggested_post_parameters
+                - thumbnail
+                - video_note
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                duration:
+                  type: integer
+                length:
+                  type: integer
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                thumbnail:
+                  type: string
+                  format: binary
+                video_note:
+                  type: string
+                  format: binary
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - duration
+                - length
+                - message_effect_id
+                - message_thread_id
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - suggested_post_parameters
+                - thumbnail
+                - video_note
       responses:
         '200':
           description: OK
@@ -4518,6 +7322,122 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                duration:
+                  type: integer
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                voice:
+                  type: string
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - caption
+                - caption_entities
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - duration
+                - message_effect_id
+                - message_thread_id
+                - parse_mode
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - suggested_post_parameters
+                - voice
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                business_connection_id:
+                  type: string
+                caption:
+                  type: string
+                caption_entities:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                chat_id:
+                  type: integer
+                direct_messages_topic_id:
+                  type: integer
+                disable_notification:
+                  type: boolean
+                duration:
+                  type: integer
+                message_effect_id:
+                  type: string
+                message_thread_id:
+                  type: integer
+                parse_mode:
+                  type: string
+                protect_content:
+                  type: boolean
+                reply_markup:
+                  anyOf:
+                      - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardMarkup'
+                      - $ref: '#/components/schemas/ReplyKeyboardRemove'
+                      - $ref: '#/components/schemas/ForceReply'
+                reply_parameters:
+                  $ref: '#/components/schemas/ReplyParameters'
+                suggested_post_parameters:
+                  $ref: '#/components/schemas/SuggestedPostParameters'
+                voice:
+                  type: string
+                  format: binary
+              required:
+                - allow_paid_broadcast
+                - business_connection_id
+                - caption
+                - caption_entities
+                - chat_id
+                - direct_messages_topic_id
+                - disable_notification
+                - duration
+                - message_effect_id
+                - message_thread_id
+                - parse_mode
+                - protect_content
+                - reply_markup
+                - reply_parameters
+                - suggested_post_parameters
+                - voice
       responses:
         '200':
           description: OK
@@ -4557,6 +7477,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                bio:
+                  type: string
+                business_connection_id:
+                  type: string
+              required:
+                - bio
+                - business_connection_id
       responses:
         '200':
           description: OK
@@ -4597,6 +7525,17 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                accepted_gift_types:
+                  $ref: '#/components/schemas/AcceptedGiftTypes'
+                business_connection_id:
+                  type: string
+                show_gift_button:
+                  type: boolean
+              required:
+                - accepted_gift_types
+                - business_connection_id
+                - show_gift_button
       responses:
         '200':
           description: OK
@@ -4637,6 +7576,17 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+              required:
+                - business_connection_id
+                - first_name
+                - last_name
       responses:
         '200':
           description: OK
@@ -4677,6 +7627,17 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                is_public:
+                  type: boolean
+                photo:
+                  $ref: '#/components/schemas/InputProfilePhoto'
+              required:
+                - business_connection_id
+                - is_public
+                - photo
       responses:
         '200':
           description: OK
@@ -4717,6 +7678,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                username:
+                  type: string
+              required:
+                - business_connection_id
+                - username
       responses:
         '200':
           description: OK
@@ -4757,6 +7726,17 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                custom_title:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+                - chat_id
+                - custom_title
+                - user_id
       responses:
         '200':
           description: OK
@@ -4797,6 +7777,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                description:
+                  type: string
+              required:
+                - chat_id
+                - description
       responses:
         '200':
           description: OK
@@ -4837,6 +7825,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                menu_button:
+                  $ref: '#/components/schemas/MenuButton'
+              required:
+                - chat_id
+                - menu_button
       responses:
         '200':
           description: OK
@@ -4877,6 +7873,17 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                permissions:
+                  $ref: '#/components/schemas/ChatPermissions'
+                use_independent_chat_permissions:
+                  type: boolean
+              required:
+                - chat_id
+                - permissions
+                - use_independent_chat_permissions
       responses:
         '200':
           description: OK
@@ -4917,6 +7924,23 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  type: integer
+                photo:
+                  type: string
+                  format: binary
+              required:
+                - chat_id
+                - photo
       responses:
         '200':
           description: OK
@@ -4957,6 +7981,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                sticker_set_name:
+                  type: string
+              required:
+                - chat_id
+                - sticker_set_name
       responses:
         '200':
           description: OK
@@ -4997,6 +8029,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                title:
+                  type: string
+              required:
+                - chat_id
+                - title
       responses:
         '200':
           description: OK
@@ -5037,6 +8077,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                custom_emoji_id:
+                  type: string
+                name:
+                  type: string
+              required:
+                - custom_emoji_id
+                - name
       responses:
         '200':
           description: OK
@@ -5077,6 +8125,29 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                disable_edit_message:
+                  type: boolean
+                force:
+                  type: boolean
+                inline_message_id:
+                  type: string
+                message_id:
+                  type: integer
+                score:
+                  type: integer
+                user_id:
+                  type: integer
+              required:
+                - chat_id
+                - disable_edit_message
+                - force
+                - inline_message_id
+                - message_id
+                - score
+                - user_id
       responses:
         '200':
           description: OK
@@ -5119,6 +8190,22 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                is_big:
+                  type: boolean
+                message_id:
+                  type: integer
+                reaction:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/ReactionType'
+              required:
+                - chat_id
+                - is_big
+                - message_id
+                - reaction
       responses:
         '200':
           description: OK
@@ -5159,6 +8246,19 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                commands:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/BotCommand'
+                language_code:
+                  type: string
+                scope:
+                  $ref: '#/components/schemas/BotCommandScope'
+              required:
+                - commands
+                - language_code
+                - scope
       responses:
         '200':
           description: OK
@@ -5199,6 +8299,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                for_channels:
+                  type: boolean
+                rights:
+                  $ref: '#/components/schemas/ChatAdministratorRights'
+              required:
+                - for_channels
+                - rights
       responses:
         '200':
           description: OK
@@ -5239,6 +8347,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                description:
+                  type: string
+                language_code:
+                  type: string
+              required:
+                - description
+                - language_code
       responses:
         '200':
           description: OK
@@ -5279,6 +8395,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                language_code:
+                  type: string
+                name:
+                  type: string
+              required:
+                - language_code
+                - name
       responses:
         '200':
           description: OK
@@ -5319,6 +8443,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                language_code:
+                  type: string
+                short_description:
+                  type: string
+              required:
+                - language_code
+                - short_description
       responses:
         '200':
           description: OK
@@ -5360,6 +8492,16 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                errors:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/PassportElementError'
+                user_id:
+                  type: integer
+              required:
+                - errors
+                - user_id
       responses:
         '200':
           description: OK
@@ -5400,6 +8542,16 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                emoji_list:
+                  type: array
+                  items:
+                      type: string
+                sticker:
+                  type: string
+              required:
+                - emoji_list
+                - sticker
       responses:
         '200':
           description: OK
@@ -5440,6 +8592,16 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                keywords:
+                  type: array
+                  items:
+                      type: string
+                sticker:
+                  type: string
+              required:
+                - keywords
+                - sticker
       responses:
         '200':
           description: OK
@@ -5480,6 +8642,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                mask_position:
+                  $ref: '#/components/schemas/MaskPosition'
+                sticker:
+                  type: string
+              required:
+                - mask_position
+                - sticker
       responses:
         '200':
           description: OK
@@ -5520,6 +8690,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                position:
+                  type: integer
+                sticker:
+                  type: string
+              required:
+                - position
+                - sticker
       responses:
         '200':
           description: OK
@@ -5560,6 +8738,38 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                format:
+                  type: string
+                name:
+                  type: string
+                thumbnail:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+                - format
+                - name
+                - thumbnail
+                - user_id
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                format:
+                  type: string
+                name:
+                  type: string
+                thumbnail:
+                  type: string
+                  format: binary
+                user_id:
+                  type: integer
+              required:
+                - format
+                - name
+                - thumbnail
+                - user_id
       responses:
         '200':
           description: OK
@@ -5600,6 +8810,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                name:
+                  type: string
+                title:
+                  type: string
+              required:
+                - name
+                - title
       responses:
         '200':
           description: OK
@@ -5640,6 +8858,17 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                emoji_status_custom_emoji_id:
+                  type: string
+                emoji_status_expiration_date:
+                  type: integer
+                user_id:
+                  type: integer
+              required:
+                - emoji_status_custom_emoji_id
+                - emoji_status_expiration_date
+                - user_id
       responses:
         '200':
           description: OK
@@ -5681,6 +8910,57 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                allowed_updates:
+                  type: array
+                  items:
+                      type: string
+                drop_pending_updates:
+                  type: boolean
+                ip_address:
+                  type: string
+                max_connections:
+                  type: integer
+                secret_token:
+                  type: string
+                url:
+                  type: string
+              required:
+                - allowed_updates
+                - drop_pending_updates
+                - ip_address
+                - max_connections
+                - secret_token
+                - url
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                allowed_updates:
+                  type: array
+                  items:
+                      type: string
+                certificate:
+                  type: string
+                  format: binary
+                drop_pending_updates:
+                  type: boolean
+                ip_address:
+                  type: string
+                max_connections:
+                  type: integer
+                secret_token:
+                  type: string
+                url:
+                  type: string
+              required:
+                - allowed_updates
+                - certificate
+                - drop_pending_updates
+                - ip_address
+                - max_connections
+                - secret_token
+                - url
       responses:
         '200':
           description: OK
@@ -5721,6 +9001,23 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                inline_message_id:
+                  type: string
+                message_id:
+                  type: integer
+                reply_markup:
+                  $ref: '#/components/schemas/InlineKeyboardMarkup'
+              required:
+                - business_connection_id
+                - chat_id
+                - inline_message_id
+                - message_id
+                - reply_markup
       responses:
         '200':
           description: OK
@@ -5763,6 +9060,20 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                message_id:
+                  type: integer
+                reply_markup:
+                  $ref: '#/components/schemas/InlineKeyboardMarkup'
+              required:
+                - business_connection_id
+                - chat_id
+                - message_id
+                - reply_markup
       responses:
         '200':
           description: OK
@@ -5802,6 +9113,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                star_count:
+                  type: integer
+              required:
+                - business_connection_id
+                - star_count
       responses:
         '200':
           description: OK
@@ -5842,6 +9161,20 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                new_owner_chat_id:
+                  type: integer
+                owned_gift_id:
+                  type: string
+                star_count:
+                  type: integer
+              required:
+                - business_connection_id
+                - new_owner_chat_id
+                - owned_gift_id
+                - star_count
       responses:
         '200':
           description: OK
@@ -5882,6 +9215,17 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                only_if_banned:
+                  type: boolean
+                user_id:
+                  type: integer
+              required:
+                - chat_id
+                - only_if_banned
+                - user_id
       responses:
         '200':
           description: OK
@@ -5922,6 +9266,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                sender_chat_id:
+                  type: integer
+              required:
+                - chat_id
+                - sender_chat_id
       responses:
         '200':
           description: OK
@@ -5962,6 +9314,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
       responses:
         '200':
           description: OK
@@ -6002,6 +9359,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
       responses:
         '200':
           description: OK
@@ -6042,6 +9404,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                message_thread_id:
+                  type: integer
+              required:
+                - chat_id
+                - message_thread_id
       responses:
         '200':
           description: OK
@@ -6082,6 +9452,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+              required:
+                - chat_id
       responses:
         '200':
           description: OK
@@ -6122,6 +9497,17 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                chat_id:
+                  type: integer
+                message_id:
+                  type: integer
+              required:
+                - business_connection_id
+                - chat_id
+                - message_id
       responses:
         '200':
           description: OK
@@ -6162,6 +9548,20 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                business_connection_id:
+                  type: string
+                keep_original_details:
+                  type: boolean
+                owned_gift_id:
+                  type: string
+                star_count:
+                  type: integer
+              required:
+                - business_connection_id
+                - keep_original_details
+                - owned_gift_id
+                - star_count
       responses:
         '200':
           description: OK
@@ -6202,6 +9602,29 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                sticker_format:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+                - sticker_format
+                - user_id
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                sticker:
+                  type: string
+                  format: binary
+                sticker_format:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+                - sticker
+                - sticker_format
+                - user_id
       responses:
         '200':
           description: OK
@@ -6241,6 +9664,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                chat_id:
+                  type: integer
+                custom_description:
+                  type: string
+              required:
+                - chat_id
+                - custom_description
       responses:
         '200':
           description: OK
@@ -6281,6 +9712,14 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                custom_description:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+                - custom_description
+                - user_id
       responses:
         '200':
           description: OK
@@ -9159,12 +12598,6 @@ components:
       required:
         - phone_number
         - first_name
-   InputFile:
-      type: object
-      description: |-
-        This object represents the contents of a file to be uploaded. Must be posted using multipart/form-data in the usual way that files are uploaded via the browser.
-      x-tags:
-        - Available types
    InputInvoiceMessageContent:
       type: object
       description: |-

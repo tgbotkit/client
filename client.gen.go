@@ -12,6 +12,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+
+	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
 const (
@@ -104,6 +106,16 @@ type BotCommand struct {
 	Command     string `json:"command"`
 	Description string `json:"description"`
 }
+
+// BotCommandScope This object represents the scope to which bot commands are applied. Currently, the following 7 scopes are supported:
+// BotCommandScopeDefault
+// BotCommandScopeAllPrivateChats
+// BotCommandScopeAllGroupChats
+// BotCommandScopeAllChatAdministrators
+// BotCommandScopeChat
+// BotCommandScopeChatAdministrators
+// BotCommandScopeChatMember
+type BotCommandScope = map[string]interface{}
 
 // BotDescription This object represents the bot's description.
 type BotDescription struct {
@@ -707,6 +719,13 @@ type File struct {
 	FileUniqueId string  `json:"file_unique_id"`
 }
 
+// ForceReply Upon receiving a message with this object, Telegram clients will display a reply interface to the user (act as if the user has selected the bot's message and tapped 'Reply'). This can be extremely useful if you want to create user-friendly step-by-step interfaces without having to sacrifice privacy mode. Not supported in channels and for messages sent on behalf of a Telegram Business account.
+type ForceReply struct {
+	ForceReply            bool    `json:"force_reply"`
+	InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
+	Selective             *bool   `json:"selective,omitempty"`
+}
+
 // ForumTopic This object represents a forum topic.
 type ForumTopic struct {
 	IconColor         int     `json:"icon_color"`
@@ -884,6 +903,151 @@ type InlineQuery struct {
 	Query    string    `json:"query"`
 }
 
+// InlineQueryResult This object represents one result of an inline query. Telegram clients currently support results of the following 20 types:
+// InlineQueryResultCachedAudio
+// InlineQueryResultCachedDocument
+// InlineQueryResultCachedGif
+// InlineQueryResultCachedMpeg4Gif
+// InlineQueryResultCachedPhoto
+// InlineQueryResultCachedSticker
+// InlineQueryResultCachedVideo
+// InlineQueryResultCachedVoice
+// InlineQueryResultArticle
+// InlineQueryResultAudio
+// InlineQueryResultContact
+// InlineQueryResultGame
+// InlineQueryResultDocument
+// InlineQueryResultGif
+// InlineQueryResultLocation
+// InlineQueryResultMpeg4Gif
+// InlineQueryResultPhoto
+// InlineQueryResultVenue
+// InlineQueryResultVideo
+// InlineQueryResultVoice
+// Note: All URLs passed in inline query results will be available to end users and therefore must be assumed to be public.
+type InlineQueryResult = map[string]interface{}
+
+// InlineQueryResultsButton This object represents a button to be shown above inline query results. You must use exactly one of the optional fields.
+type InlineQueryResultsButton struct {
+	StartParameter *string `json:"start_parameter,omitempty"`
+	Text           string  `json:"text"`
+
+	// WebApp Describes a Web App.
+	WebApp *WebAppInfo `json:"web_app,omitempty"`
+}
+
+// InputChecklist Describes a checklist to create.
+type InputChecklist struct {
+	OthersCanAddTasks        *bool                `json:"others_can_add_tasks,omitempty"`
+	OthersCanMarkTasksAsDone *bool                `json:"others_can_mark_tasks_as_done,omitempty"`
+	ParseMode                *string              `json:"parse_mode,omitempty"`
+	Tasks                    []InputChecklistTask `json:"tasks"`
+	Title                    string               `json:"title"`
+	TitleEntities            *[]MessageEntity     `json:"title_entities,omitempty"`
+}
+
+// InputChecklistTask Describes a task to add to a checklist.
+type InputChecklistTask struct {
+	Id           int              `json:"id"`
+	ParseMode    *string          `json:"parse_mode,omitempty"`
+	Text         string           `json:"text"`
+	TextEntities *[]MessageEntity `json:"text_entities,omitempty"`
+}
+
+// InputMedia This object represents the content of a media message to be sent. It should be one of
+// InputMediaAnimation
+// InputMediaDocument
+// InputMediaAudio
+// InputMediaPhoto
+// InputMediaVideo
+type InputMedia = map[string]interface{}
+
+// InputMediaAudio Represents an audio file to be treated as music to be sent.
+type InputMediaAudio struct {
+	Caption         *string          `json:"caption,omitempty"`
+	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
+	Duration        *int             `json:"duration,omitempty"`
+	Media           string           `json:"media"`
+	ParseMode       *string          `json:"parse_mode,omitempty"`
+	Performer       *string          `json:"performer,omitempty"`
+	Thumbnail       *string          `json:"thumbnail,omitempty"`
+	Title           *string          `json:"title,omitempty"`
+	Type            string           `json:"type"`
+}
+
+// InputMediaDocument Represents a general file to be sent.
+type InputMediaDocument struct {
+	Caption                     *string          `json:"caption,omitempty"`
+	CaptionEntities             *[]MessageEntity `json:"caption_entities,omitempty"`
+	DisableContentTypeDetection *bool            `json:"disable_content_type_detection,omitempty"`
+	Media                       string           `json:"media"`
+	ParseMode                   *string          `json:"parse_mode,omitempty"`
+	Thumbnail                   *string          `json:"thumbnail,omitempty"`
+	Type                        string           `json:"type"`
+}
+
+// InputMediaPhoto Represents a photo to be sent.
+type InputMediaPhoto struct {
+	Caption               *string          `json:"caption,omitempty"`
+	CaptionEntities       *[]MessageEntity `json:"caption_entities,omitempty"`
+	HasSpoiler            *bool            `json:"has_spoiler,omitempty"`
+	Media                 string           `json:"media"`
+	ParseMode             *string          `json:"parse_mode,omitempty"`
+	ShowCaptionAboveMedia *bool            `json:"show_caption_above_media,omitempty"`
+	Type                  string           `json:"type"`
+}
+
+// InputMediaVideo Represents a video to be sent.
+type InputMediaVideo struct {
+	Caption               *string          `json:"caption,omitempty"`
+	CaptionEntities       *[]MessageEntity `json:"caption_entities,omitempty"`
+	Cover                 *string          `json:"cover,omitempty"`
+	Duration              *int             `json:"duration,omitempty"`
+	HasSpoiler            *bool            `json:"has_spoiler,omitempty"`
+	Height                *int             `json:"height,omitempty"`
+	Media                 string           `json:"media"`
+	ParseMode             *string          `json:"parse_mode,omitempty"`
+	ShowCaptionAboveMedia *bool            `json:"show_caption_above_media,omitempty"`
+	StartTimestamp        *int             `json:"start_timestamp,omitempty"`
+	SupportsStreaming     *bool            `json:"supports_streaming,omitempty"`
+	Thumbnail             *string          `json:"thumbnail,omitempty"`
+	Type                  string           `json:"type"`
+	Width                 *int             `json:"width,omitempty"`
+}
+
+// InputPaidMedia This object describes the paid media to be sent. Currently, it can be one of
+// InputPaidMediaPhoto
+// InputPaidMediaVideo
+type InputPaidMedia = map[string]interface{}
+
+// InputPollOption This object contains information about one answer option in a poll to be sent.
+type InputPollOption struct {
+	Text          string           `json:"text"`
+	TextEntities  *[]MessageEntity `json:"text_entities,omitempty"`
+	TextParseMode *string          `json:"text_parse_mode,omitempty"`
+}
+
+// InputProfilePhoto This object describes a profile photo to set. Currently, it can be one of
+// InputProfilePhotoStatic
+// InputProfilePhotoAnimated
+type InputProfilePhoto = map[string]interface{}
+
+// InputSticker This object describes a sticker to be added to a sticker set.
+type InputSticker struct {
+	EmojiList []string  `json:"emoji_list"`
+	Format    string    `json:"format"`
+	Keywords  *[]string `json:"keywords,omitempty"`
+
+	// MaskPosition This object describes the position on faces where a mask should be placed by default.
+	MaskPosition *MaskPosition `json:"mask_position,omitempty"`
+	Sticker      string        `json:"sticker"`
+}
+
+// InputStoryContent This object describes the content of a story to post. Currently, it can be one of
+// InputStoryContentPhoto
+// InputStoryContentVideo
+type InputStoryContent = map[string]interface{}
+
 // Invoice This object contains basic information about an invoice.
 type Invoice struct {
 	Currency       string `json:"currency"`
@@ -891,6 +1055,64 @@ type Invoice struct {
 	StartParameter string `json:"start_parameter"`
 	Title          string `json:"title"`
 	TotalAmount    int    `json:"total_amount"`
+}
+
+// KeyboardButton This object represents one button of the reply keyboard. At most one of the optional fields must be used to specify type of the button. For simple text buttons, String can be used instead of this object to specify the button text.
+type KeyboardButton struct {
+	// RequestChat This object defines the criteria used to request a suitable chat. Information about the selected chat will be shared with the bot when the corresponding button is pressed. The bot will be granted requested rights in the chat if appropriate. More about requesting chats ».
+	RequestChat     *KeyboardButtonRequestChat `json:"request_chat,omitempty"`
+	RequestContact  *bool                      `json:"request_contact,omitempty"`
+	RequestLocation *bool                      `json:"request_location,omitempty"`
+
+	// RequestPoll This object represents type of a poll, which is allowed to be created and sent when the corresponding button is pressed.
+	RequestPoll *KeyboardButtonPollType `json:"request_poll,omitempty"`
+
+	// RequestUsers This object defines the criteria used to request suitable users. Information about the selected users will be shared with the bot when the corresponding button is pressed. More about requesting users »
+	RequestUsers *KeyboardButtonRequestUsers `json:"request_users,omitempty"`
+	Text         string                      `json:"text"`
+
+	// WebApp Describes a Web App.
+	WebApp *WebAppInfo `json:"web_app,omitempty"`
+}
+
+// KeyboardButtonPollType This object represents type of a poll, which is allowed to be created and sent when the corresponding button is pressed.
+type KeyboardButtonPollType struct {
+	Type *string `json:"type,omitempty"`
+}
+
+// KeyboardButtonRequestChat This object defines the criteria used to request a suitable chat. Information about the selected chat will be shared with the bot when the corresponding button is pressed. The bot will be granted requested rights in the chat if appropriate. More about requesting chats ».
+type KeyboardButtonRequestChat struct {
+	// BotAdministratorRights Represents the rights of an administrator in a chat.
+	BotAdministratorRights *ChatAdministratorRights `json:"bot_administrator_rights,omitempty"`
+	BotIsMember            *bool                    `json:"bot_is_member,omitempty"`
+	ChatHasUsername        *bool                    `json:"chat_has_username,omitempty"`
+	ChatIsChannel          bool                     `json:"chat_is_channel"`
+	ChatIsCreated          *bool                    `json:"chat_is_created,omitempty"`
+	ChatIsForum            *bool                    `json:"chat_is_forum,omitempty"`
+	RequestId              int                      `json:"request_id"`
+	RequestPhoto           *bool                    `json:"request_photo,omitempty"`
+	RequestTitle           *bool                    `json:"request_title,omitempty"`
+	RequestUsername        *bool                    `json:"request_username,omitempty"`
+
+	// UserAdministratorRights Represents the rights of an administrator in a chat.
+	UserAdministratorRights *ChatAdministratorRights `json:"user_administrator_rights,omitempty"`
+}
+
+// KeyboardButtonRequestUsers This object defines the criteria used to request suitable users. Information about the selected users will be shared with the bot when the corresponding button is pressed. More about requesting users »
+type KeyboardButtonRequestUsers struct {
+	MaxQuantity     *int  `json:"max_quantity,omitempty"`
+	RequestId       int   `json:"request_id"`
+	RequestName     *bool `json:"request_name,omitempty"`
+	RequestPhoto    *bool `json:"request_photo,omitempty"`
+	RequestUsername *bool `json:"request_username,omitempty"`
+	UserIsBot       *bool `json:"user_is_bot,omitempty"`
+	UserIsPremium   *bool `json:"user_is_premium,omitempty"`
+}
+
+// LabeledPrice This object represents a portion of the price for goods or services.
+type LabeledPrice struct {
+	Amount int    `json:"amount"`
+	Label  string `json:"label"`
 }
 
 // LinkPreviewOptions Describes the options used for link preview generation.
@@ -1306,6 +1528,18 @@ type PassportData struct {
 	Data        []EncryptedPassportElement `json:"data"`
 }
 
+// PassportElementError This object represents an error in the Telegram Passport element which was submitted that should be resolved by the user. It should be one of:
+// PassportElementErrorDataField
+// PassportElementErrorFrontSide
+// PassportElementErrorReverseSide
+// PassportElementErrorSelfie
+// PassportElementErrorFile
+// PassportElementErrorFiles
+// PassportElementErrorTranslationFile
+// PassportElementErrorTranslationFiles
+// PassportElementErrorUnspecified
+type PassportElementError = map[string]interface{}
+
 // PassportFile This object represents a file uploaded to Telegram Passport. Currently all Telegram Passport files are in JPEG format when decrypted and don't exceed 10MB.
 type PassportFile struct {
 	FileDate     int    `json:"file_date"`
@@ -1418,6 +1652,34 @@ type RefundedPayment struct {
 	TotalAmount             int     `json:"total_amount"`
 }
 
+// ReplyKeyboardMarkup This object represents a custom keyboard with reply options (see Introduction to bots for details and examples). Not supported in channels and for messages sent on behalf of a Telegram Business account.
+type ReplyKeyboardMarkup struct {
+	InputFieldPlaceholder *string            `json:"input_field_placeholder,omitempty"`
+	IsPersistent          *bool              `json:"is_persistent,omitempty"`
+	Keyboard              [][]KeyboardButton `json:"keyboard"`
+	OneTimeKeyboard       *bool              `json:"one_time_keyboard,omitempty"`
+	ResizeKeyboard        *bool              `json:"resize_keyboard,omitempty"`
+	Selective             *bool              `json:"selective,omitempty"`
+}
+
+// ReplyKeyboardRemove Upon receiving a message with this object, Telegram clients will remove the current custom keyboard and display the default letter-keyboard. By default, custom keyboards are displayed until a new keyboard is sent by a bot. An exception is made for one-time keyboards that are hidden immediately after the user presses a button (see ReplyKeyboardMarkup). Not supported in channels and for messages sent on behalf of a Telegram Business account.
+type ReplyKeyboardRemove struct {
+	RemoveKeyboard bool  `json:"remove_keyboard"`
+	Selective      *bool `json:"selective,omitempty"`
+}
+
+// ReplyParameters Describes reply parameters for the message that is being sent.
+type ReplyParameters struct {
+	AllowSendingWithoutReply *bool            `json:"allow_sending_without_reply,omitempty"`
+	ChatId                   *int             `json:"chat_id,omitempty"`
+	ChecklistTaskId          *int             `json:"checklist_task_id,omitempty"`
+	MessageId                int              `json:"message_id"`
+	Quote                    *string          `json:"quote,omitempty"`
+	QuoteEntities            *[]MessageEntity `json:"quote_entities,omitempty"`
+	QuoteParseMode           *string          `json:"quote_parse_mode,omitempty"`
+	QuotePosition            *int             `json:"quote_position,omitempty"`
+}
+
 // ResponseParameters Describes why a request was unsuccessful.
 type ResponseParameters struct {
 	MigrateToChatId *int `json:"migrate_to_chat_id,omitempty"`
@@ -1446,6 +1708,13 @@ type ShippingAddress struct {
 	State       string `json:"state"`
 	StreetLine1 string `json:"street_line1"`
 	StreetLine2 string `json:"street_line2"`
+}
+
+// ShippingOption This object represents one shipping option.
+type ShippingOption struct {
+	Id     string         `json:"id"`
+	Prices []LabeledPrice `json:"prices"`
+	Title  string         `json:"title"`
 }
 
 // ShippingQuery This object contains information about an incoming shipping query.
@@ -1541,6 +1810,38 @@ type Story struct {
 	Id   int  `json:"id"`
 }
 
+// StoryArea Describes a clickable area on a story media.
+type StoryArea struct {
+	// Position Describes the position of a clickable area within a story.
+	Position StoryAreaPosition `json:"position"`
+
+	// Type Describes the type of a clickable area on a story. Currently, it can be one of
+	// StoryAreaTypeLocation
+	// StoryAreaTypeSuggestedReaction
+	// StoryAreaTypeLink
+	// StoryAreaTypeWeather
+	// StoryAreaTypeUniqueGift
+	Type StoryAreaType `json:"type"`
+}
+
+// StoryAreaPosition Describes the position of a clickable area within a story.
+type StoryAreaPosition struct {
+	CornerRadiusPercentage float32 `json:"corner_radius_percentage"`
+	HeightPercentage       float32 `json:"height_percentage"`
+	RotationAngle          float32 `json:"rotation_angle"`
+	WidthPercentage        float32 `json:"width_percentage"`
+	XPercentage            float32 `json:"x_percentage"`
+	YPercentage            float32 `json:"y_percentage"`
+}
+
+// StoryAreaType Describes the type of a clickable area on a story. Currently, it can be one of
+// StoryAreaTypeLocation
+// StoryAreaTypeSuggestedReaction
+// StoryAreaTypeLink
+// StoryAreaTypeWeather
+// StoryAreaTypeUniqueGift
+type StoryAreaType = map[string]interface{}
+
 // SuccessfulPayment This object contains basic information about a successful payment. Note that if the buyer initiates a chargeback with the relevant payment provider following this transaction, the funds may be debited from your balance. This is outside of Telegram's control.
 type SuccessfulPayment struct {
 	Currency         string `json:"currency"`
@@ -1602,6 +1903,13 @@ type SuggestedPostPaid struct {
 
 	// SuggestedPostMessage This object represents a message.
 	SuggestedPostMessage *Message `json:"suggested_post_message,omitempty"`
+}
+
+// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+type SuggestedPostParameters struct {
+	// Price Describes the price of a suggested post.
+	Price    *SuggestedPostPrice `json:"price,omitempty"`
+	SendDate *int                `json:"send_date,omitempty"`
 }
 
 // SuggestedPostPrice Describes the price of a suggested post.
@@ -1916,952 +2224,2569 @@ type WriteAccessAllowed struct {
 }
 
 // AddStickerToSetJSONBody defines parameters for AddStickerToSet.
-type AddStickerToSetJSONBody = map[string]interface{}
+type AddStickerToSetJSONBody struct {
+	Name string `json:"name"`
+
+	// Sticker This object describes a sticker to be added to a sticker set.
+	Sticker InputSticker `json:"sticker"`
+	UserId  int          `json:"user_id"`
+}
+
+// AddStickerToSetMultipartBody defines parameters for AddStickerToSet.
+type AddStickerToSetMultipartBody struct {
+	Name string `json:"name"`
+
+	// Sticker This object describes a sticker to be added to a sticker set.
+	Sticker InputSticker `json:"sticker"`
+	UserId  int          `json:"user_id"`
+}
 
 // AnswerCallbackQueryJSONBody defines parameters for AnswerCallbackQuery.
-type AnswerCallbackQueryJSONBody = map[string]interface{}
+type AnswerCallbackQueryJSONBody struct {
+	CacheTime       int    `json:"cache_time"`
+	CallbackQueryId string `json:"callback_query_id"`
+	ShowAlert       bool   `json:"show_alert"`
+	Text            string `json:"text"`
+	Url             string `json:"url"`
+}
 
 // AnswerInlineQueryJSONBody defines parameters for AnswerInlineQuery.
-type AnswerInlineQueryJSONBody = map[string]interface{}
+type AnswerInlineQueryJSONBody struct {
+	// Button This object represents a button to be shown above inline query results. You must use exactly one of the optional fields.
+	Button        InlineQueryResultsButton `json:"button"`
+	CacheTime     int                      `json:"cache_time"`
+	InlineQueryId string                   `json:"inline_query_id"`
+	IsPersonal    bool                     `json:"is_personal"`
+	NextOffset    string                   `json:"next_offset"`
+	Results       []InlineQueryResult      `json:"results"`
+}
 
 // AnswerPreCheckoutQueryJSONBody defines parameters for AnswerPreCheckoutQuery.
-type AnswerPreCheckoutQueryJSONBody = map[string]interface{}
+type AnswerPreCheckoutQueryJSONBody struct {
+	ErrorMessage       string `json:"error_message"`
+	Ok                 bool   `json:"ok"`
+	PreCheckoutQueryId string `json:"pre_checkout_query_id"`
+}
 
 // AnswerShippingQueryJSONBody defines parameters for AnswerShippingQuery.
-type AnswerShippingQueryJSONBody = map[string]interface{}
+type AnswerShippingQueryJSONBody struct {
+	ErrorMessage    string           `json:"error_message"`
+	Ok              bool             `json:"ok"`
+	ShippingOptions []ShippingOption `json:"shipping_options"`
+	ShippingQueryId string           `json:"shipping_query_id"`
+}
 
 // AnswerWebAppQueryJSONBody defines parameters for AnswerWebAppQuery.
-type AnswerWebAppQueryJSONBody = map[string]interface{}
+type AnswerWebAppQueryJSONBody struct {
+	// Result This object represents one result of an inline query. Telegram clients currently support results of the following 20 types:
+	// InlineQueryResultCachedAudio
+	// InlineQueryResultCachedDocument
+	// InlineQueryResultCachedGif
+	// InlineQueryResultCachedMpeg4Gif
+	// InlineQueryResultCachedPhoto
+	// InlineQueryResultCachedSticker
+	// InlineQueryResultCachedVideo
+	// InlineQueryResultCachedVoice
+	// InlineQueryResultArticle
+	// InlineQueryResultAudio
+	// InlineQueryResultContact
+	// InlineQueryResultGame
+	// InlineQueryResultDocument
+	// InlineQueryResultGif
+	// InlineQueryResultLocation
+	// InlineQueryResultMpeg4Gif
+	// InlineQueryResultPhoto
+	// InlineQueryResultVenue
+	// InlineQueryResultVideo
+	// InlineQueryResultVoice
+	// Note: All URLs passed in inline query results will be available to end users and therefore must be assumed to be public.
+	Result        InlineQueryResult `json:"result"`
+	WebAppQueryId string            `json:"web_app_query_id"`
+}
 
 // ApproveChatJoinRequestJSONBody defines parameters for ApproveChatJoinRequest.
-type ApproveChatJoinRequestJSONBody = map[string]interface{}
+type ApproveChatJoinRequestJSONBody struct {
+	ChatId int `json:"chat_id"`
+	UserId int `json:"user_id"`
+}
 
 // ApproveSuggestedPostJSONBody defines parameters for ApproveSuggestedPost.
-type ApproveSuggestedPostJSONBody = map[string]interface{}
+type ApproveSuggestedPostJSONBody struct {
+	ChatId    int `json:"chat_id"`
+	MessageId int `json:"message_id"`
+	SendDate  int `json:"send_date"`
+}
 
 // BanChatMemberJSONBody defines parameters for BanChatMember.
-type BanChatMemberJSONBody = map[string]interface{}
+type BanChatMemberJSONBody struct {
+	ChatId         int  `json:"chat_id"`
+	RevokeMessages bool `json:"revoke_messages"`
+	UntilDate      int  `json:"until_date"`
+	UserId         int  `json:"user_id"`
+}
 
 // BanChatSenderChatJSONBody defines parameters for BanChatSenderChat.
-type BanChatSenderChatJSONBody = map[string]interface{}
-
-// CloseJSONBody defines parameters for Close.
-type CloseJSONBody = map[string]interface{}
+type BanChatSenderChatJSONBody struct {
+	ChatId       int `json:"chat_id"`
+	SenderChatId int `json:"sender_chat_id"`
+}
 
 // CloseForumTopicJSONBody defines parameters for CloseForumTopic.
-type CloseForumTopicJSONBody = map[string]interface{}
+type CloseForumTopicJSONBody struct {
+	ChatId          int `json:"chat_id"`
+	MessageThreadId int `json:"message_thread_id"`
+}
 
 // CloseGeneralForumTopicJSONBody defines parameters for CloseGeneralForumTopic.
-type CloseGeneralForumTopicJSONBody = map[string]interface{}
+type CloseGeneralForumTopicJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
 
 // ConvertGiftToStarsJSONBody defines parameters for ConvertGiftToStars.
-type ConvertGiftToStarsJSONBody = map[string]interface{}
+type ConvertGiftToStarsJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	OwnedGiftId          string `json:"owned_gift_id"`
+}
 
 // CopyMessageJSONBody defines parameters for CopyMessage.
-type CopyMessageJSONBody = map[string]interface{}
+type CopyMessageJSONBody struct {
+	AllowPaidBroadcast    bool                            `json:"allow_paid_broadcast"`
+	Caption               string                          `json:"caption"`
+	CaptionEntities       []MessageEntity                 `json:"caption_entities"`
+	ChatId                int                             `json:"chat_id"`
+	DirectMessagesTopicId int                             `json:"direct_messages_topic_id"`
+	DisableNotification   bool                            `json:"disable_notification"`
+	FromChatId            CopyMessageJSONBody_FromChatId  `json:"from_chat_id"`
+	MessageId             int                             `json:"message_id"`
+	MessageThreadId       int                             `json:"message_thread_id"`
+	ParseMode             string                          `json:"parse_mode"`
+	ProtectContent        bool                            `json:"protect_content"`
+	ReplyMarkup           CopyMessageJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters       ReplyParameters `json:"reply_parameters"`
+	ShowCaptionAboveMedia bool            `json:"show_caption_above_media"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	VideoStartTimestamp     int                     `json:"video_start_timestamp"`
+}
+
+// CopyMessageJSONBodyFromChatId0 defines parameters for CopyMessage.
+type CopyMessageJSONBodyFromChatId0 = int
+
+// CopyMessageJSONBodyFromChatId1 defines parameters for CopyMessage.
+type CopyMessageJSONBodyFromChatId1 = string
+
+// CopyMessageJSONBody_FromChatId defines parameters for CopyMessage.
+type CopyMessageJSONBody_FromChatId struct {
+	union json.RawMessage
+}
+
+// CopyMessageJSONBody_ReplyMarkup defines parameters for CopyMessage.
+type CopyMessageJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // CopyMessagesJSONBody defines parameters for CopyMessages.
-type CopyMessagesJSONBody = map[string]interface{}
+type CopyMessagesJSONBody struct {
+	ChatId                int                             `json:"chat_id"`
+	DirectMessagesTopicId int                             `json:"direct_messages_topic_id"`
+	DisableNotification   bool                            `json:"disable_notification"`
+	FromChatId            CopyMessagesJSONBody_FromChatId `json:"from_chat_id"`
+	MessageIds            []int                           `json:"message_ids"`
+	MessageThreadId       int                             `json:"message_thread_id"`
+	ProtectContent        bool                            `json:"protect_content"`
+	RemoveCaption         bool                            `json:"remove_caption"`
+}
+
+// CopyMessagesJSONBodyFromChatId0 defines parameters for CopyMessages.
+type CopyMessagesJSONBodyFromChatId0 = int
+
+// CopyMessagesJSONBodyFromChatId1 defines parameters for CopyMessages.
+type CopyMessagesJSONBodyFromChatId1 = string
+
+// CopyMessagesJSONBody_FromChatId defines parameters for CopyMessages.
+type CopyMessagesJSONBody_FromChatId struct {
+	union json.RawMessage
+}
 
 // CreateChatInviteLinkJSONBody defines parameters for CreateChatInviteLink.
-type CreateChatInviteLinkJSONBody = map[string]interface{}
+type CreateChatInviteLinkJSONBody struct {
+	ChatId             int    `json:"chat_id"`
+	CreatesJoinRequest bool   `json:"creates_join_request"`
+	ExpireDate         int    `json:"expire_date"`
+	MemberLimit        int    `json:"member_limit"`
+	Name               string `json:"name"`
+}
 
 // CreateChatSubscriptionInviteLinkJSONBody defines parameters for CreateChatSubscriptionInviteLink.
-type CreateChatSubscriptionInviteLinkJSONBody = map[string]interface{}
+type CreateChatSubscriptionInviteLinkJSONBody struct {
+	ChatId             int    `json:"chat_id"`
+	Name               string `json:"name"`
+	SubscriptionPeriod int    `json:"subscription_period"`
+	SubscriptionPrice  int    `json:"subscription_price"`
+}
 
 // CreateForumTopicJSONBody defines parameters for CreateForumTopic.
-type CreateForumTopicJSONBody = map[string]interface{}
+type CreateForumTopicJSONBody struct {
+	ChatId            int    `json:"chat_id"`
+	IconColor         int    `json:"icon_color"`
+	IconCustomEmojiId string `json:"icon_custom_emoji_id"`
+	Name              string `json:"name"`
+}
 
 // CreateInvoiceLinkJSONBody defines parameters for CreateInvoiceLink.
-type CreateInvoiceLinkJSONBody = map[string]interface{}
+type CreateInvoiceLinkJSONBody struct {
+	BusinessConnectionId      string         `json:"business_connection_id"`
+	Currency                  string         `json:"currency"`
+	Description               string         `json:"description"`
+	IsFlexible                bool           `json:"is_flexible"`
+	MaxTipAmount              int            `json:"max_tip_amount"`
+	NeedEmail                 bool           `json:"need_email"`
+	NeedName                  bool           `json:"need_name"`
+	NeedPhoneNumber           bool           `json:"need_phone_number"`
+	NeedShippingAddress       bool           `json:"need_shipping_address"`
+	Payload                   string         `json:"payload"`
+	PhotoHeight               int            `json:"photo_height"`
+	PhotoSize                 int            `json:"photo_size"`
+	PhotoUrl                  string         `json:"photo_url"`
+	PhotoWidth                int            `json:"photo_width"`
+	Prices                    []LabeledPrice `json:"prices"`
+	ProviderData              string         `json:"provider_data"`
+	ProviderToken             string         `json:"provider_token"`
+	SendEmailToProvider       bool           `json:"send_email_to_provider"`
+	SendPhoneNumberToProvider bool           `json:"send_phone_number_to_provider"`
+	SubscriptionPeriod        int            `json:"subscription_period"`
+	SuggestedTipAmounts       []int          `json:"suggested_tip_amounts"`
+	Title                     string         `json:"title"`
+}
 
 // CreateNewStickerSetJSONBody defines parameters for CreateNewStickerSet.
-type CreateNewStickerSetJSONBody = map[string]interface{}
+type CreateNewStickerSetJSONBody struct {
+	Name            string         `json:"name"`
+	NeedsRepainting bool           `json:"needs_repainting"`
+	StickerType     string         `json:"sticker_type"`
+	Stickers        []InputSticker `json:"stickers"`
+	Title           string         `json:"title"`
+	UserId          int            `json:"user_id"`
+}
+
+// CreateNewStickerSetMultipartBody defines parameters for CreateNewStickerSet.
+type CreateNewStickerSetMultipartBody struct {
+	Name            string         `json:"name"`
+	NeedsRepainting bool           `json:"needs_repainting"`
+	StickerType     string         `json:"sticker_type"`
+	Stickers        []InputSticker `json:"stickers"`
+	Title           string         `json:"title"`
+	UserId          int            `json:"user_id"`
+}
 
 // DeclineChatJoinRequestJSONBody defines parameters for DeclineChatJoinRequest.
-type DeclineChatJoinRequestJSONBody = map[string]interface{}
+type DeclineChatJoinRequestJSONBody struct {
+	ChatId int `json:"chat_id"`
+	UserId int `json:"user_id"`
+}
 
 // DeclineSuggestedPostJSONBody defines parameters for DeclineSuggestedPost.
-type DeclineSuggestedPostJSONBody = map[string]interface{}
+type DeclineSuggestedPostJSONBody struct {
+	ChatId    int    `json:"chat_id"`
+	Comment   string `json:"comment"`
+	MessageId int    `json:"message_id"`
+}
 
 // DeleteBusinessMessagesJSONBody defines parameters for DeleteBusinessMessages.
-type DeleteBusinessMessagesJSONBody = map[string]interface{}
+type DeleteBusinessMessagesJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	MessageIds           []int  `json:"message_ids"`
+}
 
 // DeleteChatPhotoJSONBody defines parameters for DeleteChatPhoto.
-type DeleteChatPhotoJSONBody = map[string]interface{}
+type DeleteChatPhotoJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
 
 // DeleteChatStickerSetJSONBody defines parameters for DeleteChatStickerSet.
-type DeleteChatStickerSetJSONBody = map[string]interface{}
+type DeleteChatStickerSetJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
 
 // DeleteForumTopicJSONBody defines parameters for DeleteForumTopic.
-type DeleteForumTopicJSONBody = map[string]interface{}
+type DeleteForumTopicJSONBody struct {
+	ChatId          int `json:"chat_id"`
+	MessageThreadId int `json:"message_thread_id"`
+}
 
 // DeleteMessageJSONBody defines parameters for DeleteMessage.
-type DeleteMessageJSONBody = map[string]interface{}
+type DeleteMessageJSONBody struct {
+	ChatId    int `json:"chat_id"`
+	MessageId int `json:"message_id"`
+}
 
 // DeleteMessagesJSONBody defines parameters for DeleteMessages.
-type DeleteMessagesJSONBody = map[string]interface{}
+type DeleteMessagesJSONBody struct {
+	ChatId     int   `json:"chat_id"`
+	MessageIds []int `json:"message_ids"`
+}
 
 // DeleteMyCommandsJSONBody defines parameters for DeleteMyCommands.
-type DeleteMyCommandsJSONBody = map[string]interface{}
+type DeleteMyCommandsJSONBody struct {
+	LanguageCode string `json:"language_code"`
+
+	// Scope This object represents the scope to which bot commands are applied. Currently, the following 7 scopes are supported:
+	// BotCommandScopeDefault
+	// BotCommandScopeAllPrivateChats
+	// BotCommandScopeAllGroupChats
+	// BotCommandScopeAllChatAdministrators
+	// BotCommandScopeChat
+	// BotCommandScopeChatAdministrators
+	// BotCommandScopeChatMember
+	Scope BotCommandScope `json:"scope"`
+}
 
 // DeleteStickerFromSetJSONBody defines parameters for DeleteStickerFromSet.
-type DeleteStickerFromSetJSONBody = map[string]interface{}
+type DeleteStickerFromSetJSONBody struct {
+	Sticker string `json:"sticker"`
+}
 
 // DeleteStickerSetJSONBody defines parameters for DeleteStickerSet.
-type DeleteStickerSetJSONBody = map[string]interface{}
+type DeleteStickerSetJSONBody struct {
+	Name string `json:"name"`
+}
 
 // DeleteStoryJSONBody defines parameters for DeleteStory.
-type DeleteStoryJSONBody = map[string]interface{}
+type DeleteStoryJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	StoryId              int    `json:"story_id"`
+}
 
 // DeleteWebhookJSONBody defines parameters for DeleteWebhook.
-type DeleteWebhookJSONBody = map[string]interface{}
+type DeleteWebhookJSONBody struct {
+	DropPendingUpdates bool `json:"drop_pending_updates"`
+}
 
 // EditChatInviteLinkJSONBody defines parameters for EditChatInviteLink.
-type EditChatInviteLinkJSONBody = map[string]interface{}
+type EditChatInviteLinkJSONBody struct {
+	ChatId             int    `json:"chat_id"`
+	CreatesJoinRequest bool   `json:"creates_join_request"`
+	ExpireDate         int    `json:"expire_date"`
+	InviteLink         string `json:"invite_link"`
+	MemberLimit        int    `json:"member_limit"`
+	Name               string `json:"name"`
+}
 
 // EditChatSubscriptionInviteLinkJSONBody defines parameters for EditChatSubscriptionInviteLink.
-type EditChatSubscriptionInviteLinkJSONBody = map[string]interface{}
+type EditChatSubscriptionInviteLinkJSONBody struct {
+	ChatId     int    `json:"chat_id"`
+	InviteLink string `json:"invite_link"`
+	Name       string `json:"name"`
+}
 
 // EditForumTopicJSONBody defines parameters for EditForumTopic.
-type EditForumTopicJSONBody = map[string]interface{}
+type EditForumTopicJSONBody struct {
+	ChatId            int    `json:"chat_id"`
+	IconCustomEmojiId string `json:"icon_custom_emoji_id"`
+	MessageThreadId   int    `json:"message_thread_id"`
+	Name              string `json:"name"`
+}
 
 // EditGeneralForumTopicJSONBody defines parameters for EditGeneralForumTopic.
-type EditGeneralForumTopicJSONBody = map[string]interface{}
+type EditGeneralForumTopicJSONBody struct {
+	ChatId int    `json:"chat_id"`
+	Name   string `json:"name"`
+}
 
 // EditMessageCaptionJSONBody defines parameters for EditMessageCaption.
-type EditMessageCaptionJSONBody = map[string]interface{}
+type EditMessageCaptionJSONBody struct {
+	BusinessConnectionId string          `json:"business_connection_id"`
+	Caption              string          `json:"caption"`
+	CaptionEntities      []MessageEntity `json:"caption_entities"`
+	ChatId               int             `json:"chat_id"`
+	InlineMessageId      string          `json:"inline_message_id"`
+	MessageId            int             `json:"message_id"`
+	ParseMode            string          `json:"parse_mode"`
+
+	// ReplyMarkup This object represents an inline keyboard that appears right next to the message it belongs to.
+	ReplyMarkup           InlineKeyboardMarkup `json:"reply_markup"`
+	ShowCaptionAboveMedia bool                 `json:"show_caption_above_media"`
+}
 
 // EditMessageChecklistJSONBody defines parameters for EditMessageChecklist.
-type EditMessageChecklistJSONBody = map[string]interface{}
+type EditMessageChecklistJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	ChatId               int    `json:"chat_id"`
+
+	// Checklist Describes a checklist to create.
+	Checklist InputChecklist `json:"checklist"`
+	MessageId int            `json:"message_id"`
+
+	// ReplyMarkup This object represents an inline keyboard that appears right next to the message it belongs to.
+	ReplyMarkup InlineKeyboardMarkup `json:"reply_markup"`
+}
 
 // EditMessageLiveLocationJSONBody defines parameters for EditMessageLiveLocation.
-type EditMessageLiveLocationJSONBody = map[string]interface{}
+type EditMessageLiveLocationJSONBody struct {
+	BusinessConnectionId string  `json:"business_connection_id"`
+	ChatId               int     `json:"chat_id"`
+	Heading              int     `json:"heading"`
+	HorizontalAccuracy   float32 `json:"horizontal_accuracy"`
+	InlineMessageId      string  `json:"inline_message_id"`
+	Latitude             float32 `json:"latitude"`
+	LivePeriod           int     `json:"live_period"`
+	Longitude            float32 `json:"longitude"`
+	MessageId            int     `json:"message_id"`
+	ProximityAlertRadius int     `json:"proximity_alert_radius"`
+
+	// ReplyMarkup This object represents an inline keyboard that appears right next to the message it belongs to.
+	ReplyMarkup InlineKeyboardMarkup `json:"reply_markup"`
+}
 
 // EditMessageMediaJSONBody defines parameters for EditMessageMedia.
-type EditMessageMediaJSONBody = map[string]interface{}
+type EditMessageMediaJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	ChatId               int    `json:"chat_id"`
+	InlineMessageId      string `json:"inline_message_id"`
+
+	// Media This object represents the content of a media message to be sent. It should be one of
+	// InputMediaAnimation
+	// InputMediaDocument
+	// InputMediaAudio
+	// InputMediaPhoto
+	// InputMediaVideo
+	Media     InputMedia `json:"media"`
+	MessageId int        `json:"message_id"`
+
+	// ReplyMarkup This object represents an inline keyboard that appears right next to the message it belongs to.
+	ReplyMarkup InlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// EditMessageMediaMultipartBody defines parameters for EditMessageMedia.
+type EditMessageMediaMultipartBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	ChatId               int    `json:"chat_id"`
+	InlineMessageId      string `json:"inline_message_id"`
+
+	// Media This object represents the content of a media message to be sent. It should be one of
+	// InputMediaAnimation
+	// InputMediaDocument
+	// InputMediaAudio
+	// InputMediaPhoto
+	// InputMediaVideo
+	Media     InputMedia `json:"media"`
+	MessageId int        `json:"message_id"`
+
+	// ReplyMarkup This object represents an inline keyboard that appears right next to the message it belongs to.
+	ReplyMarkup InlineKeyboardMarkup `json:"reply_markup"`
+}
 
 // EditMessageReplyMarkupJSONBody defines parameters for EditMessageReplyMarkup.
-type EditMessageReplyMarkupJSONBody = map[string]interface{}
+type EditMessageReplyMarkupJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	ChatId               int    `json:"chat_id"`
+	InlineMessageId      string `json:"inline_message_id"`
+	MessageId            int    `json:"message_id"`
+
+	// ReplyMarkup This object represents an inline keyboard that appears right next to the message it belongs to.
+	ReplyMarkup InlineKeyboardMarkup `json:"reply_markup"`
+}
 
 // EditMessageTextJSONBody defines parameters for EditMessageText.
-type EditMessageTextJSONBody = map[string]interface{}
+type EditMessageTextJSONBody struct {
+	BusinessConnectionId string          `json:"business_connection_id"`
+	ChatId               int             `json:"chat_id"`
+	Entities             []MessageEntity `json:"entities"`
+	InlineMessageId      string          `json:"inline_message_id"`
+
+	// LinkPreviewOptions Describes the options used for link preview generation.
+	LinkPreviewOptions LinkPreviewOptions `json:"link_preview_options"`
+	MessageId          int                `json:"message_id"`
+	ParseMode          string             `json:"parse_mode"`
+
+	// ReplyMarkup This object represents an inline keyboard that appears right next to the message it belongs to.
+	ReplyMarkup InlineKeyboardMarkup `json:"reply_markup"`
+	Text        string               `json:"text"`
+}
 
 // EditStoryJSONBody defines parameters for EditStory.
-type EditStoryJSONBody = map[string]interface{}
+type EditStoryJSONBody struct {
+	Areas                []StoryArea     `json:"areas"`
+	BusinessConnectionId string          `json:"business_connection_id"`
+	Caption              string          `json:"caption"`
+	CaptionEntities      []MessageEntity `json:"caption_entities"`
+
+	// Content This object describes the content of a story to post. Currently, it can be one of
+	// InputStoryContentPhoto
+	// InputStoryContentVideo
+	Content   InputStoryContent `json:"content"`
+	ParseMode string            `json:"parse_mode"`
+	StoryId   int               `json:"story_id"`
+}
 
 // EditUserStarSubscriptionJSONBody defines parameters for EditUserStarSubscription.
-type EditUserStarSubscriptionJSONBody = map[string]interface{}
+type EditUserStarSubscriptionJSONBody struct {
+	IsCanceled              bool   `json:"is_canceled"`
+	TelegramPaymentChargeId string `json:"telegram_payment_charge_id"`
+	UserId                  int    `json:"user_id"`
+}
 
 // ExportChatInviteLinkJSONBody defines parameters for ExportChatInviteLink.
-type ExportChatInviteLinkJSONBody = map[string]interface{}
+type ExportChatInviteLinkJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
 
 // ForwardMessageJSONBody defines parameters for ForwardMessage.
-type ForwardMessageJSONBody = map[string]interface{}
+type ForwardMessageJSONBody struct {
+	ChatId                int                               `json:"chat_id"`
+	DirectMessagesTopicId int                               `json:"direct_messages_topic_id"`
+	DisableNotification   bool                              `json:"disable_notification"`
+	FromChatId            ForwardMessageJSONBody_FromChatId `json:"from_chat_id"`
+	MessageId             int                               `json:"message_id"`
+	MessageThreadId       int                               `json:"message_thread_id"`
+	ProtectContent        bool                              `json:"protect_content"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	VideoStartTimestamp     int                     `json:"video_start_timestamp"`
+}
+
+// ForwardMessageJSONBodyFromChatId0 defines parameters for ForwardMessage.
+type ForwardMessageJSONBodyFromChatId0 = int
+
+// ForwardMessageJSONBodyFromChatId1 defines parameters for ForwardMessage.
+type ForwardMessageJSONBodyFromChatId1 = string
+
+// ForwardMessageJSONBody_FromChatId defines parameters for ForwardMessage.
+type ForwardMessageJSONBody_FromChatId struct {
+	union json.RawMessage
+}
 
 // ForwardMessagesJSONBody defines parameters for ForwardMessages.
-type ForwardMessagesJSONBody = map[string]interface{}
+type ForwardMessagesJSONBody struct {
+	ChatId                int                                `json:"chat_id"`
+	DirectMessagesTopicId int                                `json:"direct_messages_topic_id"`
+	DisableNotification   bool                               `json:"disable_notification"`
+	FromChatId            ForwardMessagesJSONBody_FromChatId `json:"from_chat_id"`
+	MessageIds            []int                              `json:"message_ids"`
+	MessageThreadId       int                                `json:"message_thread_id"`
+	ProtectContent        bool                               `json:"protect_content"`
+}
 
-// GetAvailableGiftsJSONBody defines parameters for GetAvailableGifts.
-type GetAvailableGiftsJSONBody = map[string]interface{}
+// ForwardMessagesJSONBodyFromChatId0 defines parameters for ForwardMessages.
+type ForwardMessagesJSONBodyFromChatId0 = int
+
+// ForwardMessagesJSONBodyFromChatId1 defines parameters for ForwardMessages.
+type ForwardMessagesJSONBodyFromChatId1 = string
+
+// ForwardMessagesJSONBody_FromChatId defines parameters for ForwardMessages.
+type ForwardMessagesJSONBody_FromChatId struct {
+	union json.RawMessage
+}
 
 // GetBusinessAccountGiftsJSONBody defines parameters for GetBusinessAccountGifts.
-type GetBusinessAccountGiftsJSONBody = map[string]interface{}
+type GetBusinessAccountGiftsJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	ExcludeLimited       bool   `json:"exclude_limited"`
+	ExcludeSaved         bool   `json:"exclude_saved"`
+	ExcludeUnique        bool   `json:"exclude_unique"`
+	ExcludeUnlimited     bool   `json:"exclude_unlimited"`
+	ExcludeUnsaved       bool   `json:"exclude_unsaved"`
+	Limit                int    `json:"limit"`
+	Offset               string `json:"offset"`
+	SortByPrice          bool   `json:"sort_by_price"`
+}
 
 // GetBusinessAccountStarBalanceJSONBody defines parameters for GetBusinessAccountStarBalance.
-type GetBusinessAccountStarBalanceJSONBody = map[string]interface{}
+type GetBusinessAccountStarBalanceJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+}
 
 // GetBusinessConnectionJSONBody defines parameters for GetBusinessConnection.
-type GetBusinessConnectionJSONBody = map[string]interface{}
+type GetBusinessConnectionJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+}
 
 // GetChatJSONBody defines parameters for GetChat.
-type GetChatJSONBody = map[string]interface{}
+type GetChatJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
 
 // GetChatAdministratorsJSONBody defines parameters for GetChatAdministrators.
-type GetChatAdministratorsJSONBody = map[string]interface{}
+type GetChatAdministratorsJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
 
 // GetChatMemberJSONBody defines parameters for GetChatMember.
-type GetChatMemberJSONBody = map[string]interface{}
+type GetChatMemberJSONBody struct {
+	ChatId int `json:"chat_id"`
+	UserId int `json:"user_id"`
+}
 
 // GetChatMemberCountJSONBody defines parameters for GetChatMemberCount.
-type GetChatMemberCountJSONBody = map[string]interface{}
+type GetChatMemberCountJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
 
 // GetChatMenuButtonJSONBody defines parameters for GetChatMenuButton.
-type GetChatMenuButtonJSONBody = map[string]interface{}
+type GetChatMenuButtonJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
 
 // GetCustomEmojiStickersJSONBody defines parameters for GetCustomEmojiStickers.
-type GetCustomEmojiStickersJSONBody = map[string]interface{}
+type GetCustomEmojiStickersJSONBody struct {
+	CustomEmojiIds []string `json:"custom_emoji_ids"`
+}
 
 // GetFileJSONBody defines parameters for GetFile.
-type GetFileJSONBody = map[string]interface{}
-
-// GetForumTopicIconStickersJSONBody defines parameters for GetForumTopicIconStickers.
-type GetForumTopicIconStickersJSONBody = map[string]interface{}
+type GetFileJSONBody struct {
+	FileId string `json:"file_id"`
+}
 
 // GetGameHighScoresJSONBody defines parameters for GetGameHighScores.
-type GetGameHighScoresJSONBody = map[string]interface{}
-
-// GetMeJSONBody defines parameters for GetMe.
-type GetMeJSONBody = map[string]interface{}
+type GetGameHighScoresJSONBody struct {
+	ChatId          int    `json:"chat_id"`
+	InlineMessageId string `json:"inline_message_id"`
+	MessageId       int    `json:"message_id"`
+	UserId          int    `json:"user_id"`
+}
 
 // GetMyCommandsJSONBody defines parameters for GetMyCommands.
-type GetMyCommandsJSONBody = map[string]interface{}
+type GetMyCommandsJSONBody struct {
+	LanguageCode string `json:"language_code"`
+
+	// Scope This object represents the scope to which bot commands are applied. Currently, the following 7 scopes are supported:
+	// BotCommandScopeDefault
+	// BotCommandScopeAllPrivateChats
+	// BotCommandScopeAllGroupChats
+	// BotCommandScopeAllChatAdministrators
+	// BotCommandScopeChat
+	// BotCommandScopeChatAdministrators
+	// BotCommandScopeChatMember
+	Scope BotCommandScope `json:"scope"`
+}
 
 // GetMyDefaultAdministratorRightsJSONBody defines parameters for GetMyDefaultAdministratorRights.
-type GetMyDefaultAdministratorRightsJSONBody = map[string]interface{}
+type GetMyDefaultAdministratorRightsJSONBody struct {
+	ForChannels bool `json:"for_channels"`
+}
 
 // GetMyDescriptionJSONBody defines parameters for GetMyDescription.
-type GetMyDescriptionJSONBody = map[string]interface{}
+type GetMyDescriptionJSONBody struct {
+	LanguageCode string `json:"language_code"`
+}
 
 // GetMyNameJSONBody defines parameters for GetMyName.
-type GetMyNameJSONBody = map[string]interface{}
+type GetMyNameJSONBody struct {
+	LanguageCode string `json:"language_code"`
+}
 
 // GetMyShortDescriptionJSONBody defines parameters for GetMyShortDescription.
-type GetMyShortDescriptionJSONBody = map[string]interface{}
-
-// GetMyStarBalanceJSONBody defines parameters for GetMyStarBalance.
-type GetMyStarBalanceJSONBody = map[string]interface{}
+type GetMyShortDescriptionJSONBody struct {
+	LanguageCode string `json:"language_code"`
+}
 
 // GetStarTransactionsJSONBody defines parameters for GetStarTransactions.
-type GetStarTransactionsJSONBody = map[string]interface{}
+type GetStarTransactionsJSONBody struct {
+	Limit  int `json:"limit"`
+	Offset int `json:"offset"`
+}
 
 // GetStickerSetJSONBody defines parameters for GetStickerSet.
-type GetStickerSetJSONBody = map[string]interface{}
+type GetStickerSetJSONBody struct {
+	Name string `json:"name"`
+}
 
 // GetUpdatesJSONBody defines parameters for GetUpdates.
-type GetUpdatesJSONBody = map[string]interface{}
+type GetUpdatesJSONBody struct {
+	AllowedUpdates []string `json:"allowed_updates"`
+	Limit          int      `json:"limit"`
+	Offset         int      `json:"offset"`
+	Timeout        int      `json:"timeout"`
+}
 
 // GetUserChatBoostsJSONBody defines parameters for GetUserChatBoosts.
-type GetUserChatBoostsJSONBody = map[string]interface{}
+type GetUserChatBoostsJSONBody struct {
+	ChatId int `json:"chat_id"`
+	UserId int `json:"user_id"`
+}
 
 // GetUserProfilePhotosJSONBody defines parameters for GetUserProfilePhotos.
-type GetUserProfilePhotosJSONBody = map[string]interface{}
-
-// GetWebhookInfoJSONBody defines parameters for GetWebhookInfo.
-type GetWebhookInfoJSONBody = map[string]interface{}
+type GetUserProfilePhotosJSONBody struct {
+	Limit  int `json:"limit"`
+	Offset int `json:"offset"`
+	UserId int `json:"user_id"`
+}
 
 // GiftPremiumSubscriptionJSONBody defines parameters for GiftPremiumSubscription.
-type GiftPremiumSubscriptionJSONBody = map[string]interface{}
+type GiftPremiumSubscriptionJSONBody struct {
+	MonthCount    int             `json:"month_count"`
+	StarCount     int             `json:"star_count"`
+	Text          string          `json:"text"`
+	TextEntities  []MessageEntity `json:"text_entities"`
+	TextParseMode string          `json:"text_parse_mode"`
+	UserId        int             `json:"user_id"`
+}
 
 // HideGeneralForumTopicJSONBody defines parameters for HideGeneralForumTopic.
-type HideGeneralForumTopicJSONBody = map[string]interface{}
+type HideGeneralForumTopicJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
 
 // LeaveChatJSONBody defines parameters for LeaveChat.
-type LeaveChatJSONBody = map[string]interface{}
-
-// LogOutJSONBody defines parameters for LogOut.
-type LogOutJSONBody = map[string]interface{}
+type LeaveChatJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
 
 // PinChatMessageJSONBody defines parameters for PinChatMessage.
-type PinChatMessageJSONBody = map[string]interface{}
+type PinChatMessageJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	ChatId               int    `json:"chat_id"`
+	DisableNotification  bool   `json:"disable_notification"`
+	MessageId            int    `json:"message_id"`
+}
 
 // PostStoryJSONBody defines parameters for PostStory.
-type PostStoryJSONBody = map[string]interface{}
+type PostStoryJSONBody struct {
+	ActivePeriod         int             `json:"active_period"`
+	Areas                []StoryArea     `json:"areas"`
+	BusinessConnectionId string          `json:"business_connection_id"`
+	Caption              string          `json:"caption"`
+	CaptionEntities      []MessageEntity `json:"caption_entities"`
+
+	// Content This object describes the content of a story to post. Currently, it can be one of
+	// InputStoryContentPhoto
+	// InputStoryContentVideo
+	Content        InputStoryContent `json:"content"`
+	ParseMode      string            `json:"parse_mode"`
+	PostToChatPage bool              `json:"post_to_chat_page"`
+	ProtectContent bool              `json:"protect_content"`
+}
 
 // PromoteChatMemberJSONBody defines parameters for PromoteChatMember.
-type PromoteChatMemberJSONBody = map[string]interface{}
+type PromoteChatMemberJSONBody struct {
+	CanChangeInfo           bool `json:"can_change_info"`
+	CanDeleteMessages       bool `json:"can_delete_messages"`
+	CanDeleteStories        bool `json:"can_delete_stories"`
+	CanEditMessages         bool `json:"can_edit_messages"`
+	CanEditStories          bool `json:"can_edit_stories"`
+	CanInviteUsers          bool `json:"can_invite_users"`
+	CanManageChat           bool `json:"can_manage_chat"`
+	CanManageDirectMessages bool `json:"can_manage_direct_messages"`
+	CanManageTopics         bool `json:"can_manage_topics"`
+	CanManageVideoChats     bool `json:"can_manage_video_chats"`
+	CanPinMessages          bool `json:"can_pin_messages"`
+	CanPostMessages         bool `json:"can_post_messages"`
+	CanPostStories          bool `json:"can_post_stories"`
+	CanPromoteMembers       bool `json:"can_promote_members"`
+	CanRestrictMembers      bool `json:"can_restrict_members"`
+	ChatId                  int  `json:"chat_id"`
+	IsAnonymous             bool `json:"is_anonymous"`
+	UserId                  int  `json:"user_id"`
+}
 
 // ReadBusinessMessageJSONBody defines parameters for ReadBusinessMessage.
-type ReadBusinessMessageJSONBody = map[string]interface{}
+type ReadBusinessMessageJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	ChatId               int    `json:"chat_id"`
+	MessageId            int    `json:"message_id"`
+}
 
 // RefundStarPaymentJSONBody defines parameters for RefundStarPayment.
-type RefundStarPaymentJSONBody = map[string]interface{}
+type RefundStarPaymentJSONBody struct {
+	TelegramPaymentChargeId string `json:"telegram_payment_charge_id"`
+	UserId                  int    `json:"user_id"`
+}
 
 // RemoveBusinessAccountProfilePhotoJSONBody defines parameters for RemoveBusinessAccountProfilePhoto.
-type RemoveBusinessAccountProfilePhotoJSONBody = map[string]interface{}
+type RemoveBusinessAccountProfilePhotoJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	IsPublic             bool   `json:"is_public"`
+}
 
 // RemoveChatVerificationJSONBody defines parameters for RemoveChatVerification.
-type RemoveChatVerificationJSONBody = map[string]interface{}
+type RemoveChatVerificationJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
 
 // RemoveUserVerificationJSONBody defines parameters for RemoveUserVerification.
-type RemoveUserVerificationJSONBody = map[string]interface{}
+type RemoveUserVerificationJSONBody struct {
+	UserId int `json:"user_id"`
+}
 
 // ReopenForumTopicJSONBody defines parameters for ReopenForumTopic.
-type ReopenForumTopicJSONBody = map[string]interface{}
+type ReopenForumTopicJSONBody struct {
+	ChatId          int `json:"chat_id"`
+	MessageThreadId int `json:"message_thread_id"`
+}
 
 // ReopenGeneralForumTopicJSONBody defines parameters for ReopenGeneralForumTopic.
-type ReopenGeneralForumTopicJSONBody = map[string]interface{}
+type ReopenGeneralForumTopicJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
 
 // ReplaceStickerInSetJSONBody defines parameters for ReplaceStickerInSet.
-type ReplaceStickerInSetJSONBody = map[string]interface{}
+type ReplaceStickerInSetJSONBody struct {
+	Name       string `json:"name"`
+	OldSticker string `json:"old_sticker"`
+
+	// Sticker This object describes a sticker to be added to a sticker set.
+	Sticker InputSticker `json:"sticker"`
+	UserId  int          `json:"user_id"`
+}
+
+// ReplaceStickerInSetMultipartBody defines parameters for ReplaceStickerInSet.
+type ReplaceStickerInSetMultipartBody struct {
+	Name       string `json:"name"`
+	OldSticker string `json:"old_sticker"`
+
+	// Sticker This object describes a sticker to be added to a sticker set.
+	Sticker InputSticker `json:"sticker"`
+	UserId  int          `json:"user_id"`
+}
 
 // RestrictChatMemberJSONBody defines parameters for RestrictChatMember.
-type RestrictChatMemberJSONBody = map[string]interface{}
+type RestrictChatMemberJSONBody struct {
+	ChatId int `json:"chat_id"`
+
+	// Permissions Describes actions that a non-administrator user is allowed to take in a chat.
+	Permissions                   ChatPermissions `json:"permissions"`
+	UntilDate                     int             `json:"until_date"`
+	UseIndependentChatPermissions bool            `json:"use_independent_chat_permissions"`
+	UserId                        int             `json:"user_id"`
+}
 
 // RevokeChatInviteLinkJSONBody defines parameters for RevokeChatInviteLink.
-type RevokeChatInviteLinkJSONBody = map[string]interface{}
+type RevokeChatInviteLinkJSONBody struct {
+	ChatId     int    `json:"chat_id"`
+	InviteLink string `json:"invite_link"`
+}
 
 // SavePreparedInlineMessageJSONBody defines parameters for SavePreparedInlineMessage.
-type SavePreparedInlineMessageJSONBody = map[string]interface{}
+type SavePreparedInlineMessageJSONBody struct {
+	AllowBotChats     bool `json:"allow_bot_chats"`
+	AllowChannelChats bool `json:"allow_channel_chats"`
+	AllowGroupChats   bool `json:"allow_group_chats"`
+	AllowUserChats    bool `json:"allow_user_chats"`
+
+	// Result This object represents one result of an inline query. Telegram clients currently support results of the following 20 types:
+	// InlineQueryResultCachedAudio
+	// InlineQueryResultCachedDocument
+	// InlineQueryResultCachedGif
+	// InlineQueryResultCachedMpeg4Gif
+	// InlineQueryResultCachedPhoto
+	// InlineQueryResultCachedSticker
+	// InlineQueryResultCachedVideo
+	// InlineQueryResultCachedVoice
+	// InlineQueryResultArticle
+	// InlineQueryResultAudio
+	// InlineQueryResultContact
+	// InlineQueryResultGame
+	// InlineQueryResultDocument
+	// InlineQueryResultGif
+	// InlineQueryResultLocation
+	// InlineQueryResultMpeg4Gif
+	// InlineQueryResultPhoto
+	// InlineQueryResultVenue
+	// InlineQueryResultVideo
+	// InlineQueryResultVoice
+	// Note: All URLs passed in inline query results will be available to end users and therefore must be assumed to be public.
+	Result InlineQueryResult `json:"result"`
+	UserId int               `json:"user_id"`
+}
 
 // SendAnimationJSONBody defines parameters for SendAnimation.
-type SendAnimationJSONBody = map[string]interface{}
+type SendAnimationJSONBody struct {
+	AllowPaidBroadcast    bool                              `json:"allow_paid_broadcast"`
+	Animation             string                            `json:"animation"`
+	BusinessConnectionId  string                            `json:"business_connection_id"`
+	Caption               string                            `json:"caption"`
+	CaptionEntities       []MessageEntity                   `json:"caption_entities"`
+	ChatId                int                               `json:"chat_id"`
+	DirectMessagesTopicId int                               `json:"direct_messages_topic_id"`
+	DisableNotification   bool                              `json:"disable_notification"`
+	Duration              int                               `json:"duration"`
+	HasSpoiler            bool                              `json:"has_spoiler"`
+	Height                int                               `json:"height"`
+	MessageEffectId       string                            `json:"message_effect_id"`
+	MessageThreadId       int                               `json:"message_thread_id"`
+	ParseMode             string                            `json:"parse_mode"`
+	ProtectContent        bool                              `json:"protect_content"`
+	ReplyMarkup           SendAnimationJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters       ReplyParameters `json:"reply_parameters"`
+	ShowCaptionAboveMedia bool            `json:"show_caption_above_media"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	Thumbnail               string                  `json:"thumbnail"`
+	Width                   int                     `json:"width"`
+}
+
+// SendAnimationMultipartBody defines parameters for SendAnimation.
+type SendAnimationMultipartBody struct {
+	AllowPaidBroadcast    bool                                   `json:"allow_paid_broadcast"`
+	Animation             openapi_types.File                     `json:"animation"`
+	BusinessConnectionId  string                                 `json:"business_connection_id"`
+	Caption               string                                 `json:"caption"`
+	CaptionEntities       []MessageEntity                        `json:"caption_entities"`
+	ChatId                int                                    `json:"chat_id"`
+	DirectMessagesTopicId int                                    `json:"direct_messages_topic_id"`
+	DisableNotification   bool                                   `json:"disable_notification"`
+	Duration              int                                    `json:"duration"`
+	HasSpoiler            bool                                   `json:"has_spoiler"`
+	Height                int                                    `json:"height"`
+	MessageEffectId       string                                 `json:"message_effect_id"`
+	MessageThreadId       int                                    `json:"message_thread_id"`
+	ParseMode             string                                 `json:"parse_mode"`
+	ProtectContent        bool                                   `json:"protect_content"`
+	ReplyMarkup           SendAnimationMultipartBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters       ReplyParameters `json:"reply_parameters"`
+	ShowCaptionAboveMedia bool            `json:"show_caption_above_media"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	Thumbnail               openapi_types.File      `json:"thumbnail"`
+	Width                   int                     `json:"width"`
+}
+
+// SendAnimationJSONBody_ReplyMarkup defines parameters for SendAnimation.
+type SendAnimationJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
+
+// SendAnimationMultipartBody_ReplyMarkup defines parameters for SendAnimation.
+type SendAnimationMultipartBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // SendAudioJSONBody defines parameters for SendAudio.
-type SendAudioJSONBody = map[string]interface{}
+type SendAudioJSONBody struct {
+	AllowPaidBroadcast    bool                          `json:"allow_paid_broadcast"`
+	Audio                 string                        `json:"audio"`
+	BusinessConnectionId  string                        `json:"business_connection_id"`
+	Caption               string                        `json:"caption"`
+	CaptionEntities       []MessageEntity               `json:"caption_entities"`
+	ChatId                int                           `json:"chat_id"`
+	DirectMessagesTopicId int                           `json:"direct_messages_topic_id"`
+	DisableNotification   bool                          `json:"disable_notification"`
+	Duration              int                           `json:"duration"`
+	MessageEffectId       string                        `json:"message_effect_id"`
+	MessageThreadId       int                           `json:"message_thread_id"`
+	ParseMode             string                        `json:"parse_mode"`
+	Performer             string                        `json:"performer"`
+	ProtectContent        bool                          `json:"protect_content"`
+	ReplyMarkup           SendAudioJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	Thumbnail               string                  `json:"thumbnail"`
+	Title                   string                  `json:"title"`
+}
+
+// SendAudioMultipartBody defines parameters for SendAudio.
+type SendAudioMultipartBody struct {
+	AllowPaidBroadcast    bool                               `json:"allow_paid_broadcast"`
+	Audio                 openapi_types.File                 `json:"audio"`
+	BusinessConnectionId  string                             `json:"business_connection_id"`
+	Caption               string                             `json:"caption"`
+	CaptionEntities       []MessageEntity                    `json:"caption_entities"`
+	ChatId                int                                `json:"chat_id"`
+	DirectMessagesTopicId int                                `json:"direct_messages_topic_id"`
+	DisableNotification   bool                               `json:"disable_notification"`
+	Duration              int                                `json:"duration"`
+	MessageEffectId       string                             `json:"message_effect_id"`
+	MessageThreadId       int                                `json:"message_thread_id"`
+	ParseMode             string                             `json:"parse_mode"`
+	Performer             string                             `json:"performer"`
+	ProtectContent        bool                               `json:"protect_content"`
+	ReplyMarkup           SendAudioMultipartBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	Thumbnail               openapi_types.File      `json:"thumbnail"`
+	Title                   string                  `json:"title"`
+}
+
+// SendAudioJSONBody_ReplyMarkup defines parameters for SendAudio.
+type SendAudioJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
+
+// SendAudioMultipartBody_ReplyMarkup defines parameters for SendAudio.
+type SendAudioMultipartBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // SendChatActionJSONBody defines parameters for SendChatAction.
-type SendChatActionJSONBody = map[string]interface{}
+type SendChatActionJSONBody struct {
+	Action               string `json:"action"`
+	BusinessConnectionId string `json:"business_connection_id"`
+	ChatId               int    `json:"chat_id"`
+	MessageThreadId      int    `json:"message_thread_id"`
+}
 
 // SendChecklistJSONBody defines parameters for SendChecklist.
-type SendChecklistJSONBody = map[string]interface{}
+type SendChecklistJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	ChatId               int    `json:"chat_id"`
+
+	// Checklist Describes a checklist to create.
+	Checklist           InputChecklist `json:"checklist"`
+	DisableNotification bool           `json:"disable_notification"`
+	MessageEffectId     string         `json:"message_effect_id"`
+	ProtectContent      bool           `json:"protect_content"`
+
+	// ReplyMarkup This object represents an inline keyboard that appears right next to the message it belongs to.
+	ReplyMarkup InlineKeyboardMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+}
 
 // SendContactJSONBody defines parameters for SendContact.
-type SendContactJSONBody = map[string]interface{}
+type SendContactJSONBody struct {
+	AllowPaidBroadcast    bool                            `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                          `json:"business_connection_id"`
+	ChatId                int                             `json:"chat_id"`
+	DirectMessagesTopicId int                             `json:"direct_messages_topic_id"`
+	DisableNotification   bool                            `json:"disable_notification"`
+	FirstName             string                          `json:"first_name"`
+	LastName              string                          `json:"last_name"`
+	MessageEffectId       string                          `json:"message_effect_id"`
+	MessageThreadId       int                             `json:"message_thread_id"`
+	PhoneNumber           string                          `json:"phone_number"`
+	ProtectContent        bool                            `json:"protect_content"`
+	ReplyMarkup           SendContactJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	Vcard                   string                  `json:"vcard"`
+}
+
+// SendContactJSONBody_ReplyMarkup defines parameters for SendContact.
+type SendContactJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // SendDiceJSONBody defines parameters for SendDice.
-type SendDiceJSONBody = map[string]interface{}
+type SendDiceJSONBody struct {
+	AllowPaidBroadcast    bool                         `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                       `json:"business_connection_id"`
+	ChatId                int                          `json:"chat_id"`
+	DirectMessagesTopicId int                          `json:"direct_messages_topic_id"`
+	DisableNotification   bool                         `json:"disable_notification"`
+	Emoji                 string                       `json:"emoji"`
+	MessageEffectId       string                       `json:"message_effect_id"`
+	MessageThreadId       int                          `json:"message_thread_id"`
+	ProtectContent        bool                         `json:"protect_content"`
+	ReplyMarkup           SendDiceJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+}
+
+// SendDiceJSONBody_ReplyMarkup defines parameters for SendDice.
+type SendDiceJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // SendDocumentJSONBody defines parameters for SendDocument.
-type SendDocumentJSONBody = map[string]interface{}
+type SendDocumentJSONBody struct {
+	AllowPaidBroadcast          bool                             `json:"allow_paid_broadcast"`
+	BusinessConnectionId        string                           `json:"business_connection_id"`
+	Caption                     string                           `json:"caption"`
+	CaptionEntities             []MessageEntity                  `json:"caption_entities"`
+	ChatId                      int                              `json:"chat_id"`
+	DirectMessagesTopicId       int                              `json:"direct_messages_topic_id"`
+	DisableContentTypeDetection bool                             `json:"disable_content_type_detection"`
+	DisableNotification         bool                             `json:"disable_notification"`
+	Document                    string                           `json:"document"`
+	MessageEffectId             string                           `json:"message_effect_id"`
+	MessageThreadId             int                              `json:"message_thread_id"`
+	ParseMode                   string                           `json:"parse_mode"`
+	ProtectContent              bool                             `json:"protect_content"`
+	ReplyMarkup                 SendDocumentJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	Thumbnail               string                  `json:"thumbnail"`
+}
+
+// SendDocumentMultipartBody defines parameters for SendDocument.
+type SendDocumentMultipartBody struct {
+	AllowPaidBroadcast          bool                                  `json:"allow_paid_broadcast"`
+	BusinessConnectionId        string                                `json:"business_connection_id"`
+	Caption                     string                                `json:"caption"`
+	CaptionEntities             []MessageEntity                       `json:"caption_entities"`
+	ChatId                      int                                   `json:"chat_id"`
+	DirectMessagesTopicId       int                                   `json:"direct_messages_topic_id"`
+	DisableContentTypeDetection bool                                  `json:"disable_content_type_detection"`
+	DisableNotification         bool                                  `json:"disable_notification"`
+	Document                    openapi_types.File                    `json:"document"`
+	MessageEffectId             string                                `json:"message_effect_id"`
+	MessageThreadId             int                                   `json:"message_thread_id"`
+	ParseMode                   string                                `json:"parse_mode"`
+	ProtectContent              bool                                  `json:"protect_content"`
+	ReplyMarkup                 SendDocumentMultipartBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	Thumbnail               openapi_types.File      `json:"thumbnail"`
+}
+
+// SendDocumentJSONBody_ReplyMarkup defines parameters for SendDocument.
+type SendDocumentJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
+
+// SendDocumentMultipartBody_ReplyMarkup defines parameters for SendDocument.
+type SendDocumentMultipartBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // SendGameJSONBody defines parameters for SendGame.
-type SendGameJSONBody = map[string]interface{}
+type SendGameJSONBody struct {
+	AllowPaidBroadcast   bool   `json:"allow_paid_broadcast"`
+	BusinessConnectionId string `json:"business_connection_id"`
+	ChatId               int    `json:"chat_id"`
+	DisableNotification  bool   `json:"disable_notification"`
+	GameShortName        string `json:"game_short_name"`
+	MessageEffectId      string `json:"message_effect_id"`
+	MessageThreadId      int    `json:"message_thread_id"`
+	ProtectContent       bool   `json:"protect_content"`
+
+	// ReplyMarkup This object represents an inline keyboard that appears right next to the message it belongs to.
+	ReplyMarkup InlineKeyboardMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+}
 
 // SendGiftJSONBody defines parameters for SendGift.
-type SendGiftJSONBody = map[string]interface{}
+type SendGiftJSONBody struct {
+	ChatId        int             `json:"chat_id"`
+	GiftId        string          `json:"gift_id"`
+	PayForUpgrade bool            `json:"pay_for_upgrade"`
+	Text          string          `json:"text"`
+	TextEntities  []MessageEntity `json:"text_entities"`
+	TextParseMode string          `json:"text_parse_mode"`
+	UserId        int             `json:"user_id"`
+}
 
 // SendInvoiceJSONBody defines parameters for SendInvoice.
-type SendInvoiceJSONBody = map[string]interface{}
+type SendInvoiceJSONBody struct {
+	AllowPaidBroadcast    bool           `json:"allow_paid_broadcast"`
+	ChatId                int            `json:"chat_id"`
+	Currency              string         `json:"currency"`
+	Description           string         `json:"description"`
+	DirectMessagesTopicId int            `json:"direct_messages_topic_id"`
+	DisableNotification   bool           `json:"disable_notification"`
+	IsFlexible            bool           `json:"is_flexible"`
+	MaxTipAmount          int            `json:"max_tip_amount"`
+	MessageEffectId       string         `json:"message_effect_id"`
+	MessageThreadId       int            `json:"message_thread_id"`
+	NeedEmail             bool           `json:"need_email"`
+	NeedName              bool           `json:"need_name"`
+	NeedPhoneNumber       bool           `json:"need_phone_number"`
+	NeedShippingAddress   bool           `json:"need_shipping_address"`
+	Payload               string         `json:"payload"`
+	PhotoHeight           int            `json:"photo_height"`
+	PhotoSize             int            `json:"photo_size"`
+	PhotoUrl              string         `json:"photo_url"`
+	PhotoWidth            int            `json:"photo_width"`
+	Prices                []LabeledPrice `json:"prices"`
+	ProtectContent        bool           `json:"protect_content"`
+	ProviderData          string         `json:"provider_data"`
+	ProviderToken         string         `json:"provider_token"`
+
+	// ReplyMarkup This object represents an inline keyboard that appears right next to the message it belongs to.
+	ReplyMarkup InlineKeyboardMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters           ReplyParameters `json:"reply_parameters"`
+	SendEmailToProvider       bool            `json:"send_email_to_provider"`
+	SendPhoneNumberToProvider bool            `json:"send_phone_number_to_provider"`
+	StartParameter            string          `json:"start_parameter"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	SuggestedTipAmounts     []int                   `json:"suggested_tip_amounts"`
+	Title                   string                  `json:"title"`
+}
 
 // SendLocationJSONBody defines parameters for SendLocation.
-type SendLocationJSONBody = map[string]interface{}
+type SendLocationJSONBody struct {
+	AllowPaidBroadcast    bool                             `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                           `json:"business_connection_id"`
+	ChatId                int                              `json:"chat_id"`
+	DirectMessagesTopicId int                              `json:"direct_messages_topic_id"`
+	DisableNotification   bool                             `json:"disable_notification"`
+	Heading               int                              `json:"heading"`
+	HorizontalAccuracy    float32                          `json:"horizontal_accuracy"`
+	Latitude              float32                          `json:"latitude"`
+	LivePeriod            int                              `json:"live_period"`
+	Longitude             float32                          `json:"longitude"`
+	MessageEffectId       string                           `json:"message_effect_id"`
+	MessageThreadId       int                              `json:"message_thread_id"`
+	ProtectContent        bool                             `json:"protect_content"`
+	ProximityAlertRadius  int                              `json:"proximity_alert_radius"`
+	ReplyMarkup           SendLocationJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+}
+
+// SendLocationJSONBody_ReplyMarkup defines parameters for SendLocation.
+type SendLocationJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // SendMediaGroupJSONBody defines parameters for SendMediaGroup.
-type SendMediaGroupJSONBody = map[string]interface{}
+type SendMediaGroupJSONBody struct {
+	AllowPaidBroadcast    bool                                `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                              `json:"business_connection_id"`
+	ChatId                int                                 `json:"chat_id"`
+	DirectMessagesTopicId int                                 `json:"direct_messages_topic_id"`
+	DisableNotification   bool                                `json:"disable_notification"`
+	Media                 []SendMediaGroupJSONBody_Media_Item `json:"media"`
+	MessageEffectId       string                              `json:"message_effect_id"`
+	MessageThreadId       int                                 `json:"message_thread_id"`
+	ProtectContent        bool                                `json:"protect_content"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+}
+
+// SendMediaGroupMultipartBody defines parameters for SendMediaGroup.
+type SendMediaGroupMultipartBody struct {
+	AllowPaidBroadcast    bool                                     `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                                   `json:"business_connection_id"`
+	ChatId                int                                      `json:"chat_id"`
+	DirectMessagesTopicId int                                      `json:"direct_messages_topic_id"`
+	DisableNotification   bool                                     `json:"disable_notification"`
+	Media                 []SendMediaGroupMultipartBody_Media_Item `json:"media"`
+	MessageEffectId       string                                   `json:"message_effect_id"`
+	MessageThreadId       int                                      `json:"message_thread_id"`
+	ProtectContent        bool                                     `json:"protect_content"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+}
+
+// SendMediaGroupJSONBody_Media_Item defines parameters for SendMediaGroup.
+type SendMediaGroupJSONBody_Media_Item struct {
+	union json.RawMessage
+}
+
+// SendMediaGroupMultipartBody_Media_Item defines parameters for SendMediaGroup.
+type SendMediaGroupMultipartBody_Media_Item struct {
+	union json.RawMessage
+}
 
 // SendMessageJSONBody defines parameters for SendMessage.
-type SendMessageJSONBody = map[string]interface{}
+type SendMessageJSONBody struct {
+	AllowPaidBroadcast    bool            `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string          `json:"business_connection_id"`
+	ChatId                int             `json:"chat_id"`
+	DirectMessagesTopicId int             `json:"direct_messages_topic_id"`
+	DisableNotification   bool            `json:"disable_notification"`
+	Entities              []MessageEntity `json:"entities"`
+
+	// LinkPreviewOptions Describes the options used for link preview generation.
+	LinkPreviewOptions LinkPreviewOptions              `json:"link_preview_options"`
+	MessageEffectId    string                          `json:"message_effect_id"`
+	MessageThreadId    int                             `json:"message_thread_id"`
+	ParseMode          string                          `json:"parse_mode"`
+	ProtectContent     bool                            `json:"protect_content"`
+	ReplyMarkup        SendMessageJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	Text                    string                  `json:"text"`
+}
+
+// SendMessageJSONBody_ReplyMarkup defines parameters for SendMessage.
+type SendMessageJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // SendPaidMediaJSONBody defines parameters for SendPaidMedia.
-type SendPaidMediaJSONBody = map[string]interface{}
+type SendPaidMediaJSONBody struct {
+	AllowPaidBroadcast    bool                              `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                            `json:"business_connection_id"`
+	Caption               string                            `json:"caption"`
+	CaptionEntities       []MessageEntity                   `json:"caption_entities"`
+	ChatId                int                               `json:"chat_id"`
+	DirectMessagesTopicId int                               `json:"direct_messages_topic_id"`
+	DisableNotification   bool                              `json:"disable_notification"`
+	Media                 []InputPaidMedia                  `json:"media"`
+	MessageThreadId       int                               `json:"message_thread_id"`
+	ParseMode             string                            `json:"parse_mode"`
+	Payload               string                            `json:"payload"`
+	ProtectContent        bool                              `json:"protect_content"`
+	ReplyMarkup           SendPaidMediaJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters       ReplyParameters `json:"reply_parameters"`
+	ShowCaptionAboveMedia bool            `json:"show_caption_above_media"`
+	StarCount             int             `json:"star_count"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+}
+
+// SendPaidMediaJSONBody_ReplyMarkup defines parameters for SendPaidMedia.
+type SendPaidMediaJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // SendPhotoJSONBody defines parameters for SendPhoto.
-type SendPhotoJSONBody = map[string]interface{}
+type SendPhotoJSONBody struct {
+	AllowPaidBroadcast    bool                          `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                        `json:"business_connection_id"`
+	Caption               string                        `json:"caption"`
+	CaptionEntities       []MessageEntity               `json:"caption_entities"`
+	ChatId                int                           `json:"chat_id"`
+	DirectMessagesTopicId int                           `json:"direct_messages_topic_id"`
+	DisableNotification   bool                          `json:"disable_notification"`
+	HasSpoiler            bool                          `json:"has_spoiler"`
+	MessageEffectId       string                        `json:"message_effect_id"`
+	MessageThreadId       int                           `json:"message_thread_id"`
+	ParseMode             string                        `json:"parse_mode"`
+	Photo                 string                        `json:"photo"`
+	ProtectContent        bool                          `json:"protect_content"`
+	ReplyMarkup           SendPhotoJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters       ReplyParameters `json:"reply_parameters"`
+	ShowCaptionAboveMedia bool            `json:"show_caption_above_media"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+}
+
+// SendPhotoMultipartBody defines parameters for SendPhoto.
+type SendPhotoMultipartBody struct {
+	AllowPaidBroadcast    bool                               `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                             `json:"business_connection_id"`
+	Caption               string                             `json:"caption"`
+	CaptionEntities       []MessageEntity                    `json:"caption_entities"`
+	ChatId                int                                `json:"chat_id"`
+	DirectMessagesTopicId int                                `json:"direct_messages_topic_id"`
+	DisableNotification   bool                               `json:"disable_notification"`
+	HasSpoiler            bool                               `json:"has_spoiler"`
+	MessageEffectId       string                             `json:"message_effect_id"`
+	MessageThreadId       int                                `json:"message_thread_id"`
+	ParseMode             string                             `json:"parse_mode"`
+	Photo                 openapi_types.File                 `json:"photo"`
+	ProtectContent        bool                               `json:"protect_content"`
+	ReplyMarkup           SendPhotoMultipartBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters       ReplyParameters `json:"reply_parameters"`
+	ShowCaptionAboveMedia bool            `json:"show_caption_above_media"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+}
+
+// SendPhotoJSONBody_ReplyMarkup defines parameters for SendPhoto.
+type SendPhotoJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
+
+// SendPhotoMultipartBody_ReplyMarkup defines parameters for SendPhoto.
+type SendPhotoMultipartBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // SendPollJSONBody defines parameters for SendPoll.
-type SendPollJSONBody = map[string]interface{}
+type SendPollJSONBody struct {
+	AllowPaidBroadcast    bool                         `json:"allow_paid_broadcast"`
+	AllowsMultipleAnswers bool                         `json:"allows_multiple_answers"`
+	BusinessConnectionId  string                       `json:"business_connection_id"`
+	ChatId                int                          `json:"chat_id"`
+	CloseDate             int                          `json:"close_date"`
+	CorrectOptionId       int                          `json:"correct_option_id"`
+	DisableNotification   bool                         `json:"disable_notification"`
+	Explanation           string                       `json:"explanation"`
+	ExplanationEntities   []MessageEntity              `json:"explanation_entities"`
+	ExplanationParseMode  string                       `json:"explanation_parse_mode"`
+	IsAnonymous           bool                         `json:"is_anonymous"`
+	IsClosed              bool                         `json:"is_closed"`
+	MessageEffectId       string                       `json:"message_effect_id"`
+	MessageThreadId       int                          `json:"message_thread_id"`
+	OpenPeriod            int                          `json:"open_period"`
+	Options               []InputPollOption            `json:"options"`
+	ProtectContent        bool                         `json:"protect_content"`
+	Question              string                       `json:"question"`
+	QuestionEntities      []MessageEntity              `json:"question_entities"`
+	QuestionParseMode     string                       `json:"question_parse_mode"`
+	ReplyMarkup           SendPollJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+	Type            string          `json:"type"`
+}
+
+// SendPollJSONBody_ReplyMarkup defines parameters for SendPoll.
+type SendPollJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // SendStickerJSONBody defines parameters for SendSticker.
-type SendStickerJSONBody = map[string]interface{}
+type SendStickerJSONBody struct {
+	AllowPaidBroadcast    bool                            `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                          `json:"business_connection_id"`
+	ChatId                int                             `json:"chat_id"`
+	DirectMessagesTopicId int                             `json:"direct_messages_topic_id"`
+	DisableNotification   bool                            `json:"disable_notification"`
+	Emoji                 string                          `json:"emoji"`
+	MessageEffectId       string                          `json:"message_effect_id"`
+	MessageThreadId       int                             `json:"message_thread_id"`
+	ProtectContent        bool                            `json:"protect_content"`
+	ReplyMarkup           SendStickerJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+	Sticker         string          `json:"sticker"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+}
+
+// SendStickerMultipartBody defines parameters for SendSticker.
+type SendStickerMultipartBody struct {
+	AllowPaidBroadcast    bool                                 `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                               `json:"business_connection_id"`
+	ChatId                int                                  `json:"chat_id"`
+	DirectMessagesTopicId int                                  `json:"direct_messages_topic_id"`
+	DisableNotification   bool                                 `json:"disable_notification"`
+	Emoji                 string                               `json:"emoji"`
+	MessageEffectId       string                               `json:"message_effect_id"`
+	MessageThreadId       int                                  `json:"message_thread_id"`
+	ProtectContent        bool                                 `json:"protect_content"`
+	ReplyMarkup           SendStickerMultipartBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters    `json:"reply_parameters"`
+	Sticker         openapi_types.File `json:"sticker"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+}
+
+// SendStickerJSONBody_ReplyMarkup defines parameters for SendSticker.
+type SendStickerJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
+
+// SendStickerMultipartBody_ReplyMarkup defines parameters for SendSticker.
+type SendStickerMultipartBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // SendVenueJSONBody defines parameters for SendVenue.
-type SendVenueJSONBody = map[string]interface{}
+type SendVenueJSONBody struct {
+	Address               string                        `json:"address"`
+	AllowPaidBroadcast    bool                          `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                        `json:"business_connection_id"`
+	ChatId                int                           `json:"chat_id"`
+	DirectMessagesTopicId int                           `json:"direct_messages_topic_id"`
+	DisableNotification   bool                          `json:"disable_notification"`
+	FoursquareId          string                        `json:"foursquare_id"`
+	FoursquareType        string                        `json:"foursquare_type"`
+	GooglePlaceId         string                        `json:"google_place_id"`
+	GooglePlaceType       string                        `json:"google_place_type"`
+	Latitude              float32                       `json:"latitude"`
+	Longitude             float32                       `json:"longitude"`
+	MessageEffectId       string                        `json:"message_effect_id"`
+	MessageThreadId       int                           `json:"message_thread_id"`
+	ProtectContent        bool                          `json:"protect_content"`
+	ReplyMarkup           SendVenueJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	Title                   string                  `json:"title"`
+}
+
+// SendVenueJSONBody_ReplyMarkup defines parameters for SendVenue.
+type SendVenueJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // SendVideoJSONBody defines parameters for SendVideo.
-type SendVideoJSONBody = map[string]interface{}
+type SendVideoJSONBody struct {
+	AllowPaidBroadcast    bool                          `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                        `json:"business_connection_id"`
+	Caption               string                        `json:"caption"`
+	CaptionEntities       []MessageEntity               `json:"caption_entities"`
+	ChatId                int                           `json:"chat_id"`
+	Cover                 string                        `json:"cover"`
+	DirectMessagesTopicId int                           `json:"direct_messages_topic_id"`
+	DisableNotification   bool                          `json:"disable_notification"`
+	Duration              int                           `json:"duration"`
+	HasSpoiler            bool                          `json:"has_spoiler"`
+	Height                int                           `json:"height"`
+	MessageEffectId       string                        `json:"message_effect_id"`
+	MessageThreadId       int                           `json:"message_thread_id"`
+	ParseMode             string                        `json:"parse_mode"`
+	ProtectContent        bool                          `json:"protect_content"`
+	ReplyMarkup           SendVideoJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters       ReplyParameters `json:"reply_parameters"`
+	ShowCaptionAboveMedia bool            `json:"show_caption_above_media"`
+	StartTimestamp        int             `json:"start_timestamp"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	SupportsStreaming       bool                    `json:"supports_streaming"`
+	Thumbnail               string                  `json:"thumbnail"`
+	Video                   string                  `json:"video"`
+	Width                   int                     `json:"width"`
+}
+
+// SendVideoMultipartBody defines parameters for SendVideo.
+type SendVideoMultipartBody struct {
+	AllowPaidBroadcast    bool                               `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                             `json:"business_connection_id"`
+	Caption               string                             `json:"caption"`
+	CaptionEntities       []MessageEntity                    `json:"caption_entities"`
+	ChatId                int                                `json:"chat_id"`
+	Cover                 openapi_types.File                 `json:"cover"`
+	DirectMessagesTopicId int                                `json:"direct_messages_topic_id"`
+	DisableNotification   bool                               `json:"disable_notification"`
+	Duration              int                                `json:"duration"`
+	HasSpoiler            bool                               `json:"has_spoiler"`
+	Height                int                                `json:"height"`
+	MessageEffectId       string                             `json:"message_effect_id"`
+	MessageThreadId       int                                `json:"message_thread_id"`
+	ParseMode             string                             `json:"parse_mode"`
+	ProtectContent        bool                               `json:"protect_content"`
+	ReplyMarkup           SendVideoMultipartBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters       ReplyParameters `json:"reply_parameters"`
+	ShowCaptionAboveMedia bool            `json:"show_caption_above_media"`
+	StartTimestamp        int             `json:"start_timestamp"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	SupportsStreaming       bool                    `json:"supports_streaming"`
+	Thumbnail               openapi_types.File      `json:"thumbnail"`
+	Video                   openapi_types.File      `json:"video"`
+	Width                   int                     `json:"width"`
+}
+
+// SendVideoJSONBody_ReplyMarkup defines parameters for SendVideo.
+type SendVideoJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
+
+// SendVideoMultipartBody_ReplyMarkup defines parameters for SendVideo.
+type SendVideoMultipartBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // SendVideoNoteJSONBody defines parameters for SendVideoNote.
-type SendVideoNoteJSONBody = map[string]interface{}
+type SendVideoNoteJSONBody struct {
+	AllowPaidBroadcast    bool                              `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                            `json:"business_connection_id"`
+	ChatId                int                               `json:"chat_id"`
+	DirectMessagesTopicId int                               `json:"direct_messages_topic_id"`
+	DisableNotification   bool                              `json:"disable_notification"`
+	Duration              int                               `json:"duration"`
+	Length                int                               `json:"length"`
+	MessageEffectId       string                            `json:"message_effect_id"`
+	MessageThreadId       int                               `json:"message_thread_id"`
+	ProtectContent        bool                              `json:"protect_content"`
+	ReplyMarkup           SendVideoNoteJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	Thumbnail               string                  `json:"thumbnail"`
+	VideoNote               string                  `json:"video_note"`
+}
+
+// SendVideoNoteMultipartBody defines parameters for SendVideoNote.
+type SendVideoNoteMultipartBody struct {
+	AllowPaidBroadcast    bool                                   `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                                 `json:"business_connection_id"`
+	ChatId                int                                    `json:"chat_id"`
+	DirectMessagesTopicId int                                    `json:"direct_messages_topic_id"`
+	DisableNotification   bool                                   `json:"disable_notification"`
+	Duration              int                                    `json:"duration"`
+	Length                int                                    `json:"length"`
+	MessageEffectId       string                                 `json:"message_effect_id"`
+	MessageThreadId       int                                    `json:"message_thread_id"`
+	ProtectContent        bool                                   `json:"protect_content"`
+	ReplyMarkup           SendVideoNoteMultipartBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	Thumbnail               openapi_types.File      `json:"thumbnail"`
+	VideoNote               openapi_types.File      `json:"video_note"`
+}
+
+// SendVideoNoteJSONBody_ReplyMarkup defines parameters for SendVideoNote.
+type SendVideoNoteJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
+
+// SendVideoNoteMultipartBody_ReplyMarkup defines parameters for SendVideoNote.
+type SendVideoNoteMultipartBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // SendVoiceJSONBody defines parameters for SendVoice.
-type SendVoiceJSONBody = map[string]interface{}
+type SendVoiceJSONBody struct {
+	AllowPaidBroadcast    bool                          `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                        `json:"business_connection_id"`
+	Caption               string                        `json:"caption"`
+	CaptionEntities       []MessageEntity               `json:"caption_entities"`
+	ChatId                int                           `json:"chat_id"`
+	DirectMessagesTopicId int                           `json:"direct_messages_topic_id"`
+	DisableNotification   bool                          `json:"disable_notification"`
+	Duration              int                           `json:"duration"`
+	MessageEffectId       string                        `json:"message_effect_id"`
+	MessageThreadId       int                           `json:"message_thread_id"`
+	ParseMode             string                        `json:"parse_mode"`
+	ProtectContent        bool                          `json:"protect_content"`
+	ReplyMarkup           SendVoiceJSONBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	Voice                   string                  `json:"voice"`
+}
+
+// SendVoiceMultipartBody defines parameters for SendVoice.
+type SendVoiceMultipartBody struct {
+	AllowPaidBroadcast    bool                               `json:"allow_paid_broadcast"`
+	BusinessConnectionId  string                             `json:"business_connection_id"`
+	Caption               string                             `json:"caption"`
+	CaptionEntities       []MessageEntity                    `json:"caption_entities"`
+	ChatId                int                                `json:"chat_id"`
+	DirectMessagesTopicId int                                `json:"direct_messages_topic_id"`
+	DisableNotification   bool                               `json:"disable_notification"`
+	Duration              int                                `json:"duration"`
+	MessageEffectId       string                             `json:"message_effect_id"`
+	MessageThreadId       int                                `json:"message_thread_id"`
+	ParseMode             string                             `json:"parse_mode"`
+	ProtectContent        bool                               `json:"protect_content"`
+	ReplyMarkup           SendVoiceMultipartBody_ReplyMarkup `json:"reply_markup"`
+
+	// ReplyParameters Describes reply parameters for the message that is being sent.
+	ReplyParameters ReplyParameters `json:"reply_parameters"`
+
+	// SuggestedPostParameters Contains parameters of a post that is being suggested by the bot.
+	SuggestedPostParameters SuggestedPostParameters `json:"suggested_post_parameters"`
+	Voice                   openapi_types.File      `json:"voice"`
+}
+
+// SendVoiceJSONBody_ReplyMarkup defines parameters for SendVoice.
+type SendVoiceJSONBody_ReplyMarkup struct {
+	union json.RawMessage
+}
+
+// SendVoiceMultipartBody_ReplyMarkup defines parameters for SendVoice.
+type SendVoiceMultipartBody_ReplyMarkup struct {
+	union json.RawMessage
+}
 
 // SetBusinessAccountBioJSONBody defines parameters for SetBusinessAccountBio.
-type SetBusinessAccountBioJSONBody = map[string]interface{}
+type SetBusinessAccountBioJSONBody struct {
+	Bio                  string `json:"bio"`
+	BusinessConnectionId string `json:"business_connection_id"`
+}
 
 // SetBusinessAccountGiftSettingsJSONBody defines parameters for SetBusinessAccountGiftSettings.
-type SetBusinessAccountGiftSettingsJSONBody = map[string]interface{}
+type SetBusinessAccountGiftSettingsJSONBody struct {
+	// AcceptedGiftTypes This object describes the types of gifts that can be gifted to a user or a chat.
+	AcceptedGiftTypes    AcceptedGiftTypes `json:"accepted_gift_types"`
+	BusinessConnectionId string            `json:"business_connection_id"`
+	ShowGiftButton       bool              `json:"show_gift_button"`
+}
 
 // SetBusinessAccountNameJSONBody defines parameters for SetBusinessAccountName.
-type SetBusinessAccountNameJSONBody = map[string]interface{}
+type SetBusinessAccountNameJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	FirstName            string `json:"first_name"`
+	LastName             string `json:"last_name"`
+}
 
 // SetBusinessAccountProfilePhotoJSONBody defines parameters for SetBusinessAccountProfilePhoto.
-type SetBusinessAccountProfilePhotoJSONBody = map[string]interface{}
+type SetBusinessAccountProfilePhotoJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	IsPublic             bool   `json:"is_public"`
+
+	// Photo This object describes a profile photo to set. Currently, it can be one of
+	// InputProfilePhotoStatic
+	// InputProfilePhotoAnimated
+	Photo InputProfilePhoto `json:"photo"`
+}
 
 // SetBusinessAccountUsernameJSONBody defines parameters for SetBusinessAccountUsername.
-type SetBusinessAccountUsernameJSONBody = map[string]interface{}
+type SetBusinessAccountUsernameJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	Username             string `json:"username"`
+}
 
 // SetChatAdministratorCustomTitleJSONBody defines parameters for SetChatAdministratorCustomTitle.
-type SetChatAdministratorCustomTitleJSONBody = map[string]interface{}
+type SetChatAdministratorCustomTitleJSONBody struct {
+	ChatId      int    `json:"chat_id"`
+	CustomTitle string `json:"custom_title"`
+	UserId      int    `json:"user_id"`
+}
 
 // SetChatDescriptionJSONBody defines parameters for SetChatDescription.
-type SetChatDescriptionJSONBody = map[string]interface{}
+type SetChatDescriptionJSONBody struct {
+	ChatId      int    `json:"chat_id"`
+	Description string `json:"description"`
+}
 
 // SetChatMenuButtonJSONBody defines parameters for SetChatMenuButton.
-type SetChatMenuButtonJSONBody = map[string]interface{}
+type SetChatMenuButtonJSONBody struct {
+	ChatId int `json:"chat_id"`
+
+	// MenuButton This object describes the bot's menu button in a private chat. It should be one of
+	// MenuButtonCommands
+	// MenuButtonWebApp
+	// MenuButtonDefault
+	// If a menu button other than MenuButtonDefault is set for a private chat, then it is applied in the chat. Otherwise the default menu button is applied. By default, the menu button opens the list of bot commands.
+	MenuButton MenuButton `json:"menu_button"`
+}
 
 // SetChatPermissionsJSONBody defines parameters for SetChatPermissions.
-type SetChatPermissionsJSONBody = map[string]interface{}
+type SetChatPermissionsJSONBody struct {
+	ChatId int `json:"chat_id"`
+
+	// Permissions Describes actions that a non-administrator user is allowed to take in a chat.
+	Permissions                   ChatPermissions `json:"permissions"`
+	UseIndependentChatPermissions bool            `json:"use_independent_chat_permissions"`
+}
 
 // SetChatPhotoJSONBody defines parameters for SetChatPhoto.
-type SetChatPhotoJSONBody = map[string]interface{}
+type SetChatPhotoJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
+
+// SetChatPhotoMultipartBody defines parameters for SetChatPhoto.
+type SetChatPhotoMultipartBody struct {
+	ChatId int                `json:"chat_id"`
+	Photo  openapi_types.File `json:"photo"`
+}
 
 // SetChatStickerSetJSONBody defines parameters for SetChatStickerSet.
-type SetChatStickerSetJSONBody = map[string]interface{}
+type SetChatStickerSetJSONBody struct {
+	ChatId         int    `json:"chat_id"`
+	StickerSetName string `json:"sticker_set_name"`
+}
 
 // SetChatTitleJSONBody defines parameters for SetChatTitle.
-type SetChatTitleJSONBody = map[string]interface{}
+type SetChatTitleJSONBody struct {
+	ChatId int    `json:"chat_id"`
+	Title  string `json:"title"`
+}
 
 // SetCustomEmojiStickerSetThumbnailJSONBody defines parameters for SetCustomEmojiStickerSetThumbnail.
-type SetCustomEmojiStickerSetThumbnailJSONBody = map[string]interface{}
+type SetCustomEmojiStickerSetThumbnailJSONBody struct {
+	CustomEmojiId string `json:"custom_emoji_id"`
+	Name          string `json:"name"`
+}
 
 // SetGameScoreJSONBody defines parameters for SetGameScore.
-type SetGameScoreJSONBody = map[string]interface{}
+type SetGameScoreJSONBody struct {
+	ChatId             int    `json:"chat_id"`
+	DisableEditMessage bool   `json:"disable_edit_message"`
+	Force              bool   `json:"force"`
+	InlineMessageId    string `json:"inline_message_id"`
+	MessageId          int    `json:"message_id"`
+	Score              int    `json:"score"`
+	UserId             int    `json:"user_id"`
+}
 
 // SetMessageReactionJSONBody defines parameters for SetMessageReaction.
-type SetMessageReactionJSONBody = map[string]interface{}
+type SetMessageReactionJSONBody struct {
+	ChatId    int            `json:"chat_id"`
+	IsBig     bool           `json:"is_big"`
+	MessageId int            `json:"message_id"`
+	Reaction  []ReactionType `json:"reaction"`
+}
 
 // SetMyCommandsJSONBody defines parameters for SetMyCommands.
-type SetMyCommandsJSONBody = map[string]interface{}
+type SetMyCommandsJSONBody struct {
+	Commands     []BotCommand `json:"commands"`
+	LanguageCode string       `json:"language_code"`
+
+	// Scope This object represents the scope to which bot commands are applied. Currently, the following 7 scopes are supported:
+	// BotCommandScopeDefault
+	// BotCommandScopeAllPrivateChats
+	// BotCommandScopeAllGroupChats
+	// BotCommandScopeAllChatAdministrators
+	// BotCommandScopeChat
+	// BotCommandScopeChatAdministrators
+	// BotCommandScopeChatMember
+	Scope BotCommandScope `json:"scope"`
+}
 
 // SetMyDefaultAdministratorRightsJSONBody defines parameters for SetMyDefaultAdministratorRights.
-type SetMyDefaultAdministratorRightsJSONBody = map[string]interface{}
+type SetMyDefaultAdministratorRightsJSONBody struct {
+	ForChannels bool `json:"for_channels"`
+
+	// Rights Represents the rights of an administrator in a chat.
+	Rights ChatAdministratorRights `json:"rights"`
+}
 
 // SetMyDescriptionJSONBody defines parameters for SetMyDescription.
-type SetMyDescriptionJSONBody = map[string]interface{}
+type SetMyDescriptionJSONBody struct {
+	Description  string `json:"description"`
+	LanguageCode string `json:"language_code"`
+}
 
 // SetMyNameJSONBody defines parameters for SetMyName.
-type SetMyNameJSONBody = map[string]interface{}
+type SetMyNameJSONBody struct {
+	LanguageCode string `json:"language_code"`
+	Name         string `json:"name"`
+}
 
 // SetMyShortDescriptionJSONBody defines parameters for SetMyShortDescription.
-type SetMyShortDescriptionJSONBody = map[string]interface{}
+type SetMyShortDescriptionJSONBody struct {
+	LanguageCode     string `json:"language_code"`
+	ShortDescription string `json:"short_description"`
+}
 
 // SetPassportDataErrorsJSONBody defines parameters for SetPassportDataErrors.
-type SetPassportDataErrorsJSONBody = map[string]interface{}
+type SetPassportDataErrorsJSONBody struct {
+	Errors []PassportElementError `json:"errors"`
+	UserId int                    `json:"user_id"`
+}
 
 // SetStickerEmojiListJSONBody defines parameters for SetStickerEmojiList.
-type SetStickerEmojiListJSONBody = map[string]interface{}
+type SetStickerEmojiListJSONBody struct {
+	EmojiList []string `json:"emoji_list"`
+	Sticker   string   `json:"sticker"`
+}
 
 // SetStickerKeywordsJSONBody defines parameters for SetStickerKeywords.
-type SetStickerKeywordsJSONBody = map[string]interface{}
+type SetStickerKeywordsJSONBody struct {
+	Keywords []string `json:"keywords"`
+	Sticker  string   `json:"sticker"`
+}
 
 // SetStickerMaskPositionJSONBody defines parameters for SetStickerMaskPosition.
-type SetStickerMaskPositionJSONBody = map[string]interface{}
+type SetStickerMaskPositionJSONBody struct {
+	// MaskPosition This object describes the position on faces where a mask should be placed by default.
+	MaskPosition MaskPosition `json:"mask_position"`
+	Sticker      string       `json:"sticker"`
+}
 
 // SetStickerPositionInSetJSONBody defines parameters for SetStickerPositionInSet.
-type SetStickerPositionInSetJSONBody = map[string]interface{}
+type SetStickerPositionInSetJSONBody struct {
+	Position int    `json:"position"`
+	Sticker  string `json:"sticker"`
+}
 
 // SetStickerSetThumbnailJSONBody defines parameters for SetStickerSetThumbnail.
-type SetStickerSetThumbnailJSONBody = map[string]interface{}
+type SetStickerSetThumbnailJSONBody struct {
+	Format    string `json:"format"`
+	Name      string `json:"name"`
+	Thumbnail string `json:"thumbnail"`
+	UserId    int    `json:"user_id"`
+}
+
+// SetStickerSetThumbnailMultipartBody defines parameters for SetStickerSetThumbnail.
+type SetStickerSetThumbnailMultipartBody struct {
+	Format    string             `json:"format"`
+	Name      string             `json:"name"`
+	Thumbnail openapi_types.File `json:"thumbnail"`
+	UserId    int                `json:"user_id"`
+}
 
 // SetStickerSetTitleJSONBody defines parameters for SetStickerSetTitle.
-type SetStickerSetTitleJSONBody = map[string]interface{}
+type SetStickerSetTitleJSONBody struct {
+	Name  string `json:"name"`
+	Title string `json:"title"`
+}
 
 // SetUserEmojiStatusJSONBody defines parameters for SetUserEmojiStatus.
-type SetUserEmojiStatusJSONBody = map[string]interface{}
+type SetUserEmojiStatusJSONBody struct {
+	EmojiStatusCustomEmojiId  string `json:"emoji_status_custom_emoji_id"`
+	EmojiStatusExpirationDate int    `json:"emoji_status_expiration_date"`
+	UserId                    int    `json:"user_id"`
+}
 
 // SetWebhookJSONBody defines parameters for SetWebhook.
-type SetWebhookJSONBody = map[string]interface{}
+type SetWebhookJSONBody struct {
+	AllowedUpdates     []string `json:"allowed_updates"`
+	DropPendingUpdates bool     `json:"drop_pending_updates"`
+	IpAddress          string   `json:"ip_address"`
+	MaxConnections     int      `json:"max_connections"`
+	SecretToken        string   `json:"secret_token"`
+	Url                string   `json:"url"`
+}
+
+// SetWebhookMultipartBody defines parameters for SetWebhook.
+type SetWebhookMultipartBody struct {
+	AllowedUpdates     []string           `json:"allowed_updates"`
+	Certificate        openapi_types.File `json:"certificate"`
+	DropPendingUpdates bool               `json:"drop_pending_updates"`
+	IpAddress          string             `json:"ip_address"`
+	MaxConnections     int                `json:"max_connections"`
+	SecretToken        string             `json:"secret_token"`
+	Url                string             `json:"url"`
+}
 
 // StopMessageLiveLocationJSONBody defines parameters for StopMessageLiveLocation.
-type StopMessageLiveLocationJSONBody = map[string]interface{}
+type StopMessageLiveLocationJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	ChatId               int    `json:"chat_id"`
+	InlineMessageId      string `json:"inline_message_id"`
+	MessageId            int    `json:"message_id"`
+
+	// ReplyMarkup This object represents an inline keyboard that appears right next to the message it belongs to.
+	ReplyMarkup InlineKeyboardMarkup `json:"reply_markup"`
+}
 
 // StopPollJSONBody defines parameters for StopPoll.
-type StopPollJSONBody = map[string]interface{}
+type StopPollJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	ChatId               int    `json:"chat_id"`
+	MessageId            int    `json:"message_id"`
+
+	// ReplyMarkup This object represents an inline keyboard that appears right next to the message it belongs to.
+	ReplyMarkup InlineKeyboardMarkup `json:"reply_markup"`
+}
 
 // TransferBusinessAccountStarsJSONBody defines parameters for TransferBusinessAccountStars.
-type TransferBusinessAccountStarsJSONBody = map[string]interface{}
+type TransferBusinessAccountStarsJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	StarCount            int    `json:"star_count"`
+}
 
 // TransferGiftJSONBody defines parameters for TransferGift.
-type TransferGiftJSONBody = map[string]interface{}
+type TransferGiftJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	NewOwnerChatId       int    `json:"new_owner_chat_id"`
+	OwnedGiftId          string `json:"owned_gift_id"`
+	StarCount            int    `json:"star_count"`
+}
 
 // UnbanChatMemberJSONBody defines parameters for UnbanChatMember.
-type UnbanChatMemberJSONBody = map[string]interface{}
+type UnbanChatMemberJSONBody struct {
+	ChatId       int  `json:"chat_id"`
+	OnlyIfBanned bool `json:"only_if_banned"`
+	UserId       int  `json:"user_id"`
+}
 
 // UnbanChatSenderChatJSONBody defines parameters for UnbanChatSenderChat.
-type UnbanChatSenderChatJSONBody = map[string]interface{}
+type UnbanChatSenderChatJSONBody struct {
+	ChatId       int `json:"chat_id"`
+	SenderChatId int `json:"sender_chat_id"`
+}
 
 // UnhideGeneralForumTopicJSONBody defines parameters for UnhideGeneralForumTopic.
-type UnhideGeneralForumTopicJSONBody = map[string]interface{}
+type UnhideGeneralForumTopicJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
 
 // UnpinAllChatMessagesJSONBody defines parameters for UnpinAllChatMessages.
-type UnpinAllChatMessagesJSONBody = map[string]interface{}
+type UnpinAllChatMessagesJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
 
 // UnpinAllForumTopicMessagesJSONBody defines parameters for UnpinAllForumTopicMessages.
-type UnpinAllForumTopicMessagesJSONBody = map[string]interface{}
+type UnpinAllForumTopicMessagesJSONBody struct {
+	ChatId          int `json:"chat_id"`
+	MessageThreadId int `json:"message_thread_id"`
+}
 
 // UnpinAllGeneralForumTopicMessagesJSONBody defines parameters for UnpinAllGeneralForumTopicMessages.
-type UnpinAllGeneralForumTopicMessagesJSONBody = map[string]interface{}
+type UnpinAllGeneralForumTopicMessagesJSONBody struct {
+	ChatId int `json:"chat_id"`
+}
 
 // UnpinChatMessageJSONBody defines parameters for UnpinChatMessage.
-type UnpinChatMessageJSONBody = map[string]interface{}
+type UnpinChatMessageJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	ChatId               int    `json:"chat_id"`
+	MessageId            int    `json:"message_id"`
+}
 
 // UpgradeGiftJSONBody defines parameters for UpgradeGift.
-type UpgradeGiftJSONBody = map[string]interface{}
+type UpgradeGiftJSONBody struct {
+	BusinessConnectionId string `json:"business_connection_id"`
+	KeepOriginalDetails  bool   `json:"keep_original_details"`
+	OwnedGiftId          string `json:"owned_gift_id"`
+	StarCount            int    `json:"star_count"`
+}
 
 // UploadStickerFileJSONBody defines parameters for UploadStickerFile.
-type UploadStickerFileJSONBody = map[string]interface{}
+type UploadStickerFileJSONBody struct {
+	StickerFormat string `json:"sticker_format"`
+	UserId        int    `json:"user_id"`
+}
+
+// UploadStickerFileMultipartBody defines parameters for UploadStickerFile.
+type UploadStickerFileMultipartBody struct {
+	Sticker       openapi_types.File `json:"sticker"`
+	StickerFormat string             `json:"sticker_format"`
+	UserId        int                `json:"user_id"`
+}
 
 // VerifyChatJSONBody defines parameters for VerifyChat.
-type VerifyChatJSONBody = map[string]interface{}
+type VerifyChatJSONBody struct {
+	ChatId            int    `json:"chat_id"`
+	CustomDescription string `json:"custom_description"`
+}
 
 // VerifyUserJSONBody defines parameters for VerifyUser.
-type VerifyUserJSONBody = map[string]interface{}
+type VerifyUserJSONBody struct {
+	CustomDescription string `json:"custom_description"`
+	UserId            int    `json:"user_id"`
+}
 
 // AddStickerToSetJSONRequestBody defines body for AddStickerToSet for application/json ContentType.
-type AddStickerToSetJSONRequestBody = AddStickerToSetJSONBody
+type AddStickerToSetJSONRequestBody AddStickerToSetJSONBody
+
+// AddStickerToSetMultipartRequestBody defines body for AddStickerToSet for multipart/form-data ContentType.
+type AddStickerToSetMultipartRequestBody AddStickerToSetMultipartBody
 
 // AnswerCallbackQueryJSONRequestBody defines body for AnswerCallbackQuery for application/json ContentType.
-type AnswerCallbackQueryJSONRequestBody = AnswerCallbackQueryJSONBody
+type AnswerCallbackQueryJSONRequestBody AnswerCallbackQueryJSONBody
 
 // AnswerInlineQueryJSONRequestBody defines body for AnswerInlineQuery for application/json ContentType.
-type AnswerInlineQueryJSONRequestBody = AnswerInlineQueryJSONBody
+type AnswerInlineQueryJSONRequestBody AnswerInlineQueryJSONBody
 
 // AnswerPreCheckoutQueryJSONRequestBody defines body for AnswerPreCheckoutQuery for application/json ContentType.
-type AnswerPreCheckoutQueryJSONRequestBody = AnswerPreCheckoutQueryJSONBody
+type AnswerPreCheckoutQueryJSONRequestBody AnswerPreCheckoutQueryJSONBody
 
 // AnswerShippingQueryJSONRequestBody defines body for AnswerShippingQuery for application/json ContentType.
-type AnswerShippingQueryJSONRequestBody = AnswerShippingQueryJSONBody
+type AnswerShippingQueryJSONRequestBody AnswerShippingQueryJSONBody
 
 // AnswerWebAppQueryJSONRequestBody defines body for AnswerWebAppQuery for application/json ContentType.
-type AnswerWebAppQueryJSONRequestBody = AnswerWebAppQueryJSONBody
+type AnswerWebAppQueryJSONRequestBody AnswerWebAppQueryJSONBody
 
 // ApproveChatJoinRequestJSONRequestBody defines body for ApproveChatJoinRequest for application/json ContentType.
-type ApproveChatJoinRequestJSONRequestBody = ApproveChatJoinRequestJSONBody
+type ApproveChatJoinRequestJSONRequestBody ApproveChatJoinRequestJSONBody
 
 // ApproveSuggestedPostJSONRequestBody defines body for ApproveSuggestedPost for application/json ContentType.
-type ApproveSuggestedPostJSONRequestBody = ApproveSuggestedPostJSONBody
+type ApproveSuggestedPostJSONRequestBody ApproveSuggestedPostJSONBody
 
 // BanChatMemberJSONRequestBody defines body for BanChatMember for application/json ContentType.
-type BanChatMemberJSONRequestBody = BanChatMemberJSONBody
+type BanChatMemberJSONRequestBody BanChatMemberJSONBody
 
 // BanChatSenderChatJSONRequestBody defines body for BanChatSenderChat for application/json ContentType.
-type BanChatSenderChatJSONRequestBody = BanChatSenderChatJSONBody
-
-// CloseJSONRequestBody defines body for Close for application/json ContentType.
-type CloseJSONRequestBody = CloseJSONBody
+type BanChatSenderChatJSONRequestBody BanChatSenderChatJSONBody
 
 // CloseForumTopicJSONRequestBody defines body for CloseForumTopic for application/json ContentType.
-type CloseForumTopicJSONRequestBody = CloseForumTopicJSONBody
+type CloseForumTopicJSONRequestBody CloseForumTopicJSONBody
 
 // CloseGeneralForumTopicJSONRequestBody defines body for CloseGeneralForumTopic for application/json ContentType.
-type CloseGeneralForumTopicJSONRequestBody = CloseGeneralForumTopicJSONBody
+type CloseGeneralForumTopicJSONRequestBody CloseGeneralForumTopicJSONBody
 
 // ConvertGiftToStarsJSONRequestBody defines body for ConvertGiftToStars for application/json ContentType.
-type ConvertGiftToStarsJSONRequestBody = ConvertGiftToStarsJSONBody
+type ConvertGiftToStarsJSONRequestBody ConvertGiftToStarsJSONBody
 
 // CopyMessageJSONRequestBody defines body for CopyMessage for application/json ContentType.
-type CopyMessageJSONRequestBody = CopyMessageJSONBody
+type CopyMessageJSONRequestBody CopyMessageJSONBody
 
 // CopyMessagesJSONRequestBody defines body for CopyMessages for application/json ContentType.
-type CopyMessagesJSONRequestBody = CopyMessagesJSONBody
+type CopyMessagesJSONRequestBody CopyMessagesJSONBody
 
 // CreateChatInviteLinkJSONRequestBody defines body for CreateChatInviteLink for application/json ContentType.
-type CreateChatInviteLinkJSONRequestBody = CreateChatInviteLinkJSONBody
+type CreateChatInviteLinkJSONRequestBody CreateChatInviteLinkJSONBody
 
 // CreateChatSubscriptionInviteLinkJSONRequestBody defines body for CreateChatSubscriptionInviteLink for application/json ContentType.
-type CreateChatSubscriptionInviteLinkJSONRequestBody = CreateChatSubscriptionInviteLinkJSONBody
+type CreateChatSubscriptionInviteLinkJSONRequestBody CreateChatSubscriptionInviteLinkJSONBody
 
 // CreateForumTopicJSONRequestBody defines body for CreateForumTopic for application/json ContentType.
-type CreateForumTopicJSONRequestBody = CreateForumTopicJSONBody
+type CreateForumTopicJSONRequestBody CreateForumTopicJSONBody
 
 // CreateInvoiceLinkJSONRequestBody defines body for CreateInvoiceLink for application/json ContentType.
-type CreateInvoiceLinkJSONRequestBody = CreateInvoiceLinkJSONBody
+type CreateInvoiceLinkJSONRequestBody CreateInvoiceLinkJSONBody
 
 // CreateNewStickerSetJSONRequestBody defines body for CreateNewStickerSet for application/json ContentType.
-type CreateNewStickerSetJSONRequestBody = CreateNewStickerSetJSONBody
+type CreateNewStickerSetJSONRequestBody CreateNewStickerSetJSONBody
+
+// CreateNewStickerSetMultipartRequestBody defines body for CreateNewStickerSet for multipart/form-data ContentType.
+type CreateNewStickerSetMultipartRequestBody CreateNewStickerSetMultipartBody
 
 // DeclineChatJoinRequestJSONRequestBody defines body for DeclineChatJoinRequest for application/json ContentType.
-type DeclineChatJoinRequestJSONRequestBody = DeclineChatJoinRequestJSONBody
+type DeclineChatJoinRequestJSONRequestBody DeclineChatJoinRequestJSONBody
 
 // DeclineSuggestedPostJSONRequestBody defines body for DeclineSuggestedPost for application/json ContentType.
-type DeclineSuggestedPostJSONRequestBody = DeclineSuggestedPostJSONBody
+type DeclineSuggestedPostJSONRequestBody DeclineSuggestedPostJSONBody
 
 // DeleteBusinessMessagesJSONRequestBody defines body for DeleteBusinessMessages for application/json ContentType.
-type DeleteBusinessMessagesJSONRequestBody = DeleteBusinessMessagesJSONBody
+type DeleteBusinessMessagesJSONRequestBody DeleteBusinessMessagesJSONBody
 
 // DeleteChatPhotoJSONRequestBody defines body for DeleteChatPhoto for application/json ContentType.
-type DeleteChatPhotoJSONRequestBody = DeleteChatPhotoJSONBody
+type DeleteChatPhotoJSONRequestBody DeleteChatPhotoJSONBody
 
 // DeleteChatStickerSetJSONRequestBody defines body for DeleteChatStickerSet for application/json ContentType.
-type DeleteChatStickerSetJSONRequestBody = DeleteChatStickerSetJSONBody
+type DeleteChatStickerSetJSONRequestBody DeleteChatStickerSetJSONBody
 
 // DeleteForumTopicJSONRequestBody defines body for DeleteForumTopic for application/json ContentType.
-type DeleteForumTopicJSONRequestBody = DeleteForumTopicJSONBody
+type DeleteForumTopicJSONRequestBody DeleteForumTopicJSONBody
 
 // DeleteMessageJSONRequestBody defines body for DeleteMessage for application/json ContentType.
-type DeleteMessageJSONRequestBody = DeleteMessageJSONBody
+type DeleteMessageJSONRequestBody DeleteMessageJSONBody
 
 // DeleteMessagesJSONRequestBody defines body for DeleteMessages for application/json ContentType.
-type DeleteMessagesJSONRequestBody = DeleteMessagesJSONBody
+type DeleteMessagesJSONRequestBody DeleteMessagesJSONBody
 
 // DeleteMyCommandsJSONRequestBody defines body for DeleteMyCommands for application/json ContentType.
-type DeleteMyCommandsJSONRequestBody = DeleteMyCommandsJSONBody
+type DeleteMyCommandsJSONRequestBody DeleteMyCommandsJSONBody
 
 // DeleteStickerFromSetJSONRequestBody defines body for DeleteStickerFromSet for application/json ContentType.
-type DeleteStickerFromSetJSONRequestBody = DeleteStickerFromSetJSONBody
+type DeleteStickerFromSetJSONRequestBody DeleteStickerFromSetJSONBody
 
 // DeleteStickerSetJSONRequestBody defines body for DeleteStickerSet for application/json ContentType.
-type DeleteStickerSetJSONRequestBody = DeleteStickerSetJSONBody
+type DeleteStickerSetJSONRequestBody DeleteStickerSetJSONBody
 
 // DeleteStoryJSONRequestBody defines body for DeleteStory for application/json ContentType.
-type DeleteStoryJSONRequestBody = DeleteStoryJSONBody
+type DeleteStoryJSONRequestBody DeleteStoryJSONBody
 
 // DeleteWebhookJSONRequestBody defines body for DeleteWebhook for application/json ContentType.
-type DeleteWebhookJSONRequestBody = DeleteWebhookJSONBody
+type DeleteWebhookJSONRequestBody DeleteWebhookJSONBody
 
 // EditChatInviteLinkJSONRequestBody defines body for EditChatInviteLink for application/json ContentType.
-type EditChatInviteLinkJSONRequestBody = EditChatInviteLinkJSONBody
+type EditChatInviteLinkJSONRequestBody EditChatInviteLinkJSONBody
 
 // EditChatSubscriptionInviteLinkJSONRequestBody defines body for EditChatSubscriptionInviteLink for application/json ContentType.
-type EditChatSubscriptionInviteLinkJSONRequestBody = EditChatSubscriptionInviteLinkJSONBody
+type EditChatSubscriptionInviteLinkJSONRequestBody EditChatSubscriptionInviteLinkJSONBody
 
 // EditForumTopicJSONRequestBody defines body for EditForumTopic for application/json ContentType.
-type EditForumTopicJSONRequestBody = EditForumTopicJSONBody
+type EditForumTopicJSONRequestBody EditForumTopicJSONBody
 
 // EditGeneralForumTopicJSONRequestBody defines body for EditGeneralForumTopic for application/json ContentType.
-type EditGeneralForumTopicJSONRequestBody = EditGeneralForumTopicJSONBody
+type EditGeneralForumTopicJSONRequestBody EditGeneralForumTopicJSONBody
 
 // EditMessageCaptionJSONRequestBody defines body for EditMessageCaption for application/json ContentType.
-type EditMessageCaptionJSONRequestBody = EditMessageCaptionJSONBody
+type EditMessageCaptionJSONRequestBody EditMessageCaptionJSONBody
 
 // EditMessageChecklistJSONRequestBody defines body for EditMessageChecklist for application/json ContentType.
-type EditMessageChecklistJSONRequestBody = EditMessageChecklistJSONBody
+type EditMessageChecklistJSONRequestBody EditMessageChecklistJSONBody
 
 // EditMessageLiveLocationJSONRequestBody defines body for EditMessageLiveLocation for application/json ContentType.
-type EditMessageLiveLocationJSONRequestBody = EditMessageLiveLocationJSONBody
+type EditMessageLiveLocationJSONRequestBody EditMessageLiveLocationJSONBody
 
 // EditMessageMediaJSONRequestBody defines body for EditMessageMedia for application/json ContentType.
-type EditMessageMediaJSONRequestBody = EditMessageMediaJSONBody
+type EditMessageMediaJSONRequestBody EditMessageMediaJSONBody
+
+// EditMessageMediaMultipartRequestBody defines body for EditMessageMedia for multipart/form-data ContentType.
+type EditMessageMediaMultipartRequestBody EditMessageMediaMultipartBody
 
 // EditMessageReplyMarkupJSONRequestBody defines body for EditMessageReplyMarkup for application/json ContentType.
-type EditMessageReplyMarkupJSONRequestBody = EditMessageReplyMarkupJSONBody
+type EditMessageReplyMarkupJSONRequestBody EditMessageReplyMarkupJSONBody
 
 // EditMessageTextJSONRequestBody defines body for EditMessageText for application/json ContentType.
-type EditMessageTextJSONRequestBody = EditMessageTextJSONBody
+type EditMessageTextJSONRequestBody EditMessageTextJSONBody
 
 // EditStoryJSONRequestBody defines body for EditStory for application/json ContentType.
-type EditStoryJSONRequestBody = EditStoryJSONBody
+type EditStoryJSONRequestBody EditStoryJSONBody
 
 // EditUserStarSubscriptionJSONRequestBody defines body for EditUserStarSubscription for application/json ContentType.
-type EditUserStarSubscriptionJSONRequestBody = EditUserStarSubscriptionJSONBody
+type EditUserStarSubscriptionJSONRequestBody EditUserStarSubscriptionJSONBody
 
 // ExportChatInviteLinkJSONRequestBody defines body for ExportChatInviteLink for application/json ContentType.
-type ExportChatInviteLinkJSONRequestBody = ExportChatInviteLinkJSONBody
+type ExportChatInviteLinkJSONRequestBody ExportChatInviteLinkJSONBody
 
 // ForwardMessageJSONRequestBody defines body for ForwardMessage for application/json ContentType.
-type ForwardMessageJSONRequestBody = ForwardMessageJSONBody
+type ForwardMessageJSONRequestBody ForwardMessageJSONBody
 
 // ForwardMessagesJSONRequestBody defines body for ForwardMessages for application/json ContentType.
-type ForwardMessagesJSONRequestBody = ForwardMessagesJSONBody
-
-// GetAvailableGiftsJSONRequestBody defines body for GetAvailableGifts for application/json ContentType.
-type GetAvailableGiftsJSONRequestBody = GetAvailableGiftsJSONBody
+type ForwardMessagesJSONRequestBody ForwardMessagesJSONBody
 
 // GetBusinessAccountGiftsJSONRequestBody defines body for GetBusinessAccountGifts for application/json ContentType.
-type GetBusinessAccountGiftsJSONRequestBody = GetBusinessAccountGiftsJSONBody
+type GetBusinessAccountGiftsJSONRequestBody GetBusinessAccountGiftsJSONBody
 
 // GetBusinessAccountStarBalanceJSONRequestBody defines body for GetBusinessAccountStarBalance for application/json ContentType.
-type GetBusinessAccountStarBalanceJSONRequestBody = GetBusinessAccountStarBalanceJSONBody
+type GetBusinessAccountStarBalanceJSONRequestBody GetBusinessAccountStarBalanceJSONBody
 
 // GetBusinessConnectionJSONRequestBody defines body for GetBusinessConnection for application/json ContentType.
-type GetBusinessConnectionJSONRequestBody = GetBusinessConnectionJSONBody
+type GetBusinessConnectionJSONRequestBody GetBusinessConnectionJSONBody
 
 // GetChatJSONRequestBody defines body for GetChat for application/json ContentType.
-type GetChatJSONRequestBody = GetChatJSONBody
+type GetChatJSONRequestBody GetChatJSONBody
 
 // GetChatAdministratorsJSONRequestBody defines body for GetChatAdministrators for application/json ContentType.
-type GetChatAdministratorsJSONRequestBody = GetChatAdministratorsJSONBody
+type GetChatAdministratorsJSONRequestBody GetChatAdministratorsJSONBody
 
 // GetChatMemberJSONRequestBody defines body for GetChatMember for application/json ContentType.
-type GetChatMemberJSONRequestBody = GetChatMemberJSONBody
+type GetChatMemberJSONRequestBody GetChatMemberJSONBody
 
 // GetChatMemberCountJSONRequestBody defines body for GetChatMemberCount for application/json ContentType.
-type GetChatMemberCountJSONRequestBody = GetChatMemberCountJSONBody
+type GetChatMemberCountJSONRequestBody GetChatMemberCountJSONBody
 
 // GetChatMenuButtonJSONRequestBody defines body for GetChatMenuButton for application/json ContentType.
-type GetChatMenuButtonJSONRequestBody = GetChatMenuButtonJSONBody
+type GetChatMenuButtonJSONRequestBody GetChatMenuButtonJSONBody
 
 // GetCustomEmojiStickersJSONRequestBody defines body for GetCustomEmojiStickers for application/json ContentType.
-type GetCustomEmojiStickersJSONRequestBody = GetCustomEmojiStickersJSONBody
+type GetCustomEmojiStickersJSONRequestBody GetCustomEmojiStickersJSONBody
 
 // GetFileJSONRequestBody defines body for GetFile for application/json ContentType.
-type GetFileJSONRequestBody = GetFileJSONBody
-
-// GetForumTopicIconStickersJSONRequestBody defines body for GetForumTopicIconStickers for application/json ContentType.
-type GetForumTopicIconStickersJSONRequestBody = GetForumTopicIconStickersJSONBody
+type GetFileJSONRequestBody GetFileJSONBody
 
 // GetGameHighScoresJSONRequestBody defines body for GetGameHighScores for application/json ContentType.
-type GetGameHighScoresJSONRequestBody = GetGameHighScoresJSONBody
-
-// GetMeJSONRequestBody defines body for GetMe for application/json ContentType.
-type GetMeJSONRequestBody = GetMeJSONBody
+type GetGameHighScoresJSONRequestBody GetGameHighScoresJSONBody
 
 // GetMyCommandsJSONRequestBody defines body for GetMyCommands for application/json ContentType.
-type GetMyCommandsJSONRequestBody = GetMyCommandsJSONBody
+type GetMyCommandsJSONRequestBody GetMyCommandsJSONBody
 
 // GetMyDefaultAdministratorRightsJSONRequestBody defines body for GetMyDefaultAdministratorRights for application/json ContentType.
-type GetMyDefaultAdministratorRightsJSONRequestBody = GetMyDefaultAdministratorRightsJSONBody
+type GetMyDefaultAdministratorRightsJSONRequestBody GetMyDefaultAdministratorRightsJSONBody
 
 // GetMyDescriptionJSONRequestBody defines body for GetMyDescription for application/json ContentType.
-type GetMyDescriptionJSONRequestBody = GetMyDescriptionJSONBody
+type GetMyDescriptionJSONRequestBody GetMyDescriptionJSONBody
 
 // GetMyNameJSONRequestBody defines body for GetMyName for application/json ContentType.
-type GetMyNameJSONRequestBody = GetMyNameJSONBody
+type GetMyNameJSONRequestBody GetMyNameJSONBody
 
 // GetMyShortDescriptionJSONRequestBody defines body for GetMyShortDescription for application/json ContentType.
-type GetMyShortDescriptionJSONRequestBody = GetMyShortDescriptionJSONBody
-
-// GetMyStarBalanceJSONRequestBody defines body for GetMyStarBalance for application/json ContentType.
-type GetMyStarBalanceJSONRequestBody = GetMyStarBalanceJSONBody
+type GetMyShortDescriptionJSONRequestBody GetMyShortDescriptionJSONBody
 
 // GetStarTransactionsJSONRequestBody defines body for GetStarTransactions for application/json ContentType.
-type GetStarTransactionsJSONRequestBody = GetStarTransactionsJSONBody
+type GetStarTransactionsJSONRequestBody GetStarTransactionsJSONBody
 
 // GetStickerSetJSONRequestBody defines body for GetStickerSet for application/json ContentType.
-type GetStickerSetJSONRequestBody = GetStickerSetJSONBody
+type GetStickerSetJSONRequestBody GetStickerSetJSONBody
 
 // GetUpdatesJSONRequestBody defines body for GetUpdates for application/json ContentType.
-type GetUpdatesJSONRequestBody = GetUpdatesJSONBody
+type GetUpdatesJSONRequestBody GetUpdatesJSONBody
 
 // GetUserChatBoostsJSONRequestBody defines body for GetUserChatBoosts for application/json ContentType.
-type GetUserChatBoostsJSONRequestBody = GetUserChatBoostsJSONBody
+type GetUserChatBoostsJSONRequestBody GetUserChatBoostsJSONBody
 
 // GetUserProfilePhotosJSONRequestBody defines body for GetUserProfilePhotos for application/json ContentType.
-type GetUserProfilePhotosJSONRequestBody = GetUserProfilePhotosJSONBody
-
-// GetWebhookInfoJSONRequestBody defines body for GetWebhookInfo for application/json ContentType.
-type GetWebhookInfoJSONRequestBody = GetWebhookInfoJSONBody
+type GetUserProfilePhotosJSONRequestBody GetUserProfilePhotosJSONBody
 
 // GiftPremiumSubscriptionJSONRequestBody defines body for GiftPremiumSubscription for application/json ContentType.
-type GiftPremiumSubscriptionJSONRequestBody = GiftPremiumSubscriptionJSONBody
+type GiftPremiumSubscriptionJSONRequestBody GiftPremiumSubscriptionJSONBody
 
 // HideGeneralForumTopicJSONRequestBody defines body for HideGeneralForumTopic for application/json ContentType.
-type HideGeneralForumTopicJSONRequestBody = HideGeneralForumTopicJSONBody
+type HideGeneralForumTopicJSONRequestBody HideGeneralForumTopicJSONBody
 
 // LeaveChatJSONRequestBody defines body for LeaveChat for application/json ContentType.
-type LeaveChatJSONRequestBody = LeaveChatJSONBody
-
-// LogOutJSONRequestBody defines body for LogOut for application/json ContentType.
-type LogOutJSONRequestBody = LogOutJSONBody
+type LeaveChatJSONRequestBody LeaveChatJSONBody
 
 // PinChatMessageJSONRequestBody defines body for PinChatMessage for application/json ContentType.
-type PinChatMessageJSONRequestBody = PinChatMessageJSONBody
+type PinChatMessageJSONRequestBody PinChatMessageJSONBody
 
 // PostStoryJSONRequestBody defines body for PostStory for application/json ContentType.
-type PostStoryJSONRequestBody = PostStoryJSONBody
+type PostStoryJSONRequestBody PostStoryJSONBody
 
 // PromoteChatMemberJSONRequestBody defines body for PromoteChatMember for application/json ContentType.
-type PromoteChatMemberJSONRequestBody = PromoteChatMemberJSONBody
+type PromoteChatMemberJSONRequestBody PromoteChatMemberJSONBody
 
 // ReadBusinessMessageJSONRequestBody defines body for ReadBusinessMessage for application/json ContentType.
-type ReadBusinessMessageJSONRequestBody = ReadBusinessMessageJSONBody
+type ReadBusinessMessageJSONRequestBody ReadBusinessMessageJSONBody
 
 // RefundStarPaymentJSONRequestBody defines body for RefundStarPayment for application/json ContentType.
-type RefundStarPaymentJSONRequestBody = RefundStarPaymentJSONBody
+type RefundStarPaymentJSONRequestBody RefundStarPaymentJSONBody
 
 // RemoveBusinessAccountProfilePhotoJSONRequestBody defines body for RemoveBusinessAccountProfilePhoto for application/json ContentType.
-type RemoveBusinessAccountProfilePhotoJSONRequestBody = RemoveBusinessAccountProfilePhotoJSONBody
+type RemoveBusinessAccountProfilePhotoJSONRequestBody RemoveBusinessAccountProfilePhotoJSONBody
 
 // RemoveChatVerificationJSONRequestBody defines body for RemoveChatVerification for application/json ContentType.
-type RemoveChatVerificationJSONRequestBody = RemoveChatVerificationJSONBody
+type RemoveChatVerificationJSONRequestBody RemoveChatVerificationJSONBody
 
 // RemoveUserVerificationJSONRequestBody defines body for RemoveUserVerification for application/json ContentType.
-type RemoveUserVerificationJSONRequestBody = RemoveUserVerificationJSONBody
+type RemoveUserVerificationJSONRequestBody RemoveUserVerificationJSONBody
 
 // ReopenForumTopicJSONRequestBody defines body for ReopenForumTopic for application/json ContentType.
-type ReopenForumTopicJSONRequestBody = ReopenForumTopicJSONBody
+type ReopenForumTopicJSONRequestBody ReopenForumTopicJSONBody
 
 // ReopenGeneralForumTopicJSONRequestBody defines body for ReopenGeneralForumTopic for application/json ContentType.
-type ReopenGeneralForumTopicJSONRequestBody = ReopenGeneralForumTopicJSONBody
+type ReopenGeneralForumTopicJSONRequestBody ReopenGeneralForumTopicJSONBody
 
 // ReplaceStickerInSetJSONRequestBody defines body for ReplaceStickerInSet for application/json ContentType.
-type ReplaceStickerInSetJSONRequestBody = ReplaceStickerInSetJSONBody
+type ReplaceStickerInSetJSONRequestBody ReplaceStickerInSetJSONBody
+
+// ReplaceStickerInSetMultipartRequestBody defines body for ReplaceStickerInSet for multipart/form-data ContentType.
+type ReplaceStickerInSetMultipartRequestBody ReplaceStickerInSetMultipartBody
 
 // RestrictChatMemberJSONRequestBody defines body for RestrictChatMember for application/json ContentType.
-type RestrictChatMemberJSONRequestBody = RestrictChatMemberJSONBody
+type RestrictChatMemberJSONRequestBody RestrictChatMemberJSONBody
 
 // RevokeChatInviteLinkJSONRequestBody defines body for RevokeChatInviteLink for application/json ContentType.
-type RevokeChatInviteLinkJSONRequestBody = RevokeChatInviteLinkJSONBody
+type RevokeChatInviteLinkJSONRequestBody RevokeChatInviteLinkJSONBody
 
 // SavePreparedInlineMessageJSONRequestBody defines body for SavePreparedInlineMessage for application/json ContentType.
-type SavePreparedInlineMessageJSONRequestBody = SavePreparedInlineMessageJSONBody
+type SavePreparedInlineMessageJSONRequestBody SavePreparedInlineMessageJSONBody
 
 // SendAnimationJSONRequestBody defines body for SendAnimation for application/json ContentType.
-type SendAnimationJSONRequestBody = SendAnimationJSONBody
+type SendAnimationJSONRequestBody SendAnimationJSONBody
+
+// SendAnimationMultipartRequestBody defines body for SendAnimation for multipart/form-data ContentType.
+type SendAnimationMultipartRequestBody SendAnimationMultipartBody
 
 // SendAudioJSONRequestBody defines body for SendAudio for application/json ContentType.
-type SendAudioJSONRequestBody = SendAudioJSONBody
+type SendAudioJSONRequestBody SendAudioJSONBody
+
+// SendAudioMultipartRequestBody defines body for SendAudio for multipart/form-data ContentType.
+type SendAudioMultipartRequestBody SendAudioMultipartBody
 
 // SendChatActionJSONRequestBody defines body for SendChatAction for application/json ContentType.
-type SendChatActionJSONRequestBody = SendChatActionJSONBody
+type SendChatActionJSONRequestBody SendChatActionJSONBody
 
 // SendChecklistJSONRequestBody defines body for SendChecklist for application/json ContentType.
-type SendChecklistJSONRequestBody = SendChecklistJSONBody
+type SendChecklistJSONRequestBody SendChecklistJSONBody
 
 // SendContactJSONRequestBody defines body for SendContact for application/json ContentType.
-type SendContactJSONRequestBody = SendContactJSONBody
+type SendContactJSONRequestBody SendContactJSONBody
 
 // SendDiceJSONRequestBody defines body for SendDice for application/json ContentType.
-type SendDiceJSONRequestBody = SendDiceJSONBody
+type SendDiceJSONRequestBody SendDiceJSONBody
 
 // SendDocumentJSONRequestBody defines body for SendDocument for application/json ContentType.
-type SendDocumentJSONRequestBody = SendDocumentJSONBody
+type SendDocumentJSONRequestBody SendDocumentJSONBody
+
+// SendDocumentMultipartRequestBody defines body for SendDocument for multipart/form-data ContentType.
+type SendDocumentMultipartRequestBody SendDocumentMultipartBody
 
 // SendGameJSONRequestBody defines body for SendGame for application/json ContentType.
-type SendGameJSONRequestBody = SendGameJSONBody
+type SendGameJSONRequestBody SendGameJSONBody
 
 // SendGiftJSONRequestBody defines body for SendGift for application/json ContentType.
-type SendGiftJSONRequestBody = SendGiftJSONBody
+type SendGiftJSONRequestBody SendGiftJSONBody
 
 // SendInvoiceJSONRequestBody defines body for SendInvoice for application/json ContentType.
-type SendInvoiceJSONRequestBody = SendInvoiceJSONBody
+type SendInvoiceJSONRequestBody SendInvoiceJSONBody
 
 // SendLocationJSONRequestBody defines body for SendLocation for application/json ContentType.
-type SendLocationJSONRequestBody = SendLocationJSONBody
+type SendLocationJSONRequestBody SendLocationJSONBody
 
 // SendMediaGroupJSONRequestBody defines body for SendMediaGroup for application/json ContentType.
-type SendMediaGroupJSONRequestBody = SendMediaGroupJSONBody
+type SendMediaGroupJSONRequestBody SendMediaGroupJSONBody
+
+// SendMediaGroupMultipartRequestBody defines body for SendMediaGroup for multipart/form-data ContentType.
+type SendMediaGroupMultipartRequestBody SendMediaGroupMultipartBody
 
 // SendMessageJSONRequestBody defines body for SendMessage for application/json ContentType.
-type SendMessageJSONRequestBody = SendMessageJSONBody
+type SendMessageJSONRequestBody SendMessageJSONBody
 
 // SendPaidMediaJSONRequestBody defines body for SendPaidMedia for application/json ContentType.
-type SendPaidMediaJSONRequestBody = SendPaidMediaJSONBody
+type SendPaidMediaJSONRequestBody SendPaidMediaJSONBody
 
 // SendPhotoJSONRequestBody defines body for SendPhoto for application/json ContentType.
-type SendPhotoJSONRequestBody = SendPhotoJSONBody
+type SendPhotoJSONRequestBody SendPhotoJSONBody
+
+// SendPhotoMultipartRequestBody defines body for SendPhoto for multipart/form-data ContentType.
+type SendPhotoMultipartRequestBody SendPhotoMultipartBody
 
 // SendPollJSONRequestBody defines body for SendPoll for application/json ContentType.
-type SendPollJSONRequestBody = SendPollJSONBody
+type SendPollJSONRequestBody SendPollJSONBody
 
 // SendStickerJSONRequestBody defines body for SendSticker for application/json ContentType.
-type SendStickerJSONRequestBody = SendStickerJSONBody
+type SendStickerJSONRequestBody SendStickerJSONBody
+
+// SendStickerMultipartRequestBody defines body for SendSticker for multipart/form-data ContentType.
+type SendStickerMultipartRequestBody SendStickerMultipartBody
 
 // SendVenueJSONRequestBody defines body for SendVenue for application/json ContentType.
-type SendVenueJSONRequestBody = SendVenueJSONBody
+type SendVenueJSONRequestBody SendVenueJSONBody
 
 // SendVideoJSONRequestBody defines body for SendVideo for application/json ContentType.
-type SendVideoJSONRequestBody = SendVideoJSONBody
+type SendVideoJSONRequestBody SendVideoJSONBody
+
+// SendVideoMultipartRequestBody defines body for SendVideo for multipart/form-data ContentType.
+type SendVideoMultipartRequestBody SendVideoMultipartBody
 
 // SendVideoNoteJSONRequestBody defines body for SendVideoNote for application/json ContentType.
-type SendVideoNoteJSONRequestBody = SendVideoNoteJSONBody
+type SendVideoNoteJSONRequestBody SendVideoNoteJSONBody
+
+// SendVideoNoteMultipartRequestBody defines body for SendVideoNote for multipart/form-data ContentType.
+type SendVideoNoteMultipartRequestBody SendVideoNoteMultipartBody
 
 // SendVoiceJSONRequestBody defines body for SendVoice for application/json ContentType.
-type SendVoiceJSONRequestBody = SendVoiceJSONBody
+type SendVoiceJSONRequestBody SendVoiceJSONBody
+
+// SendVoiceMultipartRequestBody defines body for SendVoice for multipart/form-data ContentType.
+type SendVoiceMultipartRequestBody SendVoiceMultipartBody
 
 // SetBusinessAccountBioJSONRequestBody defines body for SetBusinessAccountBio for application/json ContentType.
-type SetBusinessAccountBioJSONRequestBody = SetBusinessAccountBioJSONBody
+type SetBusinessAccountBioJSONRequestBody SetBusinessAccountBioJSONBody
 
 // SetBusinessAccountGiftSettingsJSONRequestBody defines body for SetBusinessAccountGiftSettings for application/json ContentType.
-type SetBusinessAccountGiftSettingsJSONRequestBody = SetBusinessAccountGiftSettingsJSONBody
+type SetBusinessAccountGiftSettingsJSONRequestBody SetBusinessAccountGiftSettingsJSONBody
 
 // SetBusinessAccountNameJSONRequestBody defines body for SetBusinessAccountName for application/json ContentType.
-type SetBusinessAccountNameJSONRequestBody = SetBusinessAccountNameJSONBody
+type SetBusinessAccountNameJSONRequestBody SetBusinessAccountNameJSONBody
 
 // SetBusinessAccountProfilePhotoJSONRequestBody defines body for SetBusinessAccountProfilePhoto for application/json ContentType.
-type SetBusinessAccountProfilePhotoJSONRequestBody = SetBusinessAccountProfilePhotoJSONBody
+type SetBusinessAccountProfilePhotoJSONRequestBody SetBusinessAccountProfilePhotoJSONBody
 
 // SetBusinessAccountUsernameJSONRequestBody defines body for SetBusinessAccountUsername for application/json ContentType.
-type SetBusinessAccountUsernameJSONRequestBody = SetBusinessAccountUsernameJSONBody
+type SetBusinessAccountUsernameJSONRequestBody SetBusinessAccountUsernameJSONBody
 
 // SetChatAdministratorCustomTitleJSONRequestBody defines body for SetChatAdministratorCustomTitle for application/json ContentType.
-type SetChatAdministratorCustomTitleJSONRequestBody = SetChatAdministratorCustomTitleJSONBody
+type SetChatAdministratorCustomTitleJSONRequestBody SetChatAdministratorCustomTitleJSONBody
 
 // SetChatDescriptionJSONRequestBody defines body for SetChatDescription for application/json ContentType.
-type SetChatDescriptionJSONRequestBody = SetChatDescriptionJSONBody
+type SetChatDescriptionJSONRequestBody SetChatDescriptionJSONBody
 
 // SetChatMenuButtonJSONRequestBody defines body for SetChatMenuButton for application/json ContentType.
-type SetChatMenuButtonJSONRequestBody = SetChatMenuButtonJSONBody
+type SetChatMenuButtonJSONRequestBody SetChatMenuButtonJSONBody
 
 // SetChatPermissionsJSONRequestBody defines body for SetChatPermissions for application/json ContentType.
-type SetChatPermissionsJSONRequestBody = SetChatPermissionsJSONBody
+type SetChatPermissionsJSONRequestBody SetChatPermissionsJSONBody
 
 // SetChatPhotoJSONRequestBody defines body for SetChatPhoto for application/json ContentType.
-type SetChatPhotoJSONRequestBody = SetChatPhotoJSONBody
+type SetChatPhotoJSONRequestBody SetChatPhotoJSONBody
+
+// SetChatPhotoMultipartRequestBody defines body for SetChatPhoto for multipart/form-data ContentType.
+type SetChatPhotoMultipartRequestBody SetChatPhotoMultipartBody
 
 // SetChatStickerSetJSONRequestBody defines body for SetChatStickerSet for application/json ContentType.
-type SetChatStickerSetJSONRequestBody = SetChatStickerSetJSONBody
+type SetChatStickerSetJSONRequestBody SetChatStickerSetJSONBody
 
 // SetChatTitleJSONRequestBody defines body for SetChatTitle for application/json ContentType.
-type SetChatTitleJSONRequestBody = SetChatTitleJSONBody
+type SetChatTitleJSONRequestBody SetChatTitleJSONBody
 
 // SetCustomEmojiStickerSetThumbnailJSONRequestBody defines body for SetCustomEmojiStickerSetThumbnail for application/json ContentType.
-type SetCustomEmojiStickerSetThumbnailJSONRequestBody = SetCustomEmojiStickerSetThumbnailJSONBody
+type SetCustomEmojiStickerSetThumbnailJSONRequestBody SetCustomEmojiStickerSetThumbnailJSONBody
 
 // SetGameScoreJSONRequestBody defines body for SetGameScore for application/json ContentType.
-type SetGameScoreJSONRequestBody = SetGameScoreJSONBody
+type SetGameScoreJSONRequestBody SetGameScoreJSONBody
 
 // SetMessageReactionJSONRequestBody defines body for SetMessageReaction for application/json ContentType.
-type SetMessageReactionJSONRequestBody = SetMessageReactionJSONBody
+type SetMessageReactionJSONRequestBody SetMessageReactionJSONBody
 
 // SetMyCommandsJSONRequestBody defines body for SetMyCommands for application/json ContentType.
-type SetMyCommandsJSONRequestBody = SetMyCommandsJSONBody
+type SetMyCommandsJSONRequestBody SetMyCommandsJSONBody
 
 // SetMyDefaultAdministratorRightsJSONRequestBody defines body for SetMyDefaultAdministratorRights for application/json ContentType.
-type SetMyDefaultAdministratorRightsJSONRequestBody = SetMyDefaultAdministratorRightsJSONBody
+type SetMyDefaultAdministratorRightsJSONRequestBody SetMyDefaultAdministratorRightsJSONBody
 
 // SetMyDescriptionJSONRequestBody defines body for SetMyDescription for application/json ContentType.
-type SetMyDescriptionJSONRequestBody = SetMyDescriptionJSONBody
+type SetMyDescriptionJSONRequestBody SetMyDescriptionJSONBody
 
 // SetMyNameJSONRequestBody defines body for SetMyName for application/json ContentType.
-type SetMyNameJSONRequestBody = SetMyNameJSONBody
+type SetMyNameJSONRequestBody SetMyNameJSONBody
 
 // SetMyShortDescriptionJSONRequestBody defines body for SetMyShortDescription for application/json ContentType.
-type SetMyShortDescriptionJSONRequestBody = SetMyShortDescriptionJSONBody
+type SetMyShortDescriptionJSONRequestBody SetMyShortDescriptionJSONBody
 
 // SetPassportDataErrorsJSONRequestBody defines body for SetPassportDataErrors for application/json ContentType.
-type SetPassportDataErrorsJSONRequestBody = SetPassportDataErrorsJSONBody
+type SetPassportDataErrorsJSONRequestBody SetPassportDataErrorsJSONBody
 
 // SetStickerEmojiListJSONRequestBody defines body for SetStickerEmojiList for application/json ContentType.
-type SetStickerEmojiListJSONRequestBody = SetStickerEmojiListJSONBody
+type SetStickerEmojiListJSONRequestBody SetStickerEmojiListJSONBody
 
 // SetStickerKeywordsJSONRequestBody defines body for SetStickerKeywords for application/json ContentType.
-type SetStickerKeywordsJSONRequestBody = SetStickerKeywordsJSONBody
+type SetStickerKeywordsJSONRequestBody SetStickerKeywordsJSONBody
 
 // SetStickerMaskPositionJSONRequestBody defines body for SetStickerMaskPosition for application/json ContentType.
-type SetStickerMaskPositionJSONRequestBody = SetStickerMaskPositionJSONBody
+type SetStickerMaskPositionJSONRequestBody SetStickerMaskPositionJSONBody
 
 // SetStickerPositionInSetJSONRequestBody defines body for SetStickerPositionInSet for application/json ContentType.
-type SetStickerPositionInSetJSONRequestBody = SetStickerPositionInSetJSONBody
+type SetStickerPositionInSetJSONRequestBody SetStickerPositionInSetJSONBody
 
 // SetStickerSetThumbnailJSONRequestBody defines body for SetStickerSetThumbnail for application/json ContentType.
-type SetStickerSetThumbnailJSONRequestBody = SetStickerSetThumbnailJSONBody
+type SetStickerSetThumbnailJSONRequestBody SetStickerSetThumbnailJSONBody
+
+// SetStickerSetThumbnailMultipartRequestBody defines body for SetStickerSetThumbnail for multipart/form-data ContentType.
+type SetStickerSetThumbnailMultipartRequestBody SetStickerSetThumbnailMultipartBody
 
 // SetStickerSetTitleJSONRequestBody defines body for SetStickerSetTitle for application/json ContentType.
-type SetStickerSetTitleJSONRequestBody = SetStickerSetTitleJSONBody
+type SetStickerSetTitleJSONRequestBody SetStickerSetTitleJSONBody
 
 // SetUserEmojiStatusJSONRequestBody defines body for SetUserEmojiStatus for application/json ContentType.
-type SetUserEmojiStatusJSONRequestBody = SetUserEmojiStatusJSONBody
+type SetUserEmojiStatusJSONRequestBody SetUserEmojiStatusJSONBody
 
 // SetWebhookJSONRequestBody defines body for SetWebhook for application/json ContentType.
-type SetWebhookJSONRequestBody = SetWebhookJSONBody
+type SetWebhookJSONRequestBody SetWebhookJSONBody
+
+// SetWebhookMultipartRequestBody defines body for SetWebhook for multipart/form-data ContentType.
+type SetWebhookMultipartRequestBody SetWebhookMultipartBody
 
 // StopMessageLiveLocationJSONRequestBody defines body for StopMessageLiveLocation for application/json ContentType.
-type StopMessageLiveLocationJSONRequestBody = StopMessageLiveLocationJSONBody
+type StopMessageLiveLocationJSONRequestBody StopMessageLiveLocationJSONBody
 
 // StopPollJSONRequestBody defines body for StopPoll for application/json ContentType.
-type StopPollJSONRequestBody = StopPollJSONBody
+type StopPollJSONRequestBody StopPollJSONBody
 
 // TransferBusinessAccountStarsJSONRequestBody defines body for TransferBusinessAccountStars for application/json ContentType.
-type TransferBusinessAccountStarsJSONRequestBody = TransferBusinessAccountStarsJSONBody
+type TransferBusinessAccountStarsJSONRequestBody TransferBusinessAccountStarsJSONBody
 
 // TransferGiftJSONRequestBody defines body for TransferGift for application/json ContentType.
-type TransferGiftJSONRequestBody = TransferGiftJSONBody
+type TransferGiftJSONRequestBody TransferGiftJSONBody
 
 // UnbanChatMemberJSONRequestBody defines body for UnbanChatMember for application/json ContentType.
-type UnbanChatMemberJSONRequestBody = UnbanChatMemberJSONBody
+type UnbanChatMemberJSONRequestBody UnbanChatMemberJSONBody
 
 // UnbanChatSenderChatJSONRequestBody defines body for UnbanChatSenderChat for application/json ContentType.
-type UnbanChatSenderChatJSONRequestBody = UnbanChatSenderChatJSONBody
+type UnbanChatSenderChatJSONRequestBody UnbanChatSenderChatJSONBody
 
 // UnhideGeneralForumTopicJSONRequestBody defines body for UnhideGeneralForumTopic for application/json ContentType.
-type UnhideGeneralForumTopicJSONRequestBody = UnhideGeneralForumTopicJSONBody
+type UnhideGeneralForumTopicJSONRequestBody UnhideGeneralForumTopicJSONBody
 
 // UnpinAllChatMessagesJSONRequestBody defines body for UnpinAllChatMessages for application/json ContentType.
-type UnpinAllChatMessagesJSONRequestBody = UnpinAllChatMessagesJSONBody
+type UnpinAllChatMessagesJSONRequestBody UnpinAllChatMessagesJSONBody
 
 // UnpinAllForumTopicMessagesJSONRequestBody defines body for UnpinAllForumTopicMessages for application/json ContentType.
-type UnpinAllForumTopicMessagesJSONRequestBody = UnpinAllForumTopicMessagesJSONBody
+type UnpinAllForumTopicMessagesJSONRequestBody UnpinAllForumTopicMessagesJSONBody
 
 // UnpinAllGeneralForumTopicMessagesJSONRequestBody defines body for UnpinAllGeneralForumTopicMessages for application/json ContentType.
-type UnpinAllGeneralForumTopicMessagesJSONRequestBody = UnpinAllGeneralForumTopicMessagesJSONBody
+type UnpinAllGeneralForumTopicMessagesJSONRequestBody UnpinAllGeneralForumTopicMessagesJSONBody
 
 // UnpinChatMessageJSONRequestBody defines body for UnpinChatMessage for application/json ContentType.
-type UnpinChatMessageJSONRequestBody = UnpinChatMessageJSONBody
+type UnpinChatMessageJSONRequestBody UnpinChatMessageJSONBody
 
 // UpgradeGiftJSONRequestBody defines body for UpgradeGift for application/json ContentType.
-type UpgradeGiftJSONRequestBody = UpgradeGiftJSONBody
+type UpgradeGiftJSONRequestBody UpgradeGiftJSONBody
 
 // UploadStickerFileJSONRequestBody defines body for UploadStickerFile for application/json ContentType.
-type UploadStickerFileJSONRequestBody = UploadStickerFileJSONBody
+type UploadStickerFileJSONRequestBody UploadStickerFileJSONBody
+
+// UploadStickerFileMultipartRequestBody defines body for UploadStickerFile for multipart/form-data ContentType.
+type UploadStickerFileMultipartRequestBody UploadStickerFileMultipartBody
 
 // VerifyChatJSONRequestBody defines body for VerifyChat for application/json ContentType.
-type VerifyChatJSONRequestBody = VerifyChatJSONBody
+type VerifyChatJSONRequestBody VerifyChatJSONBody
 
 // VerifyUserJSONRequestBody defines body for VerifyUser for application/json ContentType.
-type VerifyUserJSONRequestBody = VerifyUserJSONBody
+type VerifyUserJSONRequestBody VerifyUserJSONBody
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -2986,10 +4911,8 @@ type ClientInterface interface {
 
 	BanChatSenderChat(ctx context.Context, body BanChatSenderChatJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// CloseWithBody request with any body
-	CloseWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	Close(ctx context.Context, body CloseJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// Close request
+	Close(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// CloseForumTopicWithBody request with any body
 	CloseForumTopicWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3181,10 +5104,8 @@ type ClientInterface interface {
 
 	ForwardMessages(ctx context.Context, body ForwardMessagesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetAvailableGiftsWithBody request with any body
-	GetAvailableGiftsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	GetAvailableGifts(ctx context.Context, body GetAvailableGiftsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetAvailableGifts request
+	GetAvailableGifts(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetBusinessAccountGiftsWithBody request with any body
 	GetBusinessAccountGiftsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3236,20 +5157,16 @@ type ClientInterface interface {
 
 	GetFile(ctx context.Context, body GetFileJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetForumTopicIconStickersWithBody request with any body
-	GetForumTopicIconStickersWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	GetForumTopicIconStickers(ctx context.Context, body GetForumTopicIconStickersJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetForumTopicIconStickers request
+	GetForumTopicIconStickers(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetGameHighScoresWithBody request with any body
 	GetGameHighScoresWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	GetGameHighScores(ctx context.Context, body GetGameHighScoresJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetMeWithBody request with any body
-	GetMeWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	GetMe(ctx context.Context, body GetMeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetMe request
+	GetMe(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetMyCommandsWithBody request with any body
 	GetMyCommandsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3276,10 +5193,8 @@ type ClientInterface interface {
 
 	GetMyShortDescription(ctx context.Context, body GetMyShortDescriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetMyStarBalanceWithBody request with any body
-	GetMyStarBalanceWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	GetMyStarBalance(ctx context.Context, body GetMyStarBalanceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetMyStarBalance request
+	GetMyStarBalance(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetStarTransactionsWithBody request with any body
 	GetStarTransactionsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3306,10 +5221,8 @@ type ClientInterface interface {
 
 	GetUserProfilePhotos(ctx context.Context, body GetUserProfilePhotosJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetWebhookInfoWithBody request with any body
-	GetWebhookInfoWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	GetWebhookInfo(ctx context.Context, body GetWebhookInfoJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetWebhookInfo request
+	GetWebhookInfo(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GiftPremiumSubscriptionWithBody request with any body
 	GiftPremiumSubscriptionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3326,10 +5239,8 @@ type ClientInterface interface {
 
 	LeaveChat(ctx context.Context, body LeaveChatJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// LogOutWithBody request with any body
-	LogOutWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	LogOut(ctx context.Context, body LogOutJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// LogOut request
+	LogOut(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PinChatMessageWithBody request with any body
 	PinChatMessageWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3967,20 +5878,8 @@ func (c *Client) BanChatSenderChat(ctx context.Context, body BanChatSenderChatJS
 	return c.Client.Do(req)
 }
 
-func (c *Client) CloseWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCloseRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) Close(ctx context.Context, body CloseJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCloseRequest(c.Server, body)
+func (c *Client) Close(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloseRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -4903,20 +6802,8 @@ func (c *Client) ForwardMessages(ctx context.Context, body ForwardMessagesJSONRe
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetAvailableGiftsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetAvailableGiftsRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetAvailableGifts(ctx context.Context, body GetAvailableGiftsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetAvailableGiftsRequest(c.Server, body)
+func (c *Client) GetAvailableGifts(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAvailableGiftsRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -5167,20 +7054,8 @@ func (c *Client) GetFile(ctx context.Context, body GetFileJSONRequestBody, reqEd
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetForumTopicIconStickersWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetForumTopicIconStickersRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetForumTopicIconStickers(ctx context.Context, body GetForumTopicIconStickersJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetForumTopicIconStickersRequest(c.Server, body)
+func (c *Client) GetForumTopicIconStickers(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetForumTopicIconStickersRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -5215,20 +7090,8 @@ func (c *Client) GetGameHighScores(ctx context.Context, body GetGameHighScoresJS
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetMeWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetMeRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetMe(ctx context.Context, body GetMeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetMeRequest(c.Server, body)
+func (c *Client) GetMe(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetMeRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -5359,20 +7222,8 @@ func (c *Client) GetMyShortDescription(ctx context.Context, body GetMyShortDescr
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetMyStarBalanceWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetMyStarBalanceRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetMyStarBalance(ctx context.Context, body GetMyStarBalanceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetMyStarBalanceRequest(c.Server, body)
+func (c *Client) GetMyStarBalance(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetMyStarBalanceRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -5503,20 +7354,8 @@ func (c *Client) GetUserProfilePhotos(ctx context.Context, body GetUserProfilePh
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetWebhookInfoWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetWebhookInfoRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetWebhookInfo(ctx context.Context, body GetWebhookInfoJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetWebhookInfoRequest(c.Server, body)
+func (c *Client) GetWebhookInfo(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetWebhookInfoRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -5599,20 +7438,8 @@ func (c *Client) LeaveChat(ctx context.Context, body LeaveChatJSONRequestBody, r
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogOutWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewLogOutRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) LogOut(ctx context.Context, body LogOutJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewLogOutRequest(c.Server, body)
+func (c *Client) LogOut(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewLogOutRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -7919,19 +9746,8 @@ func NewBanChatSenderChatRequestWithBody(server string, contentType string, body
 	return req, nil
 }
 
-// NewCloseRequest calls the generic Close builder with application/json body
-func NewCloseRequest(server string, body CloseJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewCloseRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewCloseRequestWithBody generates requests for Close with any type of body
-func NewCloseRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+// NewCloseRequest generates requests for Close
+func NewCloseRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -7949,12 +9765,10 @@ func NewCloseRequestWithBody(server string, contentType string, body io.Reader) 
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryURL.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -9479,19 +11293,8 @@ func NewForwardMessagesRequestWithBody(server string, contentType string, body i
 	return req, nil
 }
 
-// NewGetAvailableGiftsRequest calls the generic GetAvailableGifts builder with application/json body
-func NewGetAvailableGiftsRequest(server string, body GetAvailableGiftsJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewGetAvailableGiftsRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewGetAvailableGiftsRequestWithBody generates requests for GetAvailableGifts with any type of body
-func NewGetAvailableGiftsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+// NewGetAvailableGiftsRequest generates requests for GetAvailableGifts
+func NewGetAvailableGiftsRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -9509,12 +11312,10 @@ func NewGetAvailableGiftsRequestWithBody(server string, contentType string, body
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryURL.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -9919,19 +11720,8 @@ func NewGetFileRequestWithBody(server string, contentType string, body io.Reader
 	return req, nil
 }
 
-// NewGetForumTopicIconStickersRequest calls the generic GetForumTopicIconStickers builder with application/json body
-func NewGetForumTopicIconStickersRequest(server string, body GetForumTopicIconStickersJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewGetForumTopicIconStickersRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewGetForumTopicIconStickersRequestWithBody generates requests for GetForumTopicIconStickers with any type of body
-func NewGetForumTopicIconStickersRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+// NewGetForumTopicIconStickersRequest generates requests for GetForumTopicIconStickers
+func NewGetForumTopicIconStickersRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -9949,12 +11739,10 @@ func NewGetForumTopicIconStickersRequestWithBody(server string, contentType stri
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryURL.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -9999,19 +11787,8 @@ func NewGetGameHighScoresRequestWithBody(server string, contentType string, body
 	return req, nil
 }
 
-// NewGetMeRequest calls the generic GetMe builder with application/json body
-func NewGetMeRequest(server string, body GetMeJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewGetMeRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewGetMeRequestWithBody generates requests for GetMe with any type of body
-func NewGetMeRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+// NewGetMeRequest generates requests for GetMe
+func NewGetMeRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -10029,12 +11806,10 @@ func NewGetMeRequestWithBody(server string, contentType string, body io.Reader) 
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryURL.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -10239,19 +12014,8 @@ func NewGetMyShortDescriptionRequestWithBody(server string, contentType string, 
 	return req, nil
 }
 
-// NewGetMyStarBalanceRequest calls the generic GetMyStarBalance builder with application/json body
-func NewGetMyStarBalanceRequest(server string, body GetMyStarBalanceJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewGetMyStarBalanceRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewGetMyStarBalanceRequestWithBody generates requests for GetMyStarBalance with any type of body
-func NewGetMyStarBalanceRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+// NewGetMyStarBalanceRequest generates requests for GetMyStarBalance
+func NewGetMyStarBalanceRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -10269,12 +12033,10 @@ func NewGetMyStarBalanceRequestWithBody(server string, contentType string, body 
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryURL.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -10479,19 +12241,8 @@ func NewGetUserProfilePhotosRequestWithBody(server string, contentType string, b
 	return req, nil
 }
 
-// NewGetWebhookInfoRequest calls the generic GetWebhookInfo builder with application/json body
-func NewGetWebhookInfoRequest(server string, body GetWebhookInfoJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewGetWebhookInfoRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewGetWebhookInfoRequestWithBody generates requests for GetWebhookInfo with any type of body
-func NewGetWebhookInfoRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+// NewGetWebhookInfoRequest generates requests for GetWebhookInfo
+func NewGetWebhookInfoRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -10509,12 +12260,10 @@ func NewGetWebhookInfoRequestWithBody(server string, contentType string, body io
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryURL.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -10639,19 +12388,8 @@ func NewLeaveChatRequestWithBody(server string, contentType string, body io.Read
 	return req, nil
 }
 
-// NewLogOutRequest calls the generic LogOut builder with application/json body
-func NewLogOutRequest(server string, body LogOutJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewLogOutRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewLogOutRequestWithBody generates requests for LogOut with any type of body
-func NewLogOutRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+// NewLogOutRequest generates requests for LogOut
+func NewLogOutRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -10669,12 +12407,10 @@ func NewLogOutRequestWithBody(server string, contentType string, body io.Reader)
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryURL.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -13932,10 +15668,8 @@ type ClientWithResponsesInterface interface {
 
 	BanChatSenderChatWithResponse(ctx context.Context, body BanChatSenderChatJSONRequestBody, reqEditors ...RequestEditorFn) (*BanChatSenderChatResponse, error)
 
-	// CloseWithBodyWithResponse request with any body
-	CloseWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloseResponse, error)
-
-	CloseWithResponse(ctx context.Context, body CloseJSONRequestBody, reqEditors ...RequestEditorFn) (*CloseResponse, error)
+	// CloseWithResponse request
+	CloseWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*CloseResponse, error)
 
 	// CloseForumTopicWithBodyWithResponse request with any body
 	CloseForumTopicWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloseForumTopicResponse, error)
@@ -14127,10 +15861,8 @@ type ClientWithResponsesInterface interface {
 
 	ForwardMessagesWithResponse(ctx context.Context, body ForwardMessagesJSONRequestBody, reqEditors ...RequestEditorFn) (*ForwardMessagesResponse, error)
 
-	// GetAvailableGiftsWithBodyWithResponse request with any body
-	GetAvailableGiftsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetAvailableGiftsResponse, error)
-
-	GetAvailableGiftsWithResponse(ctx context.Context, body GetAvailableGiftsJSONRequestBody, reqEditors ...RequestEditorFn) (*GetAvailableGiftsResponse, error)
+	// GetAvailableGiftsWithResponse request
+	GetAvailableGiftsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAvailableGiftsResponse, error)
 
 	// GetBusinessAccountGiftsWithBodyWithResponse request with any body
 	GetBusinessAccountGiftsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetBusinessAccountGiftsResponse, error)
@@ -14182,20 +15914,16 @@ type ClientWithResponsesInterface interface {
 
 	GetFileWithResponse(ctx context.Context, body GetFileJSONRequestBody, reqEditors ...RequestEditorFn) (*GetFileResponse, error)
 
-	// GetForumTopicIconStickersWithBodyWithResponse request with any body
-	GetForumTopicIconStickersWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetForumTopicIconStickersResponse, error)
-
-	GetForumTopicIconStickersWithResponse(ctx context.Context, body GetForumTopicIconStickersJSONRequestBody, reqEditors ...RequestEditorFn) (*GetForumTopicIconStickersResponse, error)
+	// GetForumTopicIconStickersWithResponse request
+	GetForumTopicIconStickersWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetForumTopicIconStickersResponse, error)
 
 	// GetGameHighScoresWithBodyWithResponse request with any body
 	GetGameHighScoresWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetGameHighScoresResponse, error)
 
 	GetGameHighScoresWithResponse(ctx context.Context, body GetGameHighScoresJSONRequestBody, reqEditors ...RequestEditorFn) (*GetGameHighScoresResponse, error)
 
-	// GetMeWithBodyWithResponse request with any body
-	GetMeWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetMeResponse, error)
-
-	GetMeWithResponse(ctx context.Context, body GetMeJSONRequestBody, reqEditors ...RequestEditorFn) (*GetMeResponse, error)
+	// GetMeWithResponse request
+	GetMeWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMeResponse, error)
 
 	// GetMyCommandsWithBodyWithResponse request with any body
 	GetMyCommandsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetMyCommandsResponse, error)
@@ -14222,10 +15950,8 @@ type ClientWithResponsesInterface interface {
 
 	GetMyShortDescriptionWithResponse(ctx context.Context, body GetMyShortDescriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*GetMyShortDescriptionResponse, error)
 
-	// GetMyStarBalanceWithBodyWithResponse request with any body
-	GetMyStarBalanceWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetMyStarBalanceResponse, error)
-
-	GetMyStarBalanceWithResponse(ctx context.Context, body GetMyStarBalanceJSONRequestBody, reqEditors ...RequestEditorFn) (*GetMyStarBalanceResponse, error)
+	// GetMyStarBalanceWithResponse request
+	GetMyStarBalanceWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMyStarBalanceResponse, error)
 
 	// GetStarTransactionsWithBodyWithResponse request with any body
 	GetStarTransactionsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetStarTransactionsResponse, error)
@@ -14252,10 +15978,8 @@ type ClientWithResponsesInterface interface {
 
 	GetUserProfilePhotosWithResponse(ctx context.Context, body GetUserProfilePhotosJSONRequestBody, reqEditors ...RequestEditorFn) (*GetUserProfilePhotosResponse, error)
 
-	// GetWebhookInfoWithBodyWithResponse request with any body
-	GetWebhookInfoWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetWebhookInfoResponse, error)
-
-	GetWebhookInfoWithResponse(ctx context.Context, body GetWebhookInfoJSONRequestBody, reqEditors ...RequestEditorFn) (*GetWebhookInfoResponse, error)
+	// GetWebhookInfoWithResponse request
+	GetWebhookInfoWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetWebhookInfoResponse, error)
 
 	// GiftPremiumSubscriptionWithBodyWithResponse request with any body
 	GiftPremiumSubscriptionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GiftPremiumSubscriptionResponse, error)
@@ -14272,10 +15996,8 @@ type ClientWithResponsesInterface interface {
 
 	LeaveChatWithResponse(ctx context.Context, body LeaveChatJSONRequestBody, reqEditors ...RequestEditorFn) (*LeaveChatResponse, error)
 
-	// LogOutWithBodyWithResponse request with any body
-	LogOutWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogOutResponse, error)
-
-	LogOutWithResponse(ctx context.Context, body LogOutJSONRequestBody, reqEditors ...RequestEditorFn) (*LogOutResponse, error)
+	// LogOutWithResponse request
+	LogOutWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*LogOutResponse, error)
 
 	// PinChatMessageWithBodyWithResponse request with any body
 	PinChatMessageWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PinChatMessageResponse, error)
@@ -19409,17 +21131,9 @@ func (c *ClientWithResponses) BanChatSenderChatWithResponse(ctx context.Context,
 	return ParseBanChatSenderChatResponse(rsp)
 }
 
-// CloseWithBodyWithResponse request with arbitrary body returning *CloseResponse
-func (c *ClientWithResponses) CloseWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloseResponse, error) {
-	rsp, err := c.CloseWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCloseResponse(rsp)
-}
-
-func (c *ClientWithResponses) CloseWithResponse(ctx context.Context, body CloseJSONRequestBody, reqEditors ...RequestEditorFn) (*CloseResponse, error) {
-	rsp, err := c.Close(ctx, body, reqEditors...)
+// CloseWithResponse request returning *CloseResponse
+func (c *ClientWithResponses) CloseWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*CloseResponse, error) {
+	rsp, err := c.Close(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -20072,17 +21786,9 @@ func (c *ClientWithResponses) ForwardMessagesWithResponse(ctx context.Context, b
 	return ParseForwardMessagesResponse(rsp)
 }
 
-// GetAvailableGiftsWithBodyWithResponse request with arbitrary body returning *GetAvailableGiftsResponse
-func (c *ClientWithResponses) GetAvailableGiftsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetAvailableGiftsResponse, error) {
-	rsp, err := c.GetAvailableGiftsWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetAvailableGiftsResponse(rsp)
-}
-
-func (c *ClientWithResponses) GetAvailableGiftsWithResponse(ctx context.Context, body GetAvailableGiftsJSONRequestBody, reqEditors ...RequestEditorFn) (*GetAvailableGiftsResponse, error) {
-	rsp, err := c.GetAvailableGifts(ctx, body, reqEditors...)
+// GetAvailableGiftsWithResponse request returning *GetAvailableGiftsResponse
+func (c *ClientWithResponses) GetAvailableGiftsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAvailableGiftsResponse, error) {
+	rsp, err := c.GetAvailableGifts(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -20259,17 +21965,9 @@ func (c *ClientWithResponses) GetFileWithResponse(ctx context.Context, body GetF
 	return ParseGetFileResponse(rsp)
 }
 
-// GetForumTopicIconStickersWithBodyWithResponse request with arbitrary body returning *GetForumTopicIconStickersResponse
-func (c *ClientWithResponses) GetForumTopicIconStickersWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetForumTopicIconStickersResponse, error) {
-	rsp, err := c.GetForumTopicIconStickersWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetForumTopicIconStickersResponse(rsp)
-}
-
-func (c *ClientWithResponses) GetForumTopicIconStickersWithResponse(ctx context.Context, body GetForumTopicIconStickersJSONRequestBody, reqEditors ...RequestEditorFn) (*GetForumTopicIconStickersResponse, error) {
-	rsp, err := c.GetForumTopicIconStickers(ctx, body, reqEditors...)
+// GetForumTopicIconStickersWithResponse request returning *GetForumTopicIconStickersResponse
+func (c *ClientWithResponses) GetForumTopicIconStickersWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetForumTopicIconStickersResponse, error) {
+	rsp, err := c.GetForumTopicIconStickers(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -20293,17 +21991,9 @@ func (c *ClientWithResponses) GetGameHighScoresWithResponse(ctx context.Context,
 	return ParseGetGameHighScoresResponse(rsp)
 }
 
-// GetMeWithBodyWithResponse request with arbitrary body returning *GetMeResponse
-func (c *ClientWithResponses) GetMeWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetMeResponse, error) {
-	rsp, err := c.GetMeWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetMeResponse(rsp)
-}
-
-func (c *ClientWithResponses) GetMeWithResponse(ctx context.Context, body GetMeJSONRequestBody, reqEditors ...RequestEditorFn) (*GetMeResponse, error) {
-	rsp, err := c.GetMe(ctx, body, reqEditors...)
+// GetMeWithResponse request returning *GetMeResponse
+func (c *ClientWithResponses) GetMeWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMeResponse, error) {
+	rsp, err := c.GetMe(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -20395,17 +22085,9 @@ func (c *ClientWithResponses) GetMyShortDescriptionWithResponse(ctx context.Cont
 	return ParseGetMyShortDescriptionResponse(rsp)
 }
 
-// GetMyStarBalanceWithBodyWithResponse request with arbitrary body returning *GetMyStarBalanceResponse
-func (c *ClientWithResponses) GetMyStarBalanceWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetMyStarBalanceResponse, error) {
-	rsp, err := c.GetMyStarBalanceWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetMyStarBalanceResponse(rsp)
-}
-
-func (c *ClientWithResponses) GetMyStarBalanceWithResponse(ctx context.Context, body GetMyStarBalanceJSONRequestBody, reqEditors ...RequestEditorFn) (*GetMyStarBalanceResponse, error) {
-	rsp, err := c.GetMyStarBalance(ctx, body, reqEditors...)
+// GetMyStarBalanceWithResponse request returning *GetMyStarBalanceResponse
+func (c *ClientWithResponses) GetMyStarBalanceWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMyStarBalanceResponse, error) {
+	rsp, err := c.GetMyStarBalance(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -20497,17 +22179,9 @@ func (c *ClientWithResponses) GetUserProfilePhotosWithResponse(ctx context.Conte
 	return ParseGetUserProfilePhotosResponse(rsp)
 }
 
-// GetWebhookInfoWithBodyWithResponse request with arbitrary body returning *GetWebhookInfoResponse
-func (c *ClientWithResponses) GetWebhookInfoWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetWebhookInfoResponse, error) {
-	rsp, err := c.GetWebhookInfoWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetWebhookInfoResponse(rsp)
-}
-
-func (c *ClientWithResponses) GetWebhookInfoWithResponse(ctx context.Context, body GetWebhookInfoJSONRequestBody, reqEditors ...RequestEditorFn) (*GetWebhookInfoResponse, error) {
-	rsp, err := c.GetWebhookInfo(ctx, body, reqEditors...)
+// GetWebhookInfoWithResponse request returning *GetWebhookInfoResponse
+func (c *ClientWithResponses) GetWebhookInfoWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetWebhookInfoResponse, error) {
+	rsp, err := c.GetWebhookInfo(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -20565,17 +22239,9 @@ func (c *ClientWithResponses) LeaveChatWithResponse(ctx context.Context, body Le
 	return ParseLeaveChatResponse(rsp)
 }
 
-// LogOutWithBodyWithResponse request with arbitrary body returning *LogOutResponse
-func (c *ClientWithResponses) LogOutWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogOutResponse, error) {
-	rsp, err := c.LogOutWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseLogOutResponse(rsp)
-}
-
-func (c *ClientWithResponses) LogOutWithResponse(ctx context.Context, body LogOutJSONRequestBody, reqEditors ...RequestEditorFn) (*LogOutResponse, error) {
-	rsp, err := c.LogOut(ctx, body, reqEditors...)
+// LogOutWithResponse request returning *LogOutResponse
+func (c *ClientWithResponses) LogOutWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*LogOutResponse, error) {
+	rsp, err := c.LogOut(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
