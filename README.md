@@ -1,10 +1,10 @@
 # tgbotkit client
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/tgbotkit/client.svg)](https://pkg.go.dev/github.com/tgbotkit/client)
 [![Go Report Card](https://goreportcard.com/badge/github.com/tgbotkit/client)](https://goreportcard.com/report/github.com/tgbotkit/client)
 [![tests](https://github.com/tgbotkit/client/actions/workflows/tests.yml/badge.svg)](https://github.com/tgbotkit/client/actions/workflows/tests.yml)
 [![version](https://img.shields.io/github/v/release/tgbotkit/client?sort=semver)](https://github.com/tgbotkit/client/releases)
 [![license](https://img.shields.io/github/license/tgbotkit/client)](LICENSE)
+[![Go Reference](https://pkg.go.dev/badge/github.com/tgbotkit/client.svg)](https://pkg.go.dev/github.com/tgbotkit/client)
 
 Go client for the Telegram Bot API, generated from the official spec. This project follows an **API-first** approach, using an OpenAPI specification to ensure consistency and correctness.
 
