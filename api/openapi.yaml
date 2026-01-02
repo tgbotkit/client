@@ -117,11 +117,7 @@ paths:
                   type: string
                   description: URL that will be opened by the user's client. If you have created a Game and accepted the conditions via @BotFather, specify the URL that opens your game - note that this will only work if the query comes from a callback_game button.Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
               required:
-                - cache_time
                 - callback_query_id
-                - show_alert
-                - text
-                - url
       responses:
         '200':
           description: OK
@@ -185,11 +181,7 @@ paths:
                   items:
                       $ref: '#/components/schemas/InlineQueryResult'
               required:
-                - button
-                - cache_time
                 - inline_query_id
-                - is_personal
-                - next_offset
                 - results
       responses:
         '200':
@@ -242,7 +234,6 @@ paths:
                   type: string
                   description: Unique identifier for the query to be answered
               required:
-                - error_message
                 - ok
                 - pre_checkout_query_id
       responses:
@@ -301,9 +292,7 @@ paths:
                   type: string
                   description: Unique identifier for the query to be answered
               required:
-                - error_message
                 - ok
-                - shipping_options
                 - shipping_query_id
       responses:
         '200':
@@ -458,7 +447,6 @@ paths:
               required:
                 - chat_id
                 - message_id
-                - send_date
       responses:
         '200':
           description: OK
@@ -514,8 +502,6 @@ paths:
                   description: Unique identifier of the target user
               required:
                 - chat_id
-                - revoke_messages
-                - until_date
                 - user_id
       responses:
         '200':
@@ -882,23 +868,9 @@ paths:
                   type: integer
                   description: New start timestamp for the copied video in the message
               required:
-                - allow_paid_broadcast
-                - caption
-                - caption_entities
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
                 - from_chat_id
-                - message_effect_id
                 - message_id
-                - message_thread_id
-                - parse_mode
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - show_caption_above_media
-                - suggested_post_parameters
-                - video_start_timestamp
       responses:
         '200':
           description: OK
@@ -967,13 +939,8 @@ paths:
                   description: Pass True to copy the messages without their captions
               required:
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
                 - from_chat_id
                 - message_ids
-                - message_thread_id
-                - protect_content
-                - remove_caption
       responses:
         '200':
           description: OK
@@ -1033,10 +1000,6 @@ paths:
                   description: Invite link name; 0-32 characters
               required:
                 - chat_id
-                - creates_join_request
-                - expire_date
-                - member_limit
-                - name
       responses:
         '200':
           description: OK
@@ -1091,7 +1054,6 @@ paths:
                   description: The amount of Telegram Stars a user must pay initially and after each subsequent subscription period to be a member of the chat; 1-10000
               required:
                 - chat_id
-                - name
                 - subscription_period
                 - subscription_price
       responses:
@@ -1148,8 +1110,6 @@ paths:
                   description: Topic name, 1-128 characters
               required:
                 - chat_id
-                - icon_color
-                - icon_custom_emoji_id
                 - name
       responses:
         '200':
@@ -1262,27 +1222,10 @@ paths:
                   type: string
                   description: Product name, 1-32 characters
               required:
-                - business_connection_id
                 - currency
                 - description
-                - is_flexible
-                - max_tip_amount
-                - need_email
-                - need_name
-                - need_phone_number
-                - need_shipping_address
                 - payload
-                - photo_height
-                - photo_size
-                - photo_url
-                - photo_width
                 - prices
-                - provider_data
-                - provider_token
-                - send_email_to_provider
-                - send_phone_number_to_provider
-                - subscription_period
-                - suggested_tip_amounts
                 - title
       responses:
         '200':
@@ -1346,8 +1289,6 @@ paths:
                   description: User identifier of created sticker set owner
               required:
                 - name
-                - needs_repainting
-                - sticker_type
                 - stickers
                 - title
                 - user_id
@@ -1377,8 +1318,6 @@ paths:
                   description: User identifier of created sticker set owner
               required:
                 - name
-                - needs_repainting
-                - sticker_type
                 - stickers
                 - title
                 - user_id
@@ -1484,7 +1423,6 @@ paths:
                   description: Identifier of a suggested post message to decline
               required:
                 - chat_id
-                - comment
                 - message_id
       responses:
         '200':
@@ -1831,9 +1769,6 @@ paths:
                   description: A JSON-serialized object, describing scope of users for which the commands are relevant. Defaults to BotCommandScopeDefault.
                   allOf:
                       - $ref: '#/components/schemas/BotCommandScope'
-              required:
-                - language_code
-                - scope
       responses:
         '200':
           description: OK
@@ -2022,8 +1957,6 @@ paths:
                 drop_pending_updates:
                   type: boolean
                   description: Pass True to drop all pending updates
-              required:
-                - drop_pending_updates
       responses:
         '200':
           description: OK
@@ -2085,11 +2018,7 @@ paths:
                   description: Invite link name; 0-32 characters
               required:
                 - chat_id
-                - creates_join_request
-                - expire_date
                 - invite_link
-                - member_limit
-                - name
       responses:
         '200':
           description: OK
@@ -2142,7 +2071,6 @@ paths:
               required:
                 - chat_id
                 - invite_link
-                - name
       responses:
         '200':
           description: OK
@@ -2197,9 +2125,7 @@ paths:
                   description: New topic name, 0-128 characters. If not specified or empty, the current name of the topic will be kept
               required:
                 - chat_id
-                - icon_custom_emoji_id
                 - message_thread_id
-                - name
       responses:
         '200':
           description: OK
@@ -2321,16 +2247,6 @@ paths:
                 show_caption_above_media:
                   type: boolean
                   description: Pass True, if the caption must be shown above the message media. Supported only for animation, photo and video messages.
-              required:
-                - business_connection_id
-                - caption
-                - caption_entities
-                - chat_id
-                - inline_message_id
-                - message_id
-                - parse_mode
-                - reply_markup
-                - show_caption_above_media
       responses:
         '200':
           description: OK
@@ -2396,7 +2312,6 @@ paths:
                 - chat_id
                 - checklist
                 - message_id
-                - reply_markup
       responses:
         '200':
           description: OK
@@ -2472,17 +2387,8 @@ paths:
                   allOf:
                       - $ref: '#/components/schemas/InlineKeyboardMarkup'
               required:
-                - business_connection_id
-                - chat_id
-                - heading
-                - horizontal_accuracy
-                - inline_message_id
                 - latitude
-                - live_period
                 - longitude
-                - message_id
-                - proximity_alert_radius
-                - reply_markup
       responses:
         '200':
           description: OK
@@ -2547,12 +2453,7 @@ paths:
                   allOf:
                       - $ref: '#/components/schemas/InlineKeyboardMarkup'
               required:
-                - business_connection_id
-                - chat_id
-                - inline_message_id
                 - media
-                - message_id
-                - reply_markup
           multipart/form-data:
             schema:
               type: object
@@ -2578,12 +2479,7 @@ paths:
                   allOf:
                       - $ref: '#/components/schemas/InlineKeyboardMarkup'
               required:
-                - business_connection_id
-                - chat_id
-                - inline_message_id
                 - media
-                - message_id
-                - reply_markup
       responses:
         '200':
           description: OK
@@ -2643,12 +2539,6 @@ paths:
                   description: A JSON-serialized object for an inline keyboard.
                   allOf:
                       - $ref: '#/components/schemas/InlineKeyboardMarkup'
-              required:
-                - business_connection_id
-                - chat_id
-                - inline_message_id
-                - message_id
-                - reply_markup
       responses:
         '200':
           description: OK
@@ -2724,14 +2614,6 @@ paths:
                   type: string
                   description: New text of the message, 1-4096 characters after entities parsing
               required:
-                - business_connection_id
-                - chat_id
-                - entities
-                - inline_message_id
-                - link_preview_options
-                - message_id
-                - parse_mode
-                - reply_markup
                 - text
       responses:
         '200':
@@ -2803,12 +2685,8 @@ paths:
                   type: integer
                   description: Unique identifier of the story to edit
               required:
-                - areas
                 - business_connection_id
-                - caption
-                - caption_entities
                 - content
-                - parse_mode
                 - story_id
       responses:
         '200':
@@ -2982,15 +2860,8 @@ paths:
                   description: New start timestamp for the forwarded video in the message
               required:
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
                 - from_chat_id
-                - message_effect_id
                 - message_id
-                - message_thread_id
-                - protect_content
-                - suggested_post_parameters
-                - video_start_timestamp
       responses:
         '200':
           description: OK
@@ -3056,12 +2927,8 @@ paths:
                   description: Protects the contents of the forwarded messages from forwarding and saving
               required:
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
                 - from_chat_id
                 - message_ids
-                - message_thread_id
-                - protect_content
       responses:
         '200':
           description: OK
@@ -3172,16 +3039,6 @@ paths:
                   description: Pass True to sort results by gift price instead of send date. Sorting is applied before pagination.
               required:
                 - business_connection_id
-                - exclude_from_blockchain
-                - exclude_limited_non_upgradable
-                - exclude_limited_upgradable
-                - exclude_saved
-                - exclude_unique
-                - exclude_unlimited
-                - exclude_unsaved
-                - limit
-                - offset
-                - sort_by_price
       responses:
         '200':
           description: OK
@@ -3439,16 +3296,6 @@ paths:
                   description: Pass True to sort results by gift price instead of send date. Sorting is applied before pagination.
               required:
                 - chat_id
-                - exclude_from_blockchain
-                - exclude_limited_non_upgradable
-                - exclude_limited_upgradable
-                - exclude_saved
-                - exclude_unique
-                - exclude_unlimited
-                - exclude_unsaved
-                - limit
-                - offset
-                - sort_by_price
       responses:
         '200':
           description: OK
@@ -3586,8 +3433,6 @@ paths:
                 chat_id:
                   type: integer
                   description: Unique identifier for the target private chat. If not specified, default bot's menu button will be returned
-              required:
-                - chat_id
       responses:
         '200':
           description: OK
@@ -3771,9 +3616,6 @@ paths:
                   type: integer
                   description: Target user id
               required:
-                - chat_id
-                - inline_message_id
-                - message_id
                 - user_id
       responses:
         '200':
@@ -3857,9 +3699,6 @@ paths:
                   description: A JSON-serialized object, describing scope of users. Defaults to BotCommandScopeDefault.
                   allOf:
                       - $ref: '#/components/schemas/BotCommandScope'
-              required:
-                - language_code
-                - scope
       responses:
         '200':
           description: OK
@@ -3905,8 +3744,6 @@ paths:
                 for_channels:
                   type: boolean
                   description: Pass True to get default administrator rights of the bot in channels. Otherwise, default administrator rights of the bot for groups and supergroups will be returned.
-              required:
-                - for_channels
       responses:
         '200':
           description: OK
@@ -3950,8 +3787,6 @@ paths:
                 language_code:
                   type: string
                   description: A two-letter ISO 639-1 language code or an empty string
-              required:
-                - language_code
       responses:
         '200':
           description: OK
@@ -3995,8 +3830,6 @@ paths:
                 language_code:
                   type: string
                   description: A two-letter ISO 639-1 language code or an empty string
-              required:
-                - language_code
       responses:
         '200':
           description: OK
@@ -4040,8 +3873,6 @@ paths:
                 language_code:
                   type: string
                   description: A two-letter ISO 639-1 language code or an empty string
-              required:
-                - language_code
       responses:
         '200':
           description: OK
@@ -4121,9 +3952,6 @@ paths:
                 offset:
                   type: integer
                   description: Number of transactions to skip in the response
-              required:
-                - limit
-                - offset
       responses:
         '200':
           description: OK
@@ -4223,11 +4051,6 @@ paths:
                 timeout:
                   type: integer
                   description: Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling. Should be positive, short polling should be used for testing purposes only.
-              required:
-                - allowed_updates
-                - limit
-                - offset
-                - timeout
       responses:
         '200':
           description: OK
@@ -4347,14 +4170,6 @@ paths:
                   type: integer
                   description: Unique identifier of the user
               required:
-                - exclude_from_blockchain
-                - exclude_limited_non_upgradable
-                - exclude_limited_upgradable
-                - exclude_unique
-                - exclude_unlimited
-                - limit
-                - offset
-                - sort_by_price
                 - user_id
       responses:
         '200':
@@ -4406,8 +4221,6 @@ paths:
                   type: integer
                   description: Unique identifier of the target user
               required:
-                - limit
-                - offset
                 - user_id
       responses:
         '200':
@@ -4505,9 +4318,6 @@ paths:
               required:
                 - month_count
                 - star_count
-                - text
-                - text_entities
-                - text_parse_mode
                 - user_id
       responses:
         '200':
@@ -4689,9 +4499,7 @@ paths:
                   type: integer
                   description: Identifier of a message to pin
               required:
-                - business_connection_id
                 - chat_id
-                - disable_notification
                 - message_id
       responses:
         '200':
@@ -4768,14 +4576,8 @@ paths:
                   description: Pass True if the content of the story must be protected from forwarding and screenshotting
               required:
                 - active_period
-                - areas
                 - business_connection_id
-                - caption
-                - caption_entities
                 - content
-                - parse_mode
-                - post_to_chat_page
-                - protect_content
       responses:
         '200':
           description: OK
@@ -4871,23 +4673,7 @@ paths:
                   type: integer
                   description: Unique identifier of the target user
               required:
-                - can_change_info
-                - can_delete_messages
-                - can_delete_stories
-                - can_edit_messages
-                - can_edit_stories
-                - can_invite_users
-                - can_manage_chat
-                - can_manage_direct_messages
-                - can_manage_topics
-                - can_manage_video_chats
-                - can_pin_messages
-                - can_post_messages
-                - can_post_stories
-                - can_promote_members
-                - can_restrict_members
                 - chat_id
-                - is_anonymous
                 - user_id
       responses:
         '200':
@@ -5042,7 +4828,6 @@ paths:
                   description: Pass True to remove the public photo, which is visible even if the main photo is hidden by the business account's privacy settings. After the main photo is removed, the previous profile photo (if present) becomes the main photo.
               required:
                 - business_connection_id
-                - is_public
       responses:
         '200':
           description: OK
@@ -5376,8 +5161,6 @@ paths:
                 - business_connection_id
                 - from_chat_id
                 - from_story_id
-                - post_to_chat_page
-                - protect_content
       responses:
         '200':
           description: OK
@@ -5437,8 +5220,6 @@ paths:
               required:
                 - chat_id
                 - permissions
-                - until_date
-                - use_independent_chat_permissions
                 - user_id
       responses:
         '200':
@@ -5550,10 +5331,6 @@ paths:
                   type: integer
                   description: Unique identifier of the target user that can use the prepared message
               required:
-                - allow_bot_chats
-                - allow_channel_chats
-                - allow_group_chats
-                - allow_user_chats
                 - result
                 - user_id
       responses:
@@ -5702,27 +5479,8 @@ paths:
                   type: integer
                   description: Animation width
               required:
-                - allow_paid_broadcast
                 - animation
-                - business_connection_id
-                - caption
-                - caption_entities
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - duration
-                - has_spoiler
-                - height
-                - message_effect_id
-                - message_thread_id
-                - parse_mode
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - show_caption_above_media
-                - suggested_post_parameters
-                - thumbnail
-                - width
           multipart/form-data:
             schema:
               type: object
@@ -5835,27 +5593,8 @@ paths:
                   type: integer
                   description: Animation width
               required:
-                - allow_paid_broadcast
                 - animation
-                - business_connection_id
-                - caption
-                - caption_entities
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - duration
-                - has_spoiler
-                - height
-                - message_effect_id
-                - message_thread_id
-                - parse_mode
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - show_caption_above_media
-                - suggested_post_parameters
-                - thumbnail
-                - width
       responses:
         '200':
           description: OK
@@ -5997,25 +5736,8 @@ paths:
                   type: string
                   description: Track name
               required:
-                - allow_paid_broadcast
                 - audio
-                - business_connection_id
-                - caption
-                - caption_entities
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - duration
-                - message_effect_id
-                - message_thread_id
-                - parse_mode
-                - performer
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - suggested_post_parameters
-                - thumbnail
-                - title
           multipart/form-data:
             schema:
               type: object
@@ -6122,25 +5844,8 @@ paths:
                   type: string
                   description: Track name
               required:
-                - allow_paid_broadcast
                 - audio
-                - business_connection_id
-                - caption
-                - caption_entities
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - duration
-                - message_effect_id
-                - message_thread_id
-                - parse_mode
-                - performer
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - suggested_post_parameters
-                - thumbnail
-                - title
       responses:
         '200':
           description: OK
@@ -6196,9 +5901,7 @@ paths:
                   description: Unique identifier for the target message thread or topic of a forum; for supergroups and private chats of bots with forum topic mode enabled only
               required:
                 - action
-                - business_connection_id
                 - chat_id
-                - message_thread_id
       responses:
         '200':
           description: OK
@@ -6271,11 +5974,6 @@ paths:
                 - business_connection_id
                 - chat_id
                 - checklist
-                - disable_notification
-                - message_effect_id
-                - protect_content
-                - reply_markup
-                - reply_parameters
       responses:
         '200':
           description: OK
@@ -6402,21 +6100,9 @@ paths:
                   type: string
                   description: Additional data about the contact in the form of a vCard, 0-2048 bytes
               required:
-                - allow_paid_broadcast
-                - business_connection_id
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
                 - first_name
-                - last_name
-                - message_effect_id
-                - message_thread_id
                 - phone_number
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - suggested_post_parameters
-                - vcard
       responses:
         '200':
           description: OK
@@ -6534,18 +6220,7 @@ paths:
                   allOf:
                       - $ref: '#/components/schemas/SuggestedPostParameters'
               required:
-                - allow_paid_broadcast
-                - business_connection_id
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - emoji
-                - message_effect_id
-                - message_thread_id
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - suggested_post_parameters
       responses:
         '200':
           description: OK
@@ -6680,23 +6355,8 @@ paths:
                   type: string
                   description: Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
               required:
-                - allow_paid_broadcast
-                - business_connection_id
-                - caption
-                - caption_entities
                 - chat_id
-                - direct_messages_topic_id
-                - disable_content_type_detection
-                - disable_notification
                 - document
-                - message_effect_id
-                - message_thread_id
-                - parse_mode
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - suggested_post_parameters
-                - thumbnail
           multipart/form-data:
             schema:
               type: object
@@ -6797,23 +6457,8 @@ paths:
                   format: binary
                   description: Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
               required:
-                - allow_paid_broadcast
-                - business_connection_id
-                - caption
-                - caption_entities
                 - chat_id
-                - direct_messages_topic_id
-                - disable_content_type_detection
-                - disable_notification
                 - document
-                - message_effect_id
-                - message_thread_id
-                - parse_mode
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - suggested_post_parameters
-                - thumbnail
       responses:
         '200':
           description: OK
@@ -6887,16 +6532,8 @@ paths:
                   allOf:
                       - $ref: '#/components/schemas/ReplyParameters'
               required:
-                - allow_paid_broadcast
-                - business_connection_id
                 - chat_id
-                - disable_notification
                 - game_short_name
-                - message_effect_id
-                - message_thread_id
-                - protect_content
-                - reply_markup
-                - reply_parameters
       responses:
         '200':
           description: OK
@@ -6961,13 +6598,7 @@ paths:
                   type: integer
                   description: Required if chat_id is not specified. Unique identifier of the target user who will receive the gift.
               required:
-                - chat_id
                 - gift_id
-                - pay_for_upgrade
-                - text
-                - text_entities
-                - text_parse_mode
-                - user_id
       responses:
         '200':
           description: OK
@@ -7110,36 +6741,11 @@ paths:
                   type: string
                   description: Product name, 1-32 characters
               required:
-                - allow_paid_broadcast
                 - chat_id
                 - currency
                 - description
-                - direct_messages_topic_id
-                - disable_notification
-                - is_flexible
-                - max_tip_amount
-                - message_effect_id
-                - message_thread_id
-                - need_email
-                - need_name
-                - need_phone_number
-                - need_shipping_address
                 - payload
-                - photo_height
-                - photo_size
-                - photo_url
-                - photo_width
                 - prices
-                - protect_content
-                - provider_data
-                - provider_token
-                - reply_markup
-                - reply_parameters
-                - send_email_to_provider
-                - send_phone_number_to_provider
-                - start_parameter
-                - suggested_post_parameters
-                - suggested_tip_amounts
                 - title
       responses:
         '200':
@@ -7273,23 +6879,9 @@ paths:
                   allOf:
                       - $ref: '#/components/schemas/SuggestedPostParameters'
               required:
-                - allow_paid_broadcast
-                - business_connection_id
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - heading
-                - horizontal_accuracy
                 - latitude
-                - live_period
                 - longitude
-                - message_effect_id
-                - message_thread_id
-                - protect_content
-                - proximity_alert_radius
-                - reply_markup
-                - reply_parameters
-                - suggested_post_parameters
       responses:
         '200':
           description: OK
@@ -7364,16 +6956,8 @@ paths:
                   allOf:
                       - $ref: '#/components/schemas/ReplyParameters'
               required:
-                - allow_paid_broadcast
-                - business_connection_id
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
                 - media
-                - message_effect_id
-                - message_thread_id
-                - protect_content
-                - reply_parameters
           multipart/form-data:
             schema:
               type: object
@@ -7412,16 +6996,8 @@ paths:
                   allOf:
                       - $ref: '#/components/schemas/ReplyParameters'
               required:
-                - allow_paid_broadcast
-                - business_connection_id
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
                 - media
-                - message_effect_id
-                - message_thread_id
-                - protect_content
-                - reply_parameters
       responses:
         '200':
           description: OK
@@ -7553,20 +7129,7 @@ paths:
                   type: string
                   description: Text of the message to be sent, 1-4096 characters after entities parsing
               required:
-                - allow_paid_broadcast
-                - business_connection_id
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - entities
-                - link_preview_options
-                - message_effect_id
-                - message_thread_id
-                - parse_mode
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - suggested_post_parameters
                 - text
       responses:
         '200':
@@ -7631,9 +7194,6 @@ paths:
               required:
                 - chat_id
                 - draft_id
-                - entities
-                - message_thread_id
-                - parse_mode
                 - text
       responses:
         '200':
@@ -7772,23 +7332,9 @@ paths:
                   allOf:
                       - $ref: '#/components/schemas/SuggestedPostParameters'
               required:
-                - allow_paid_broadcast
-                - business_connection_id
-                - caption
-                - caption_entities
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
                 - media
-                - message_thread_id
-                - parse_mode
-                - payload
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - show_caption_above_media
                 - star_count
-                - suggested_post_parameters
       responses:
         '200':
           description: OK
@@ -7923,23 +7469,8 @@ paths:
                   allOf:
                       - $ref: '#/components/schemas/SuggestedPostParameters'
               required:
-                - allow_paid_broadcast
-                - business_connection_id
-                - caption
-                - caption_entities
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - has_spoiler
-                - message_effect_id
-                - message_thread_id
-                - parse_mode
                 - photo
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - show_caption_above_media
-                - suggested_post_parameters
           multipart/form-data:
             schema:
               type: object
@@ -8039,23 +7570,8 @@ paths:
                   allOf:
                       - $ref: '#/components/schemas/SuggestedPostParameters'
               required:
-                - allow_paid_broadcast
-                - business_connection_id
-                - caption
-                - caption_entities
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - has_spoiler
-                - message_effect_id
-                - message_thread_id
-                - parse_mode
                 - photo
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - show_caption_above_media
-                - suggested_post_parameters
       responses:
         '200':
           description: OK
@@ -8211,29 +7727,9 @@ paths:
                   type: string
                   description: Poll type, “quiz” or “regular”, defaults to “regular”
               required:
-                - allow_paid_broadcast
-                - allows_multiple_answers
-                - business_connection_id
                 - chat_id
-                - close_date
-                - correct_option_id
-                - disable_notification
-                - explanation
-                - explanation_entities
-                - explanation_parse_mode
-                - is_anonymous
-                - is_closed
-                - message_effect_id
-                - message_thread_id
-                - open_period
                 - options
-                - protect_content
                 - question
-                - question_entities
-                - question_parse_mode
-                - reply_markup
-                - reply_parameters
-                - type
       responses:
         '200':
           description: OK
@@ -8354,19 +7850,8 @@ paths:
                   allOf:
                       - $ref: '#/components/schemas/SuggestedPostParameters'
               required:
-                - allow_paid_broadcast
-                - business_connection_id
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - emoji
-                - message_effect_id
-                - message_thread_id
-                - protect_content
-                - reply_markup
-                - reply_parameters
                 - sticker
-                - suggested_post_parameters
           multipart/form-data:
             schema:
               type: object
@@ -8452,19 +7937,8 @@ paths:
                   allOf:
                       - $ref: '#/components/schemas/SuggestedPostParameters'
               required:
-                - allow_paid_broadcast
-                - business_connection_id
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - emoji
-                - message_effect_id
-                - message_thread_id
-                - protect_content
-                - reply_markup
-                - reply_parameters
                 - sticker
-                - suggested_post_parameters
       responses:
         '200':
           description: OK
@@ -8604,23 +8078,9 @@ paths:
                   description: Name of the venue
               required:
                 - address
-                - allow_paid_broadcast
-                - business_connection_id
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - foursquare_id
-                - foursquare_type
-                - google_place_id
-                - google_place_type
                 - latitude
                 - longitude
-                - message_effect_id
-                - message_thread_id
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - suggested_post_parameters
                 - title
       responses:
         '200':
@@ -8777,30 +8237,8 @@ paths:
                   type: integer
                   description: Video width
               required:
-                - allow_paid_broadcast
-                - business_connection_id
-                - caption
-                - caption_entities
                 - chat_id
-                - cover
-                - direct_messages_topic_id
-                - disable_notification
-                - duration
-                - has_spoiler
-                - height
-                - message_effect_id
-                - message_thread_id
-                - parse_mode
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - show_caption_above_media
-                - start_timestamp
-                - suggested_post_parameters
-                - supports_streaming
-                - thumbnail
                 - video
-                - width
           multipart/form-data:
             schema:
               type: object
@@ -8923,30 +8361,8 @@ paths:
                   type: integer
                   description: Video width
               required:
-                - allow_paid_broadcast
-                - business_connection_id
-                - caption
-                - caption_entities
                 - chat_id
-                - cover
-                - direct_messages_topic_id
-                - disable_notification
-                - duration
-                - has_spoiler
-                - height
-                - message_effect_id
-                - message_thread_id
-                - parse_mode
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - show_caption_above_media
-                - start_timestamp
-                - suggested_post_parameters
-                - supports_streaming
-                - thumbnail
                 - video
-                - width
       responses:
         '200':
           description: OK
@@ -9073,20 +8489,7 @@ paths:
                   type: string
                   description: Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending video notes by a URL is currently unsupported
               required:
-                - allow_paid_broadcast
-                - business_connection_id
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - duration
-                - length
-                - message_effect_id
-                - message_thread_id
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - suggested_post_parameters
-                - thumbnail
                 - video_note
           multipart/form-data:
             schema:
@@ -9180,20 +8583,7 @@ paths:
                   format: binary
                   description: Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending video notes by a URL is currently unsupported
               required:
-                - allow_paid_broadcast
-                - business_connection_id
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - duration
-                - length
-                - message_effect_id
-                - message_thread_id
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - suggested_post_parameters
-                - thumbnail
                 - video_note
       responses:
         '200':
@@ -9326,21 +8716,7 @@ paths:
                   type: string
                   description: Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
               required:
-                - allow_paid_broadcast
-                - business_connection_id
-                - caption
-                - caption_entities
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - duration
-                - message_effect_id
-                - message_thread_id
-                - parse_mode
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - suggested_post_parameters
                 - voice
           multipart/form-data:
             schema:
@@ -9438,21 +8814,7 @@ paths:
                   format: binary
                   description: Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
               required:
-                - allow_paid_broadcast
-                - business_connection_id
-                - caption
-                - caption_entities
                 - chat_id
-                - direct_messages_topic_id
-                - disable_notification
-                - duration
-                - message_effect_id
-                - message_thread_id
-                - parse_mode
-                - protect_content
-                - reply_markup
-                - reply_parameters
-                - suggested_post_parameters
                 - voice
       responses:
         '200':
@@ -9501,7 +8863,6 @@ paths:
                   type: string
                   description: Unique identifier of the business connection
               required:
-                - bio
                 - business_connection_id
       responses:
         '200':
@@ -9611,7 +8972,6 @@ paths:
               required:
                 - business_connection_id
                 - first_name
-                - last_name
       responses:
         '200':
           description: OK
@@ -9665,7 +9025,6 @@ paths:
                       - $ref: '#/components/schemas/InputProfilePhoto'
               required:
                 - business_connection_id
-                - is_public
                 - photo
       responses:
         '200':
@@ -9716,7 +9075,6 @@ paths:
                   description: The new value of the username for the business account; 0-32 characters
               required:
                 - business_connection_id
-                - username
       responses:
         '200':
           description: OK
@@ -9820,7 +9178,6 @@ paths:
                   description: New chat description, 0-255 characters
               required:
                 - chat_id
-                - description
       responses:
         '200':
           description: OK
@@ -9869,9 +9226,6 @@ paths:
                   description: A JSON-serialized object for the bot's new menu button. Defaults to MenuButtonDefault
                   allOf:
                       - $ref: '#/components/schemas/MenuButton'
-              required:
-                - chat_id
-                - menu_button
       responses:
         '200':
           description: OK
@@ -9926,7 +9280,6 @@ paths:
               required:
                 - chat_id
                 - permissions
-                - use_independent_chat_permissions
       responses:
         '200':
           description: OK
@@ -10135,7 +9488,6 @@ paths:
                   type: string
                   description: Sticker set name
               required:
-                - custom_emoji_id
                 - name
       responses:
         '200':
@@ -10200,11 +9552,6 @@ paths:
                   type: integer
                   description: User identifier
               required:
-                - chat_id
-                - disable_edit_message
-                - force
-                - inline_message_id
-                - message_id
                 - score
                 - user_id
       responses:
@@ -10266,9 +9613,7 @@ paths:
                       $ref: '#/components/schemas/ReactionType'
               required:
                 - chat_id
-                - is_big
                 - message_id
-                - reaction
       responses:
         '200':
           description: OK
@@ -10324,8 +9669,6 @@ paths:
                       - $ref: '#/components/schemas/BotCommandScope'
               required:
                 - commands
-                - language_code
-                - scope
       responses:
         '200':
           description: OK
@@ -10374,9 +9717,6 @@ paths:
                   description: A JSON-serialized object describing new default administrator rights. If not specified, the default administrator rights will be cleared.
                   allOf:
                       - $ref: '#/components/schemas/ChatAdministratorRights'
-              required:
-                - for_channels
-                - rights
       responses:
         '200':
           description: OK
@@ -10424,9 +9764,6 @@ paths:
                 language_code:
                   type: string
                   description: A two-letter ISO 639-1 language code. If empty, the description will be applied to all users for whose language there is no dedicated description.
-              required:
-                - description
-                - language_code
       responses:
         '200':
           description: OK
@@ -10474,9 +9811,6 @@ paths:
                 name:
                   type: string
                   description: New bot name; 0-64 characters. Pass an empty string to remove the dedicated name for the given language.
-              required:
-                - language_code
-                - name
       responses:
         '200':
           description: OK
@@ -10524,9 +9858,6 @@ paths:
                 short_description:
                   type: string
                   description: New short description for the bot; 0-120 characters. Pass an empty string to remove the dedicated short description for the given language.
-              required:
-                - language_code
-                - short_description
       responses:
         '200':
           description: OK
@@ -10682,7 +10013,6 @@ paths:
                   type: string
                   description: File identifier of the sticker
               required:
-                - keywords
                 - sticker
       responses:
         '200':
@@ -10733,7 +10063,6 @@ paths:
                   type: string
                   description: File identifier of the sticker
               required:
-                - mask_position
                 - sticker
       responses:
         '200':
@@ -10841,7 +10170,6 @@ paths:
               required:
                 - format
                 - name
-                - thumbnail
                 - user_id
           multipart/form-data:
             schema:
@@ -10863,7 +10191,6 @@ paths:
               required:
                 - format
                 - name
-                - thumbnail
                 - user_id
       responses:
         '200':
@@ -10966,8 +10293,6 @@ paths:
                   type: integer
                   description: Unique identifier of the target user
               required:
-                - emoji_status_custom_emoji_id
-                - emoji_status_expiration_date
                 - user_id
       responses:
         '200':
@@ -11032,11 +10357,6 @@ paths:
                   type: string
                   description: HTTPS URL to send updates to. Use an empty string to remove webhook integration
               required:
-                - allowed_updates
-                - drop_pending_updates
-                - ip_address
-                - max_connections
-                - secret_token
                 - url
           multipart/form-data:
             schema:
@@ -11067,12 +10387,6 @@ paths:
                   type: string
                   description: HTTPS URL to send updates to. Use an empty string to remove webhook integration
               required:
-                - allowed_updates
-                - certificate
-                - drop_pending_updates
-                - ip_address
-                - max_connections
-                - secret_token
                 - url
       responses:
         '200':
@@ -11131,12 +10445,6 @@ paths:
                   description: A JSON-serialized object for a new inline keyboard.
                   allOf:
                       - $ref: '#/components/schemas/InlineKeyboardMarkup'
-              required:
-                - business_connection_id
-                - chat_id
-                - inline_message_id
-                - message_id
-                - reply_markup
       responses:
         '200':
           description: OK
@@ -11194,10 +10502,8 @@ paths:
                   allOf:
                       - $ref: '#/components/schemas/InlineKeyboardMarkup'
               required:
-                - business_connection_id
                 - chat_id
                 - message_id
-                - reply_markup
       responses:
         '200':
           description: OK
@@ -11304,7 +10610,6 @@ paths:
                 - business_connection_id
                 - new_owner_chat_id
                 - owned_gift_id
-                - star_count
       responses:
         '200':
           description: OK
@@ -11357,7 +10662,6 @@ paths:
                   description: Unique identifier of the target user
               required:
                 - chat_id
-                - only_if_banned
                 - user_id
       responses:
         '200':
@@ -11648,9 +10952,7 @@ paths:
                   type: integer
                   description: Identifier of the message to unpin. Required if business_connection_id is specified. If not specified, the most recent pinned message (by sending date) will be unpinned.
               required:
-                - business_connection_id
                 - chat_id
-                - message_id
       responses:
         '200':
           description: OK
@@ -11706,9 +11008,7 @@ paths:
                   description: The amount of Telegram Stars that will be paid for the upgrade from the business account balance. If gift.prepaid_upgrade_star_count > 0, then pass 0, otherwise, the can_transfer_stars business bot right is required and gift.upgrade_star_count must be passed.
               required:
                 - business_connection_id
-                - keep_original_details
                 - owned_gift_id
-                - star_count
       responses:
         '200':
           description: OK
@@ -11825,7 +11125,6 @@ paths:
                   description: Custom description for the verification; 0-70 characters. Must be empty if the organization isn't allowed to provide a custom verification description.
               required:
                 - chat_id
-                - custom_description
       responses:
         '200':
           description: OK
@@ -11874,7 +11173,6 @@ paths:
                   type: integer
                   description: Unique identifier of the target user
               required:
-                - custom_description
                 - user_id
       responses:
         '200':
