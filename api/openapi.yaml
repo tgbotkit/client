@@ -387,6 +387,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 user_id:
                   type: integer
@@ -437,6 +438,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target direct messages chat
                 message_id:
                   type: integer
@@ -490,6 +492,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target group or username of the target supergroup or channel (in the format @channelusername)
                 revoke_messages:
                   type: boolean
@@ -546,9 +549,11 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 sender_chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier of the target sender chat
               required:
                 - chat_id
@@ -630,6 +635,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
                 message_thread_id:
                   type: integer
@@ -680,6 +686,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
               required:
                 - chat_id
@@ -787,6 +794,7 @@ paths:
                       $ref: '#/components/schemas/MessageEntity'
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -796,6 +804,7 @@ paths:
                   description: Sends the message silently. Users will receive a notification with no sound.
                 from_chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the chat where the original message was sent (or channel username in the format @channelusername)
                 message_effect_id:
                   type: string
@@ -913,6 +922,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -922,6 +932,7 @@ paths:
                   description: Sends the messages silently. Users will receive a notification with no sound.
                 from_chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the chat where the original messages were sent (or channel username in the format @channelusername)
                 message_ids:
                   type: array
@@ -985,6 +996,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 creates_join_request:
                   type: boolean
@@ -1042,6 +1054,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target channel chat or username of the target channel (in the format @channelusername)
                 name:
                   type: string
@@ -1098,6 +1111,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
                 icon_color:
                   type: integer
@@ -1364,6 +1378,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 user_id:
                   type: integer
@@ -1414,6 +1429,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target direct messages chat
                 comment:
                   type: string
@@ -1519,6 +1535,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
               required:
                 - chat_id
@@ -1565,6 +1582,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
               required:
                 - chat_id
@@ -1611,6 +1629,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
                 message_thread_id:
                   type: integer
@@ -1661,6 +1680,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 message_id:
                   type: integer
@@ -1712,6 +1732,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 message_ids:
                   type: array
@@ -2000,6 +2021,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 creates_join_request:
                   type: boolean
@@ -2061,6 +2083,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 invite_link:
                   type: string
@@ -2113,6 +2136,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
                 icon_custom_emoji_id:
                   type: string
@@ -2169,6 +2193,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
                 name:
                   type: string
@@ -2230,6 +2255,7 @@ paths:
                       $ref: '#/components/schemas/MessageEntity'
                 chat_id:
                   type: integer
+                  format: int64
                   description: Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 inline_message_id:
                   type: string
@@ -2295,6 +2321,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat
                 checklist:
                   description: A JSON-serialized object for the new checklist
@@ -2357,6 +2384,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message to be edited was sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 heading:
                   type: integer
@@ -2437,6 +2465,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message to be edited was sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 inline_message_id:
                   type: string
@@ -2463,6 +2492,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message to be edited was sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 inline_message_id:
                   type: string
@@ -2528,6 +2558,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message to be edited was sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 inline_message_id:
                   type: string
@@ -2587,6 +2618,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message to be edited was sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 entities:
                   type: array
@@ -2784,6 +2816,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
               required:
                 - chat_id
@@ -2829,6 +2862,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -2838,6 +2872,7 @@ paths:
                   description: Sends the message silently. Users will receive a notification with no sound.
                 from_chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the chat where the original message was sent (or channel username in the format @channelusername)
                 message_effect_id:
                   type: string
@@ -2904,6 +2939,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -2913,6 +2949,7 @@ paths:
                   description: Sends the messages silently. Users will receive a notification with no sound.
                 from_chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the chat where the original messages were sent (or channel username in the format @channelusername)
                 message_ids:
                   type: array
@@ -3171,6 +3208,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
               required:
                 - chat_id
@@ -3216,6 +3254,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
               required:
                 - chat_id
@@ -3263,6 +3302,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 exclude_from_blockchain:
                   type: boolean
@@ -3338,6 +3378,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
                 user_id:
                   type: integer
@@ -3387,6 +3428,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
               required:
                 - chat_id
@@ -3432,6 +3474,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target private chat. If not specified, default bot's menu button will be returned
       responses:
         '200':
@@ -3605,6 +3648,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Required if inline_message_id is not specified. Unique identifier for the target chat
                 inline_message_id:
                   type: string
@@ -4095,6 +4139,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the chat or username of the channel (in the format @channelusername)
                 user_id:
                   type: integer
@@ -4362,6 +4407,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
               required:
                 - chat_id
@@ -4408,6 +4454,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername). Channel direct messages chats aren't supported; leave the corresponding channel instead.
               required:
                 - chat_id
@@ -4491,6 +4538,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be pinned
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 disable_notification:
                   type: boolean
@@ -4665,6 +4713,7 @@ paths:
                   description: Pass True if the administrator can restrict, ban or unban chat members, or access supergroup statistics. For backward compatibility, defaults to True for promotions of channel administrators
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 is_anonymous:
                   type: boolean
@@ -4721,6 +4770,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which to read the message
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier of the chat in which the message was received. The chat must have been active in the last 24 hours.
                 message_id:
                   type: integer
@@ -4871,6 +4921,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
               required:
                 - chat_id
@@ -4963,6 +5014,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
                 message_thread_id:
                   type: integer
@@ -5013,6 +5065,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
               required:
                 - chat_id
@@ -5146,6 +5199,7 @@ paths:
                   description: Unique identifier of the business connection
                 from_chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier of the chat which posted the story that should be reposted
                 from_story_id:
                   type: integer
@@ -5203,6 +5257,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
                 permissions:
                   description: A JSON-serialized object for new user permissions
@@ -5264,6 +5319,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier of the target chat or username of the target channel (in the format @channelusername)
                 invite_link:
                   type: string
@@ -5392,6 +5448,7 @@ paths:
                       $ref: '#/components/schemas/MessageEntity'
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -5505,6 +5562,7 @@ paths:
                       $ref: '#/components/schemas/MessageEntity'
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -5655,6 +5713,7 @@ paths:
                       $ref: '#/components/schemas/MessageEntity'
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -5762,6 +5821,7 @@ paths:
                       $ref: '#/components/schemas/MessageEntity'
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -5895,6 +5955,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the action will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername). Channel chats and channel direct messages chats aren't supported.
                 message_thread_id:
                   type: integer
@@ -5948,6 +6009,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat
                 checklist:
                   description: A JSON-serialized object for the checklist to send
@@ -6022,6 +6084,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -6151,6 +6214,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -6277,6 +6341,7 @@ paths:
                       $ref: '#/components/schemas/MessageEntity'
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -6377,6 +6442,7 @@ paths:
                       $ref: '#/components/schemas/MessageEntity'
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -6507,6 +6573,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat. Games can't be sent to channel direct messages chats and channel chats.
                 disable_notification:
                   type: boolean
@@ -6576,6 +6643,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Required if user_id is not specified. Unique identifier for the chat or username of the channel (in the format @channelusername) that will receive the gift.
                 gift_id:
                   type: string
@@ -6645,6 +6713,7 @@ paths:
                   description: Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 currency:
                   type: string
@@ -6795,6 +6864,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -6930,6 +7000,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -6970,6 +7041,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -7048,6 +7120,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -7173,6 +7246,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target private chat
                 draft_id:
                   type: integer
@@ -7252,6 +7326,7 @@ paths:
                       $ref: '#/components/schemas/MessageEntity'
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername). If the chat is a channel, all Telegram Star proceeds from this media will be credited to the chat's balance. Otherwise, they will be credited to the bot's balance.
                 direct_messages_topic_id:
                   type: integer
@@ -7391,6 +7466,7 @@ paths:
                       $ref: '#/components/schemas/MessageEntity'
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -7491,6 +7567,7 @@ paths:
                       $ref: '#/components/schemas/MessageEntity'
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -7623,6 +7700,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername). Polls can't be sent to channel direct messages chats.
                 close_date:
                   type: integer
@@ -7778,6 +7856,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -7864,6 +7943,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -7990,6 +8070,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -8138,6 +8219,7 @@ paths:
                       $ref: '#/components/schemas/MessageEntity'
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 cover:
                   type: string
@@ -8259,6 +8341,7 @@ paths:
                       $ref: '#/components/schemas/MessageEntity'
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 cover:
                   type: string
@@ -8411,6 +8494,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -8503,6 +8587,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -8641,6 +8726,7 @@ paths:
                       $ref: '#/components/schemas/MessageEntity'
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -8738,6 +8824,7 @@ paths:
                       $ref: '#/components/schemas/MessageEntity'
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 direct_messages_topic_id:
                   type: integer
@@ -9118,6 +9205,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
                 custom_title:
                   type: string
@@ -9172,6 +9260,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 description:
                   type: string
@@ -9221,6 +9310,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target private chat. If not specified, default bot's menu button will be changed
                 menu_button:
                   description: A JSON-serialized object for the bot's new menu button. Defaults to MenuButtonDefault
@@ -9269,6 +9359,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
                 permissions:
                   description: A JSON-serialized object for new default chat permissions
@@ -9323,6 +9414,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
               required:
                 - chat_id
@@ -9332,6 +9424,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 photo:
                   type: string
@@ -9383,6 +9476,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
                 sticker_set_name:
                   type: string
@@ -9433,6 +9527,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 title:
                   type: string
@@ -9532,6 +9627,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Required if inline_message_id is not specified. Unique identifier for the target chat
                 disable_edit_message:
                   type: boolean
@@ -9599,6 +9695,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 is_big:
                   type: boolean
@@ -10434,6 +10531,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message to be edited was sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 inline_message_id:
                   type: string
@@ -10493,6 +10591,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message to be edited was sent
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 message_id:
                   type: integer
@@ -10599,6 +10698,7 @@ paths:
                   description: Unique identifier of the business connection
                 new_owner_chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier of the chat which will own the gift. The chat must be active in the last 24 hours.
                 owned_gift_id:
                   type: string
@@ -10653,6 +10753,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target group or username of the target supergroup or channel (in the format @channelusername)
                 only_if_banned:
                   type: boolean
@@ -10706,9 +10807,11 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 sender_chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier of the target sender chat
               required:
                 - chat_id
@@ -10756,6 +10859,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
               required:
                 - chat_id
@@ -10802,6 +10906,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
               required:
                 - chat_id
@@ -10848,6 +10953,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
                 message_thread_id:
                   type: integer
@@ -10898,6 +11004,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
               required:
                 - chat_id
@@ -10947,6 +11054,7 @@ paths:
                   description: Unique identifier of the business connection on behalf of which the message will be unpinned
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 message_id:
                   type: integer
@@ -11119,6 +11227,7 @@ paths:
               properties:
                 chat_id:
                   type: integer
+                  format: int64
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername). Channel direct messages chats can't be verified.
                 custom_description:
                   type: string
@@ -11298,6 +11407,7 @@ components:
           description: Optional. MIME type of the file as defined by the sender
         file_size:
           type: integer
+          format: int64
           description: Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
       required:
         - file_id
@@ -11335,6 +11445,7 @@ components:
           description: Optional. MIME type of the file as defined by the sender
         file_size:
           type: integer
+          format: int64
           description: Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
         thumbnail:
           description: Optional. Thumbnail of the album cover to which the music file belongs
@@ -11617,6 +11728,7 @@ components:
           description: Scope type, must be chat
         chat_id:
           type: integer
+          format: int64
           description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername). Channel direct messages chats and channel chats aren't supported.
       required:
         - type
@@ -11633,6 +11745,7 @@ components:
           description: Scope type, must be chat_administrators
         chat_id:
           type: integer
+          format: int64
           description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername). Channel direct messages chats and channel chats aren't supported.
       required:
         - type
@@ -11649,6 +11762,7 @@ components:
           description: Scope type, must be chat_member
         chat_id:
           type: integer
+          format: int64
           description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername). Channel direct messages chats and channel chats aren't supported.
         user_id:
           type: integer
@@ -11784,6 +11898,7 @@ components:
               - $ref: '#/components/schemas/User'
         user_chat_id:
           type: integer
+          format: int64
           description: Identifier of a private chat with the user who created the business connection. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
         date:
           type: integer
@@ -11940,6 +12055,7 @@ components:
       properties:
         id:
           type: integer
+          format: int64
           description: Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
         type:
           type: string
@@ -12207,6 +12323,7 @@ components:
       properties:
         id:
           type: integer
+          format: int64
           description: Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
         type:
           type: string
@@ -12368,6 +12485,7 @@ components:
           description: Optional. For supergroups, the name of the group's custom emoji sticker set. Custom emoji from this set can be used by all users and bots in the group.
         linked_chat_id:
           type: integer
+          format: int64
           description: Optional. Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
         location:
           description: Optional. For supergroups, the location to which the supergroup is connected
@@ -12454,6 +12572,7 @@ components:
               - $ref: '#/components/schemas/User'
         user_chat_id:
           type: integer
+          format: int64
           description: Identifier of a private chat with the user who sent the join request. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. The bot can use this identifier for 5 minutes to send messages until the join request is processed, assuming no other administrator contacted the user.
         date:
           type: integer
@@ -12872,6 +12991,7 @@ components:
           description: Identifier of the request
         chat_id:
           type: integer
+          format: int64
           description: Identifier of the shared chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. The bot may not have access to the chat and could be unable to use this identifier, unless the chat is already known to the bot by some other means.
         title:
           type: string
@@ -13035,6 +13155,7 @@ components:
           description: Optional. Contact's last name
         user_id:
           type: integer
+          format: int64
           description: Optional. Contact's user identifier in Telegram. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
         vcard:
           type: string
@@ -13094,6 +13215,7 @@ components:
       properties:
         topic_id:
           type: integer
+          format: int64
           description: Unique identifier of the topic. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
         user:
           description: Optional. Information about the user that created the topic. Currently, it is always present
@@ -13126,6 +13248,7 @@ components:
           description: Optional. MIME type of the file as defined by the sender
         file_size:
           type: integer
+          format: int64
           description: Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
       required:
         - file_id
@@ -13321,6 +13444,7 @@ components:
           description: Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
         file_size:
           type: integer
+          format: int64
           description: Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
         file_path:
           type: string
@@ -16152,9 +16276,11 @@ components:
               - $ref: '#/components/schemas/MessageAutoDeleteTimerChanged'
         migrate_to_chat_id:
           type: integer
+          format: int64
           description: Optional. The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
         migrate_from_chat_id:
           type: integer
+          format: int64
           description: Optional. The supergroup has been migrated from a group with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
         pinned_message:
           description: Optional. Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
@@ -17465,6 +17591,7 @@ components:
           description: Identifier of the message that will be replied to in the current chat, or in the chat chat_id if it is specified
         chat_id:
           type: integer
+          format: int64
           description: Optional. If the message to be replied to is from a different chat, unique identifier for the chat or username of the channel (in the format @channelusername). Not supported for messages sent on behalf of a business account and messages from channel direct messages chats.
         allow_sending_without_reply:
           type: boolean
@@ -17497,6 +17624,7 @@ components:
       properties:
         migrate_to_chat_id:
           type: integer
+          format: int64
           description: Optional. The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
         retry_after:
           type: integer
@@ -17573,6 +17701,7 @@ components:
       properties:
         user_id:
           type: integer
+          format: int64
           description: Identifier of the shared user. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so 64-bit integers or double-precision float types are safe for storing these identifiers. The bot may not have access to the user and could be unable to use this identifier, unless the user is already known to the bot by some other means.
         first_name:
           type: string
@@ -18716,6 +18845,7 @@ components:
       properties:
         id:
           type: integer
+          format: int64
           description: Unique identifier for this user or bot. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
         is_bot:
           type: boolean
@@ -18912,6 +19042,7 @@ components:
           description: Optional. MIME type of the file as defined by the sender
         file_size:
           type: integer
+          format: int64
           description: Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
       required:
         - file_id
@@ -19015,6 +19146,7 @@ components:
           description: Optional. MIME type of the file as defined by the sender
         file_size:
           type: integer
+          format: int64
           description: Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
       required:
         - file_id
