@@ -79,7 +79,7 @@ type Animation struct {
 	FileName *string `json:"file_name,omitempty"`
 
 	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
-	FileSize *int `json:"file_size,omitempty"`
+	FileSize *int64 `json:"file_size,omitempty"`
 
 	// FileUniqueId Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
 	FileUniqueId string `json:"file_unique_id"`
@@ -109,7 +109,7 @@ type Audio struct {
 	FileName *string `json:"file_name,omitempty"`
 
 	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
-	FileSize *int `json:"file_size,omitempty"`
+	FileSize *int64 `json:"file_size,omitempty"`
 
 	// FileUniqueId Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
 	FileUniqueId string `json:"file_unique_id"`
@@ -246,7 +246,7 @@ type BusinessConnection struct {
 	User User `json:"user"`
 
 	// UserChatId Identifier of a private chat with the user who created the business connection. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
-	UserChatId int `json:"user_chat_id"`
+	UserChatId int64 `json:"user_chat_id"`
 }
 
 // BusinessIntro Contains information about the start page settings of a Telegram Business account.
@@ -333,7 +333,7 @@ type Chat struct {
 	FirstName *string `json:"first_name,omitempty"`
 
 	// Id Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
-	Id int `json:"id"`
+	Id int64 `json:"id"`
 
 	// IsDirectMessages Optional. True, if the chat is the direct messages chat of a channel
 	IsDirectMessages *bool `json:"is_direct_messages,omitempty"`
@@ -534,7 +534,7 @@ type ChatFullInfo struct {
 	HasVisibleHistory *bool `json:"has_visible_history,omitempty"`
 
 	// Id Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
-	Id int `json:"id"`
+	Id int64 `json:"id"`
 
 	// InviteLink Optional. Primary invite link, for groups, supergroups and channel chats
 	InviteLink *string `json:"invite_link,omitempty"`
@@ -555,7 +555,7 @@ type ChatFullInfo struct {
 	LastName *string `json:"last_name,omitempty"`
 
 	// LinkedChatId Optional. Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
-	LinkedChatId *int `json:"linked_chat_id,omitempty"`
+	LinkedChatId *int64 `json:"linked_chat_id,omitempty"`
 
 	// Location Optional. For supergroups, the location to which the supergroup is connected
 	Location *ChatLocation `json:"location,omitempty"`
@@ -669,7 +669,7 @@ type ChatJoinRequest struct {
 	InviteLink *ChatInviteLink `json:"invite_link,omitempty"`
 
 	// UserChatId Identifier of a private chat with the user who sent the join request. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. The bot can use this identifier for 5 minutes to send messages until the join request is processed, assuming no other administrator contacted the user.
-	UserChatId int `json:"user_chat_id"`
+	UserChatId int64 `json:"user_chat_id"`
 }
 
 // ChatLocation Represents a location to which a chat is connected.
@@ -780,7 +780,7 @@ type ChatPhoto struct {
 // ChatShared This object contains information about a chat that was shared with the bot using a KeyboardButtonRequestChat button.
 type ChatShared struct {
 	// ChatId Identifier of the shared chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. The bot may not have access to the chat and could be unable to use this identifier, unless the chat is already known to the bot by some other means.
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// Photo Optional. Available sizes of the chat photo, if the photo was requested by the bot
 	Photo *[]PhotoSize `json:"photo,omitempty"`
@@ -885,7 +885,7 @@ type Contact struct {
 	PhoneNumber string `json:"phone_number"`
 
 	// UserId Optional. Contact's user identifier in Telegram. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
-	UserId *int `json:"user_id,omitempty"`
+	UserId *int64 `json:"user_id,omitempty"`
 
 	// Vcard Optional. Additional data about the contact in the form of a vCard
 	Vcard *string `json:"vcard,omitempty"`
@@ -918,7 +918,7 @@ type DirectMessagePriceChanged struct {
 // DirectMessagesTopic Describes a topic of a direct messages chat.
 type DirectMessagesTopic struct {
 	// TopicId Unique identifier of the topic. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
-	TopicId int `json:"topic_id"`
+	TopicId int64 `json:"topic_id"`
 
 	// User Optional. Information about the user that created the topic. Currently, it is always present
 	User *User `json:"user,omitempty"`
@@ -933,7 +933,7 @@ type Document struct {
 	FileName *string `json:"file_name,omitempty"`
 
 	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
-	FileSize *int `json:"file_size,omitempty"`
+	FileSize *int64 `json:"file_size,omitempty"`
 
 	// FileUniqueId Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
 	FileUniqueId string `json:"file_unique_id"`
@@ -1090,7 +1090,7 @@ type File struct {
 	FilePath *string `json:"file_path,omitempty"`
 
 	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
-	FileSize *int `json:"file_size,omitempty"`
+	FileSize *int64 `json:"file_size,omitempty"`
 
 	// FileUniqueId Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
 	FileUniqueId string `json:"file_unique_id"`
@@ -1924,10 +1924,10 @@ type Message struct {
 	MessageThreadId *int `json:"message_thread_id,omitempty"`
 
 	// MigrateFromChatId Optional. The supergroup has been migrated from a group with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
-	MigrateFromChatId *int `json:"migrate_from_chat_id,omitempty"`
+	MigrateFromChatId *int64 `json:"migrate_from_chat_id,omitempty"`
 
 	// MigrateToChatId Optional. The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
-	MigrateToChatId *int `json:"migrate_to_chat_id,omitempty"`
+	MigrateToChatId *int64 `json:"migrate_to_chat_id,omitempty"`
 
 	// NewChatMembers Optional. New members that were added to the group or supergroup and information about them (the bot itself may be one of these members)
 	NewChatMembers *[]User `json:"new_chat_members,omitempty"`
@@ -2427,7 +2427,7 @@ type ReplyParameters struct {
 	AllowSendingWithoutReply *bool `json:"allow_sending_without_reply,omitempty"`
 
 	// ChatId Optional. If the message to be replied to is from a different chat, unique identifier for the chat or username of the channel (in the format @channelusername). Not supported for messages sent on behalf of a business account and messages from channel direct messages chats.
-	ChatId *int `json:"chat_id,omitempty"`
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// ChecklistTaskId Optional. Identifier of the specific checklist task to be replied to
 	ChecklistTaskId *int `json:"checklist_task_id,omitempty"`
@@ -2451,7 +2451,7 @@ type ReplyParameters struct {
 // ResponseParameters Describes why a request was unsuccessful.
 type ResponseParameters struct {
 	// MigrateToChatId Optional. The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
-	MigrateToChatId *int `json:"migrate_to_chat_id,omitempty"`
+	MigrateToChatId *int64 `json:"migrate_to_chat_id,omitempty"`
 
 	// RetryAfter Optional. In case of exceeding flood control, the number of seconds left to wait before the request can be repeated
 	RetryAfter *int `json:"retry_after,omitempty"`
@@ -2475,7 +2475,7 @@ type SharedUser struct {
 	Photo *[]PhotoSize `json:"photo,omitempty"`
 
 	// UserId Identifier of the shared user. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so 64-bit integers or double-precision float types are safe for storing these identifiers. The bot may not have access to the user and could be unable to use this identifier, unless the user is already known to the bot by some other means.
-	UserId int `json:"user_id"`
+	UserId int64 `json:"user_id"`
 
 	// Username Optional. Username of the user, if the username was requested by the bot
 	Username *string `json:"username,omitempty"`
@@ -3069,7 +3069,7 @@ type User struct {
 	HasTopicsEnabled *bool `json:"has_topics_enabled,omitempty"`
 
 	// Id Unique identifier for this user or bot. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
-	Id int `json:"id"`
+	Id int64 `json:"id"`
 
 	// IsBot True, if this user is a bot
 	IsBot bool `json:"is_bot"`
@@ -3168,7 +3168,7 @@ type Video struct {
 	FileName *string `json:"file_name,omitempty"`
 
 	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
-	FileSize *int `json:"file_size,omitempty"`
+	FileSize *int64 `json:"file_size,omitempty"`
 
 	// FileUniqueId Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
 	FileUniqueId string `json:"file_unique_id"`
@@ -3240,7 +3240,7 @@ type Voice struct {
 	FileId string `json:"file_id"`
 
 	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
-	FileSize *int `json:"file_size,omitempty"`
+	FileSize *int64 `json:"file_size,omitempty"`
 
 	// FileUniqueId Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
 	FileUniqueId string `json:"file_unique_id"`
@@ -3408,7 +3408,7 @@ type AnswerWebAppQueryJSONBody struct {
 // ApproveChatJoinRequestJSONBody defines parameters for ApproveChatJoinRequest.
 type ApproveChatJoinRequestJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// UserId Unique identifier of the target user
 	UserId int `json:"user_id"`
@@ -3417,7 +3417,7 @@ type ApproveChatJoinRequestJSONBody struct {
 // ApproveSuggestedPostJSONBody defines parameters for ApproveSuggestedPost.
 type ApproveSuggestedPostJSONBody struct {
 	// ChatId Unique identifier for the target direct messages chat
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// MessageId Identifier of a suggested post message to approve
 	MessageId int `json:"message_id"`
@@ -3429,7 +3429,7 @@ type ApproveSuggestedPostJSONBody struct {
 // BanChatMemberJSONBody defines parameters for BanChatMember.
 type BanChatMemberJSONBody struct {
 	// ChatId Unique identifier for the target group or username of the target supergroup or channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// RevokeMessages Pass True to delete all messages from the chat for the user that is being removed. If False, the user will be able to see messages in the group that were sent before the user was removed. Always True for supergroups and channels.
 	RevokeMessages *bool `json:"revoke_messages,omitempty"`
@@ -3444,16 +3444,16 @@ type BanChatMemberJSONBody struct {
 // BanChatSenderChatJSONBody defines parameters for BanChatSenderChat.
 type BanChatSenderChatJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// SenderChatId Unique identifier of the target sender chat
-	SenderChatId int `json:"sender_chat_id"`
+	SenderChatId int64 `json:"sender_chat_id"`
 }
 
 // CloseForumTopicJSONBody defines parameters for CloseForumTopic.
 type CloseForumTopicJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// MessageThreadId Unique identifier for the target message thread of the forum topic
 	MessageThreadId int `json:"message_thread_id"`
@@ -3462,7 +3462,7 @@ type CloseForumTopicJSONBody struct {
 // CloseGeneralForumTopicJSONBody defines parameters for CloseGeneralForumTopic.
 type CloseGeneralForumTopicJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 }
 
 // ConvertGiftToStarsJSONBody defines parameters for ConvertGiftToStars.
@@ -3486,7 +3486,7 @@ type CopyMessageJSONBody struct {
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -3495,7 +3495,7 @@ type CopyMessageJSONBody struct {
 	DisableNotification *bool `json:"disable_notification,omitempty"`
 
 	// FromChatId Unique identifier for the chat where the original message was sent (or channel username in the format @channelusername)
-	FromChatId int `json:"from_chat_id"`
+	FromChatId int64 `json:"from_chat_id"`
 
 	// MessageEffectId Unique identifier of the message effect to be added to the message; only available when copying to private chats
 	MessageEffectId *string `json:"message_effect_id,omitempty"`
@@ -3558,7 +3558,7 @@ type CopyMessageJSONBody struct {
 // CopyMessagesJSONBody defines parameters for CopyMessages.
 type CopyMessagesJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the messages will be sent; required if the messages are sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -3567,7 +3567,7 @@ type CopyMessagesJSONBody struct {
 	DisableNotification *bool `json:"disable_notification,omitempty"`
 
 	// FromChatId Unique identifier for the chat where the original messages were sent (or channel username in the format @channelusername)
-	FromChatId int `json:"from_chat_id"`
+	FromChatId int64 `json:"from_chat_id"`
 
 	// MessageIds A JSON-serialized list of 1-100 identifiers of messages in the chat from_chat_id to copy. The identifiers must be specified in a strictly increasing order.
 	MessageIds []int `json:"message_ids"`
@@ -3585,7 +3585,7 @@ type CopyMessagesJSONBody struct {
 // CreateChatInviteLinkJSONBody defines parameters for CreateChatInviteLink.
 type CreateChatInviteLinkJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// CreatesJoinRequest True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified
 	CreatesJoinRequest *bool `json:"creates_join_request,omitempty"`
@@ -3603,7 +3603,7 @@ type CreateChatInviteLinkJSONBody struct {
 // CreateChatSubscriptionInviteLinkJSONBody defines parameters for CreateChatSubscriptionInviteLink.
 type CreateChatSubscriptionInviteLinkJSONBody struct {
 	// ChatId Unique identifier for the target channel chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// Name Invite link name; 0-32 characters
 	Name *string `json:"name,omitempty"`
@@ -3618,7 +3618,7 @@ type CreateChatSubscriptionInviteLinkJSONBody struct {
 // CreateForumTopicJSONBody defines parameters for CreateForumTopic.
 type CreateForumTopicJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// IconColor Color of the topic icon in RGB format. Currently, must be one of 7322096 (0x6FB9F0), 16766590 (0xFFD67E), 13338331 (0xCB86DB), 9367192 (0x8EEE98), 16749490 (0xFF93B2), or 16478047 (0xFB6F5F)
 	IconColor *int `json:"icon_color,omitempty"`
@@ -3744,7 +3744,7 @@ type CreateNewStickerSetMultipartBody struct {
 // DeclineChatJoinRequestJSONBody defines parameters for DeclineChatJoinRequest.
 type DeclineChatJoinRequestJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// UserId Unique identifier of the target user
 	UserId int `json:"user_id"`
@@ -3753,7 +3753,7 @@ type DeclineChatJoinRequestJSONBody struct {
 // DeclineSuggestedPostJSONBody defines parameters for DeclineSuggestedPost.
 type DeclineSuggestedPostJSONBody struct {
 	// ChatId Unique identifier for the target direct messages chat
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// Comment Comment for the creator of the suggested post; 0-128 characters
 	Comment *string `json:"comment,omitempty"`
@@ -3774,19 +3774,19 @@ type DeleteBusinessMessagesJSONBody struct {
 // DeleteChatPhotoJSONBody defines parameters for DeleteChatPhoto.
 type DeleteChatPhotoJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 }
 
 // DeleteChatStickerSetJSONBody defines parameters for DeleteChatStickerSet.
 type DeleteChatStickerSetJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 }
 
 // DeleteForumTopicJSONBody defines parameters for DeleteForumTopic.
 type DeleteForumTopicJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// MessageThreadId Unique identifier for the target message thread of the forum topic
 	MessageThreadId int `json:"message_thread_id"`
@@ -3795,7 +3795,7 @@ type DeleteForumTopicJSONBody struct {
 // DeleteMessageJSONBody defines parameters for DeleteMessage.
 type DeleteMessageJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// MessageId Identifier of the message to delete
 	MessageId int `json:"message_id"`
@@ -3804,7 +3804,7 @@ type DeleteMessageJSONBody struct {
 // DeleteMessagesJSONBody defines parameters for DeleteMessages.
 type DeleteMessagesJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// MessageIds A JSON-serialized list of 1-100 identifiers of messages to delete. See deleteMessage for limitations on which messages can be deleted
 	MessageIds []int `json:"message_ids"`
@@ -3849,7 +3849,7 @@ type DeleteWebhookJSONBody struct {
 // EditChatInviteLinkJSONBody defines parameters for EditChatInviteLink.
 type EditChatInviteLinkJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// CreatesJoinRequest True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified
 	CreatesJoinRequest *bool `json:"creates_join_request,omitempty"`
@@ -3870,7 +3870,7 @@ type EditChatInviteLinkJSONBody struct {
 // EditChatSubscriptionInviteLinkJSONBody defines parameters for EditChatSubscriptionInviteLink.
 type EditChatSubscriptionInviteLinkJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// InviteLink The invite link to edit
 	InviteLink string `json:"invite_link"`
@@ -3882,7 +3882,7 @@ type EditChatSubscriptionInviteLinkJSONBody struct {
 // EditForumTopicJSONBody defines parameters for EditForumTopic.
 type EditForumTopicJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// IconCustomEmojiId New unique identifier of the custom emoji shown as the topic icon. Use getForumTopicIconStickers to get all allowed custom emoji identifiers. Pass an empty string to remove the icon. If not specified, the current icon will be kept
 	IconCustomEmojiId *string `json:"icon_custom_emoji_id,omitempty"`
@@ -3897,7 +3897,7 @@ type EditForumTopicJSONBody struct {
 // EditGeneralForumTopicJSONBody defines parameters for EditGeneralForumTopic.
 type EditGeneralForumTopicJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// Name New topic name, 1-128 characters
 	Name string `json:"name"`
@@ -3915,7 +3915,7 @@ type EditMessageCaptionJSONBody struct {
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
 	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId *int `json:"chat_id,omitempty"`
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// InlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message
 	InlineMessageId *string `json:"inline_message_id,omitempty"`
@@ -3939,7 +3939,7 @@ type EditMessageChecklistJSONBody struct {
 	BusinessConnectionId string `json:"business_connection_id"`
 
 	// ChatId Unique identifier for the target chat
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// Checklist A JSON-serialized object for the new checklist
 	Checklist InputChecklist `json:"checklist"`
@@ -3957,7 +3957,7 @@ type EditMessageLiveLocationJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId *int `json:"chat_id,omitempty"`
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// Heading Direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.
 	Heading *int `json:"heading,omitempty"`
@@ -3993,7 +3993,7 @@ type EditMessageMediaJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId *int `json:"chat_id,omitempty"`
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// InlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message
 	InlineMessageId *string `json:"inline_message_id,omitempty"`
@@ -4014,7 +4014,7 @@ type EditMessageMediaMultipartBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId *int `json:"chat_id,omitempty"`
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// InlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message
 	InlineMessageId *string `json:"inline_message_id,omitempty"`
@@ -4035,7 +4035,7 @@ type EditMessageReplyMarkupJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId *int `json:"chat_id,omitempty"`
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// InlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message
 	InlineMessageId *string `json:"inline_message_id,omitempty"`
@@ -4053,7 +4053,7 @@ type EditMessageTextJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId *int `json:"chat_id,omitempty"`
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// Entities A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
 	Entities *[]MessageEntity `json:"entities,omitempty"`
@@ -4116,13 +4116,13 @@ type EditUserStarSubscriptionJSONBody struct {
 // ExportChatInviteLinkJSONBody defines parameters for ExportChatInviteLink.
 type ExportChatInviteLinkJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 }
 
 // ForwardMessageJSONBody defines parameters for ForwardMessage.
 type ForwardMessageJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be forwarded; required if the message is forwarded to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -4131,7 +4131,7 @@ type ForwardMessageJSONBody struct {
 	DisableNotification *bool `json:"disable_notification,omitempty"`
 
 	// FromChatId Unique identifier for the chat where the original message was sent (or channel username in the format @channelusername)
-	FromChatId int `json:"from_chat_id"`
+	FromChatId int64 `json:"from_chat_id"`
 
 	// MessageEffectId Unique identifier of the message effect to be added to the message; only available when forwarding to private chats
 	MessageEffectId *string `json:"message_effect_id,omitempty"`
@@ -4155,7 +4155,7 @@ type ForwardMessageJSONBody struct {
 // ForwardMessagesJSONBody defines parameters for ForwardMessages.
 type ForwardMessagesJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the messages will be forwarded; required if the messages are forwarded to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -4164,7 +4164,7 @@ type ForwardMessagesJSONBody struct {
 	DisableNotification *bool `json:"disable_notification,omitempty"`
 
 	// FromChatId Unique identifier for the chat where the original messages were sent (or channel username in the format @channelusername)
-	FromChatId int `json:"from_chat_id"`
+	FromChatId int64 `json:"from_chat_id"`
 
 	// MessageIds A JSON-serialized list of 1-100 identifiers of messages in the chat from_chat_id to forward. The identifiers must be specified in a strictly increasing order.
 	MessageIds []int `json:"message_ids"`
@@ -4227,19 +4227,19 @@ type GetBusinessConnectionJSONBody struct {
 // GetChatJSONBody defines parameters for GetChat.
 type GetChatJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 }
 
 // GetChatAdministratorsJSONBody defines parameters for GetChatAdministrators.
 type GetChatAdministratorsJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 }
 
 // GetChatGiftsJSONBody defines parameters for GetChatGifts.
 type GetChatGiftsJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// ExcludeFromBlockchain Pass True to exclude gifts that were assigned from the TON blockchain and can't be resold or transferred in Telegram
 	ExcludeFromBlockchain *bool `json:"exclude_from_blockchain,omitempty"`
@@ -4275,7 +4275,7 @@ type GetChatGiftsJSONBody struct {
 // GetChatMemberJSONBody defines parameters for GetChatMember.
 type GetChatMemberJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// UserId Unique identifier of the target user
 	UserId int `json:"user_id"`
@@ -4284,13 +4284,13 @@ type GetChatMemberJSONBody struct {
 // GetChatMemberCountJSONBody defines parameters for GetChatMemberCount.
 type GetChatMemberCountJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 }
 
 // GetChatMenuButtonJSONBody defines parameters for GetChatMenuButton.
 type GetChatMenuButtonJSONBody struct {
 	// ChatId Unique identifier for the target private chat. If not specified, default bot's menu button will be returned
-	ChatId *int `json:"chat_id,omitempty"`
+	ChatId *int64 `json:"chat_id,omitempty"`
 }
 
 // GetCustomEmojiStickersJSONBody defines parameters for GetCustomEmojiStickers.
@@ -4308,7 +4308,7 @@ type GetFileJSONBody struct {
 // GetGameHighScoresJSONBody defines parameters for GetGameHighScores.
 type GetGameHighScoresJSONBody struct {
 	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat
-	ChatId *int `json:"chat_id,omitempty"`
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// InlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message
 	InlineMessageId *string `json:"inline_message_id,omitempty"`
@@ -4386,7 +4386,7 @@ type GetUpdatesJSONBody struct {
 // GetUserChatBoostsJSONBody defines parameters for GetUserChatBoosts.
 type GetUserChatBoostsJSONBody struct {
 	// ChatId Unique identifier for the chat or username of the channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// UserId Unique identifier of the target user
 	UserId int `json:"user_id"`
@@ -4458,13 +4458,13 @@ type GiftPremiumSubscriptionJSONBody struct {
 // HideGeneralForumTopicJSONBody defines parameters for HideGeneralForumTopic.
 type HideGeneralForumTopicJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 }
 
 // LeaveChatJSONBody defines parameters for LeaveChat.
 type LeaveChatJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername). Channel direct messages chats aren't supported; leave the corresponding channel instead.
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 }
 
 // PinChatMessageJSONBody defines parameters for PinChatMessage.
@@ -4473,7 +4473,7 @@ type PinChatMessageJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DisableNotification Pass True if it is not necessary to send a notification to all chat members about the new pinned message. Notifications are always disabled in channels and private chats.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
@@ -4560,7 +4560,7 @@ type PromoteChatMemberJSONBody struct {
 	CanRestrictMembers *bool `json:"can_restrict_members,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// IsAnonymous Pass True if the administrator's presence in the chat is hidden
 	IsAnonymous *bool `json:"is_anonymous,omitempty"`
@@ -4575,7 +4575,7 @@ type ReadBusinessMessageJSONBody struct {
 	BusinessConnectionId string `json:"business_connection_id"`
 
 	// ChatId Unique identifier of the chat in which the message was received. The chat must have been active in the last 24 hours.
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// MessageId Unique identifier of the message to mark as read
 	MessageId int `json:"message_id"`
@@ -4602,7 +4602,7 @@ type RemoveBusinessAccountProfilePhotoJSONBody struct {
 // RemoveChatVerificationJSONBody defines parameters for RemoveChatVerification.
 type RemoveChatVerificationJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 }
 
 // RemoveUserVerificationJSONBody defines parameters for RemoveUserVerification.
@@ -4614,7 +4614,7 @@ type RemoveUserVerificationJSONBody struct {
 // ReopenForumTopicJSONBody defines parameters for ReopenForumTopic.
 type ReopenForumTopicJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// MessageThreadId Unique identifier for the target message thread of the forum topic
 	MessageThreadId int `json:"message_thread_id"`
@@ -4623,7 +4623,7 @@ type ReopenForumTopicJSONBody struct {
 // ReopenGeneralForumTopicJSONBody defines parameters for ReopenGeneralForumTopic.
 type ReopenGeneralForumTopicJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 }
 
 // ReplaceStickerInSetJSONBody defines parameters for ReplaceStickerInSet.
@@ -4665,7 +4665,7 @@ type RepostStoryJSONBody struct {
 	BusinessConnectionId string `json:"business_connection_id"`
 
 	// FromChatId Unique identifier of the chat which posted the story that should be reposted
-	FromChatId int `json:"from_chat_id"`
+	FromChatId int64 `json:"from_chat_id"`
 
 	// FromStoryId Unique identifier of the story that should be reposted
 	FromStoryId int `json:"from_story_id"`
@@ -4680,7 +4680,7 @@ type RepostStoryJSONBody struct {
 // RestrictChatMemberJSONBody defines parameters for RestrictChatMember.
 type RestrictChatMemberJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// Permissions A JSON-serialized object for new user permissions
 	Permissions ChatPermissions `json:"permissions"`
@@ -4698,7 +4698,7 @@ type RestrictChatMemberJSONBody struct {
 // RevokeChatInviteLinkJSONBody defines parameters for RevokeChatInviteLink.
 type RevokeChatInviteLinkJSONBody struct {
 	// ChatId Unique identifier of the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// InviteLink The invite link to revoke
 	InviteLink string `json:"invite_link"`
@@ -4743,7 +4743,7 @@ type SendAnimationJSONBody struct {
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -4836,7 +4836,7 @@ type SendAnimationMultipartBody struct {
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -4929,7 +4929,7 @@ type SendAudioJSONBody struct {
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5016,7 +5016,7 @@ type SendAudioMultipartBody struct {
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5094,7 +5094,7 @@ type SendChatActionJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername). Channel chats and channel direct messages chats aren't supported.
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// MessageThreadId Unique identifier for the target message thread or topic of a forum; for supergroups and private chats of bots with forum topic mode enabled only
 	MessageThreadId *int `json:"message_thread_id,omitempty"`
@@ -5106,7 +5106,7 @@ type SendChecklistJSONBody struct {
 	BusinessConnectionId string `json:"business_connection_id"`
 
 	// ChatId Unique identifier for the target chat
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// Checklist A JSON-serialized object for the checklist to send
 	Checklist InputChecklist `json:"checklist"`
@@ -5136,7 +5136,7 @@ type SendContactJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5211,7 +5211,7 @@ type SendDiceJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5283,7 +5283,7 @@ type SendDocumentJSONBody struct {
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5364,7 +5364,7 @@ type SendDocumentMultipartBody struct {
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5439,7 +5439,7 @@ type SendGameJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat. Games can't be sent to channel direct messages chats and channel chats.
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
@@ -5466,7 +5466,7 @@ type SendGameJSONBody struct {
 // SendGiftJSONBody defines parameters for SendGift.
 type SendGiftJSONBody struct {
 	// ChatId Required if user_id is not specified. Unique identifier for the chat or username of the channel (in the format @channelusername) that will receive the gift.
-	ChatId *int `json:"chat_id,omitempty"`
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// GiftId Identifier of the gift; limited gifts can't be sent to channel chats
 	GiftId string `json:"gift_id"`
@@ -5493,7 +5493,7 @@ type SendInvoiceJSONBody struct {
 	AllowPaidBroadcast *bool `json:"allow_paid_broadcast,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// Currency Three-letter ISO 4217 currency code, see more on currencies. Pass “XTR” for payments in Telegram Stars.
 	Currency string `json:"currency"`
@@ -5592,7 +5592,7 @@ type SendLocationJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5673,7 +5673,7 @@ type SendMediaGroupJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the messages will be sent; required if the messages are sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5706,7 +5706,7 @@ type SendMediaGroupMultipartBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the messages will be sent; required if the messages are sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5739,7 +5739,7 @@ type SendMessageJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5808,7 +5808,7 @@ type SendMessageJSONBody struct {
 // SendMessageDraftJSONBody defines parameters for SendMessageDraft.
 type SendMessageDraftJSONBody struct {
 	// ChatId Unique identifier for the target private chat
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DraftId Unique identifier of the message draft; must be non-zero. Changes of drafts with the same identifier are animated
 	DraftId int `json:"draft_id"`
@@ -5841,7 +5841,7 @@ type SendPaidMediaJSONBody struct {
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername). If the chat is a channel, all Telegram Star proceeds from this media will be credited to the chat's balance. Otherwise, they will be credited to the bot's balance.
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5922,7 +5922,7 @@ type SendPhotoJSONBody struct {
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6003,7 +6003,7 @@ type SendPhotoMultipartBody struct {
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6081,7 +6081,7 @@ type SendPollJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername). Polls can't be sent to channel direct messages chats.
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// CloseDate Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 600 seconds in the future. Can't be used together with open_period.
 	CloseDate *int `json:"close_date,omitempty"`
@@ -6177,7 +6177,7 @@ type SendStickerJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6246,7 +6246,7 @@ type SendStickerMultipartBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6318,7 +6318,7 @@ type SendVenueJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6408,7 +6408,7 @@ type SendVideoJSONBody struct {
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// Cover Cover for the video in the message. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More information on Sending Files »
 	Cover *string `json:"cover,omitempty"`
@@ -6510,7 +6510,7 @@ type SendVideoMultipartBody struct {
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// Cover Cover for the video in the message. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More information on Sending Files »
 	Cover *openapi_types.File `json:"cover,omitempty"`
@@ -6606,7 +6606,7 @@ type SendVideoNoteJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6681,7 +6681,7 @@ type SendVideoNoteMultipartBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6762,7 +6762,7 @@ type SendVoiceJSONBody struct {
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6840,7 +6840,7 @@ type SendVoiceMultipartBody struct {
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6960,7 +6960,7 @@ type SetBusinessAccountUsernameJSONBody struct {
 // SetChatAdministratorCustomTitleJSONBody defines parameters for SetChatAdministratorCustomTitle.
 type SetChatAdministratorCustomTitleJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// CustomTitle New custom title for the administrator; 0-16 characters, emoji are not allowed
 	CustomTitle string `json:"custom_title"`
@@ -6972,7 +6972,7 @@ type SetChatAdministratorCustomTitleJSONBody struct {
 // SetChatDescriptionJSONBody defines parameters for SetChatDescription.
 type SetChatDescriptionJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// Description New chat description, 0-255 characters
 	Description *string `json:"description,omitempty"`
@@ -6981,7 +6981,7 @@ type SetChatDescriptionJSONBody struct {
 // SetChatMenuButtonJSONBody defines parameters for SetChatMenuButton.
 type SetChatMenuButtonJSONBody struct {
 	// ChatId Unique identifier for the target private chat. If not specified, default bot's menu button will be changed
-	ChatId *int `json:"chat_id,omitempty"`
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// MenuButton A JSON-serialized object for the bot's new menu button. Defaults to MenuButtonDefault
 	MenuButton *MenuButton `json:"menu_button,omitempty"`
@@ -6990,7 +6990,7 @@ type SetChatMenuButtonJSONBody struct {
 // SetChatPermissionsJSONBody defines parameters for SetChatPermissions.
 type SetChatPermissionsJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// Permissions A JSON-serialized object for new default chat permissions
 	Permissions ChatPermissions `json:"permissions"`
@@ -7002,13 +7002,13 @@ type SetChatPermissionsJSONBody struct {
 // SetChatPhotoJSONBody defines parameters for SetChatPhoto.
 type SetChatPhotoJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 }
 
 // SetChatPhotoMultipartBody defines parameters for SetChatPhoto.
 type SetChatPhotoMultipartBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// Photo New chat photo, uploaded using multipart/form-data
 	Photo openapi_types.File `json:"photo"`
@@ -7017,7 +7017,7 @@ type SetChatPhotoMultipartBody struct {
 // SetChatStickerSetJSONBody defines parameters for SetChatStickerSet.
 type SetChatStickerSetJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// StickerSetName Name of the sticker set to be set as the group sticker set
 	StickerSetName string `json:"sticker_set_name"`
@@ -7026,7 +7026,7 @@ type SetChatStickerSetJSONBody struct {
 // SetChatTitleJSONBody defines parameters for SetChatTitle.
 type SetChatTitleJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// Title New chat title, 1-128 characters
 	Title string `json:"title"`
@@ -7044,7 +7044,7 @@ type SetCustomEmojiStickerSetThumbnailJSONBody struct {
 // SetGameScoreJSONBody defines parameters for SetGameScore.
 type SetGameScoreJSONBody struct {
 	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat
-	ChatId *int `json:"chat_id,omitempty"`
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DisableEditMessage Pass True if the game message should not be automatically edited to include the current scoreboard
 	DisableEditMessage *bool `json:"disable_edit_message,omitempty"`
@@ -7068,7 +7068,7 @@ type SetGameScoreJSONBody struct {
 // SetMessageReactionJSONBody defines parameters for SetMessageReaction.
 type SetMessageReactionJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// IsBig Pass True to set the reaction with a big animation
 	IsBig *bool `json:"is_big,omitempty"`
@@ -7275,7 +7275,7 @@ type StopMessageLiveLocationJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId *int `json:"chat_id,omitempty"`
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// InlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message
 	InlineMessageId *string `json:"inline_message_id,omitempty"`
@@ -7293,7 +7293,7 @@ type StopPollJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// MessageId Identifier of the original message with the poll
 	MessageId int `json:"message_id"`
@@ -7317,7 +7317,7 @@ type TransferGiftJSONBody struct {
 	BusinessConnectionId string `json:"business_connection_id"`
 
 	// NewOwnerChatId Unique identifier of the chat which will own the gift. The chat must be active in the last 24 hours.
-	NewOwnerChatId int `json:"new_owner_chat_id"`
+	NewOwnerChatId int64 `json:"new_owner_chat_id"`
 
 	// OwnedGiftId Unique identifier of the regular gift that should be transferred
 	OwnedGiftId string `json:"owned_gift_id"`
@@ -7329,7 +7329,7 @@ type TransferGiftJSONBody struct {
 // UnbanChatMemberJSONBody defines parameters for UnbanChatMember.
 type UnbanChatMemberJSONBody struct {
 	// ChatId Unique identifier for the target group or username of the target supergroup or channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// OnlyIfBanned Do nothing if the user is not banned
 	OnlyIfBanned *bool `json:"only_if_banned,omitempty"`
@@ -7341,28 +7341,28 @@ type UnbanChatMemberJSONBody struct {
 // UnbanChatSenderChatJSONBody defines parameters for UnbanChatSenderChat.
 type UnbanChatSenderChatJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// SenderChatId Unique identifier of the target sender chat
-	SenderChatId int `json:"sender_chat_id"`
+	SenderChatId int64 `json:"sender_chat_id"`
 }
 
 // UnhideGeneralForumTopicJSONBody defines parameters for UnhideGeneralForumTopic.
 type UnhideGeneralForumTopicJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 }
 
 // UnpinAllChatMessagesJSONBody defines parameters for UnpinAllChatMessages.
 type UnpinAllChatMessagesJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 }
 
 // UnpinAllForumTopicMessagesJSONBody defines parameters for UnpinAllForumTopicMessages.
 type UnpinAllForumTopicMessagesJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// MessageThreadId Unique identifier for the target message thread of the forum topic
 	MessageThreadId int `json:"message_thread_id"`
@@ -7371,7 +7371,7 @@ type UnpinAllForumTopicMessagesJSONBody struct {
 // UnpinAllGeneralForumTopicMessagesJSONBody defines parameters for UnpinAllGeneralForumTopicMessages.
 type UnpinAllGeneralForumTopicMessagesJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 }
 
 // UnpinChatMessageJSONBody defines parameters for UnpinChatMessage.
@@ -7380,7 +7380,7 @@ type UnpinChatMessageJSONBody struct {
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// MessageId Identifier of the message to unpin. Required if business_connection_id is specified. If not specified, the most recent pinned message (by sending date) will be unpinned.
 	MessageId *int `json:"message_id,omitempty"`
@@ -7425,7 +7425,7 @@ type UploadStickerFileMultipartBody struct {
 // VerifyChatJSONBody defines parameters for VerifyChat.
 type VerifyChatJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername). Channel direct messages chats can't be verified.
-	ChatId int `json:"chat_id"`
+	ChatId int64 `json:"chat_id"`
 
 	// CustomDescription Custom description for the verification; 0-70 characters. Must be empty if the organization isn't allowed to provide a custom verification description.
 	CustomDescription *string `json:"custom_description,omitempty"`
