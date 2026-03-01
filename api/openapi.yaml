@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: "Telegram Bot API"
-  version: "9.3"
+  version: "9.5"
   description: |-
     This OpenAPI specification was generated using the [tgbotspec](https://github.com/metalagman/tgbotspec) tool.
 servers:
@@ -1101,7 +1101,7 @@ paths:
       tags:
         - Available methods
       description: |-
-        Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns information about the created topic as a ForumTopic object.
+        Use this method to create a topic in a forum supergroup chat or a private chat with a user. In the case of a supergroup chat the bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator right. Returns information about the created topic as a ForumTopic object.
       requestBody:
         required: true
         content:
@@ -4242,6 +4242,57 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /getUserProfileAudios:
+    post:
+      operationId: getUserProfileAudios
+      tags:
+        - Available methods
+      description: |-
+        Use this method to get a list of profile audios for a user. Returns a UserProfileAudios object.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                  description: Limits the number of audios to be retrieved. Values between 1-100 are accepted. Defaults to 100.
+                offset:
+                  type: integer
+                  description: Sequential number of the first audio to be returned. By default, all audios are returned.
+                user_id:
+                  type: integer
+                  description: Unique identifier of the target user
+              required:
+                - user_id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/OkResponse'
+                  - type: object
+                    properties:
+                      result:
+                        $ref: '#/components/schemas/UserProfileAudios'
+                    required:
+                      - result
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /getUserProfilePhotos:
     post:
       operationId: getUserProfilePhotos
@@ -4690,6 +4741,9 @@ paths:
                 can_manage_direct_messages:
                   type: boolean
                   description: Pass True if the administrator can manage direct messages within the channel and decline suggested posts; for channels only
+                can_manage_tags:
+                  type: boolean
+                  description: Pass True if the administrator can edit the tags of regular members; for groups and supergroups only
                 can_manage_topics:
                   type: boolean
                   description: Pass True if the user is allowed to create, rename, close, and reopen forum topics; for supergroups only
@@ -4925,6 +4979,40 @@ paths:
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
               required:
                 - chat_id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/OkResponse'
+                  - type: object
+                    properties:
+                      result:
+                        type: boolean
+                        default: true
+                    required:
+                      - result
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /removeMyProfilePhoto:
+    post:
+      operationId: removeMyProfilePhoto
+      tags:
+        - Available methods
+      description: |-
+        Removes the profile photo of the bot. Requires no parameters. Returns True on success.
       responses:
         '200':
           description: OK
@@ -7236,7 +7324,7 @@ paths:
       tags:
         - Available methods
       description: |-
-        Use this method to stream a partial message to a user while the message is being generated; supported only for bots with forum topic mode enabled. Returns True on success.
+        Use this method to stream a partial message to a user while the message is being generated. Returns True on success.
       requestBody:
         required: true
         content:
@@ -9294,6 +9382,60 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /setChatMemberTag:
+    post:
+      operationId: setChatMemberTag
+      tags:
+        - Available methods
+      description: |-
+        Use this method to set a tag for a regular member in a group or a supergroup. The bot must be an administrator in the chat for this to work and must have the can_manage_tags administrator right. Returns True on success.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  type: integer
+                  format: int64
+                  description: Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+                tag:
+                  type: string
+                  description: New tag for the member; 0-16 characters, emoji are not allowed
+                user_id:
+                  type: integer
+                  description: Unique identifier of the target user
+              required:
+                - chat_id
+                - user_id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/OkResponse'
+                  - type: object
+                    properties:
+                      result:
+                        type: boolean
+                        default: true
+                    required:
+                      - result
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /setChatMenuButton:
     post:
       operationId: setChatMenuButton
@@ -9908,6 +10050,53 @@ paths:
                 name:
                   type: string
                   description: New bot name; 0-64 characters. Pass an empty string to remove the dedicated name for the given language.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/OkResponse'
+                  - type: object
+                    properties:
+                      result:
+                        type: boolean
+                        default: true
+                    required:
+                      - result
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /setMyProfilePhoto:
+    post:
+      operationId: setMyProfilePhoto
+      tags:
+        - Available methods
+      description: |-
+        Changes the profile photo of the bot. Returns True on success.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                photo:
+                  description: The new profile photo to set
+                  allOf:
+                      - $ref: '#/components/schemas/InputProfilePhoto'
+              required:
+                - photo
       responses:
         '200':
           description: OK
@@ -12138,6 +12327,9 @@ components:
         can_manage_direct_messages:
           type: boolean
           description: Optional. True, if the administrator can manage direct messages of the channel and decline suggested posts; for channels only
+        can_manage_tags:
+          type: boolean
+          description: Optional. True, if the administrator can edit the tags of regular members; for groups and supergroups only. If omitted defaults to the value of can_pin_messages.
       required:
         - is_anonymous
         - can_manage_chat
@@ -12495,6 +12687,10 @@ components:
           description: Optional. For private chats, the rating of the user if any
           allOf:
               - $ref: '#/components/schemas/UserRating'
+        first_profile_audio:
+          description: Optional. For private chats, the first audio added to the profile of the user
+          allOf:
+              - $ref: '#/components/schemas/Audio'
         unique_gift_colors:
           description: Optional. The color scheme based on a unique gift that must be used for the chat's name, message replies and link previews
           allOf:
@@ -12683,6 +12879,9 @@ components:
         can_manage_direct_messages:
           type: boolean
           description: Optional. True, if the administrator can manage direct messages of the channel and decline suggested posts; for channels only
+        can_manage_tags:
+          type: boolean
+          description: Optional. True, if the administrator can edit the tags of regular members; for groups and supergroups only. If omitted defaults to the value of can_pin_messages.
         custom_title:
           type: string
           description: Optional. Custom title for this user
@@ -12749,6 +12948,9 @@ components:
         status:
           type: string
           description: The member's status in the chat, always “member”
+        tag:
+          type: string
+          description: Optional. Tag of the member
         user:
           description: Information about the user
           allOf:
@@ -12793,6 +12995,9 @@ components:
         status:
           type: string
           description: The member's status in the chat, always “restricted”
+        tag:
+          type: string
+          description: Optional. Tag of the member
         user:
           description: Information about the user
           allOf:
@@ -12830,6 +13035,9 @@ components:
         can_add_web_page_previews:
           type: boolean
           description: True, if the user is allowed to add web page previews to their messages
+        can_edit_tag:
+          type: boolean
+          description: True, if the user is allowed to edit their own tag
         can_change_info:
           type: boolean
           description: True, if the user is allowed to change the chat title, photo and other settings
@@ -12859,6 +13067,7 @@ components:
         - can_send_polls
         - can_send_other_messages
         - can_add_web_page_previews
+        - can_edit_tag
         - can_change_info
         - can_invite_users
         - can_pin_messages
@@ -12906,6 +13115,30 @@ components:
         - date
         - old_chat_member
         - new_chat_member
+   ChatOwnerChanged:
+      type: object
+      description: |-
+        Describes a service message about an ownership change in the chat.
+      x-tags:
+        - Available types
+      properties:
+        new_owner:
+          description: The new owner of the chat
+          allOf:
+              - $ref: '#/components/schemas/User'
+      required:
+        - new_owner
+   ChatOwnerLeft:
+      type: object
+      description: |-
+        Describes a service message about the chat owner leaving the chat.
+      x-tags:
+        - Available types
+      properties:
+        new_owner:
+          description: Optional. The user which will be the new owner of the chat if the previous owner does not return to the chat
+          allOf:
+              - $ref: '#/components/schemas/User'
    ChatPermissions:
       type: object
       description: |-
@@ -12943,6 +13176,9 @@ components:
         can_add_web_page_previews:
           type: boolean
           description: Optional. True, if the user is allowed to add web page previews to their messages
+        can_edit_tag:
+          type: boolean
+          description: Optional. True, if the user is allowed to edit their own tag
         can_change_info:
           type: boolean
           description: Optional. True, if the user is allowed to change the chat title, photo and other settings. Ignored in public supergroups
@@ -13902,13 +14138,19 @@ components:
    InlineKeyboardButton:
       type: object
       description: |-
-        This object represents one button of an inline keyboard. Exactly one of the optional fields must be used to specify type of the button.
+        This object represents one button of an inline keyboard. Exactly one of the fields other than text, icon_custom_emoji_id, and style must be used to specify the type of the button.
       x-tags:
         - Available types
       properties:
         text:
           type: string
           description: Label text on the button
+        icon_custom_emoji_id:
+          type: string
+          description: Optional. Unique identifier of the custom emoji shown before the text of the button. Can only be used by bots that purchased additional usernames on Fragment or in the messages directly sent by the bot to private, group and supergroup chats if the owner of the bot has a Telegram Premium subscription.
+        style:
+          type: string
+          description: Optional. Style of the button. Must be one of “danger” (red), “success” (green) or “primary” (blue). If omitted, then an app-specific style is used.
         url:
           type: string
           description: Optional. HTTP or tg:// URL to be opened when the button is pressed. Links tg://user?id=<user_id> can be used to mention a user by their identifier without using a username, if this is allowed by their privacy settings.
@@ -15720,13 +15962,19 @@ components:
    KeyboardButton:
       type: object
       description: |-
-        This object represents one button of the reply keyboard. At most one of the optional fields must be used to specify type of the button. For simple text buttons, String can be used instead of this object to specify the button text.
+        This object represents one button of the reply keyboard. At most one of the fields other than text, icon_custom_emoji_id, and style must be used to specify the type of the button. For simple text buttons, String can be used instead of this object to specify the button text.
       x-tags:
         - Available types
       properties:
         text:
           type: string
-          description: Text of the button. If none of the optional fields are used, it will be sent as a message when the button is pressed
+          description: Text of the button. If none of the fields other than text, icon_custom_emoji_id, and style are used, it will be sent as a message when the button is pressed
+        icon_custom_emoji_id:
+          type: string
+          description: Optional. Unique identifier of the custom emoji shown before the text of the button. Can only be used by bots that purchased additional usernames on Fragment or in the messages directly sent by the bot to private, group and supergroup chats if the owner of the bot has a Telegram Premium subscription.
+        style:
+          type: string
+          description: Optional. Style of the button. Must be one of “danger” (red), “success” (green) or “primary” (blue). If omitted, then an app-specific style is used.
         request_users:
           description: Optional. If specified, pressing the button will open a list of suitable users. Identifiers of selected users will be sent to the bot in a “users_shared” service message. Available in private chats only.
           allOf:
@@ -16064,6 +16312,9 @@ components:
           description: Optional. The bot that actually sent the message on behalf of the business account. Available only for outgoing messages sent on behalf of the connected business account.
           allOf:
               - $ref: '#/components/schemas/User'
+        sender_tag:
+          type: string
+          description: Optional. Tag or custom title of the sender of the message; for supergroups only
         date:
           type: integer
           description: Date the message was sent in Unix time. It is always a positive number, representing a valid date.
@@ -16126,7 +16377,7 @@ components:
           default: true
         media_group_id:
           type: string
-          description: Optional. The unique identifier of a media message group this message belongs to
+          description: Optional. The unique identifier inside this chat of a media message group this message belongs to
         author_signature:
           type: string
           description: Optional. Signature of the post author for messages in channels, or the custom title of an anonymous group administrator
@@ -16246,6 +16497,14 @@ components:
           description: Optional. A member was removed from the group, information about them (this member may be the bot itself)
           allOf:
               - $ref: '#/components/schemas/User'
+        chat_owner_left:
+          description: 'Optional. Service message: chat owner has left'
+          allOf:
+              - $ref: '#/components/schemas/ChatOwnerLeft'
+        chat_owner_changed:
+          description: 'Optional. Service message: chat owner has changed'
+          allOf:
+              - $ref: '#/components/schemas/ChatOwnerChanged'
         new_chat_title:
           type: string
           description: Optional. A chat title was changed to this value
@@ -16466,7 +16725,7 @@ components:
       properties:
         type:
           type: string
-          description: 'Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag or #hashtag@chatusername), “cashtag” ($USD or $USD@chatusername), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “blockquote” (block quotation), “expandable_blockquote” (collapsed-by-default block quotation), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames), “custom_emoji” (for inline custom emoji stickers)'
+          description: 'Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag or #hashtag@chatusername), “cashtag” ($USD or $USD@chatusername), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “blockquote” (block quotation), “expandable_blockquote” (collapsed-by-default block quotation), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames), “custom_emoji” (for inline custom emoji stickers), or “date_time” (for formatted date and time)'
         offset:
           type: integer
           description: Offset in UTF-16 code units to the start of the entity
@@ -16486,6 +16745,12 @@ components:
         custom_emoji_id:
           type: string
           description: Optional. For “custom_emoji” only, unique identifier of the custom emoji. Use getCustomEmojiStickers to get full information about the sticker
+        unix_time:
+          type: integer
+          description: Optional. For “date_time” only, the Unix time associated with the entity
+        date_time_format:
+          type: string
+          description: Optional. For “date_time” only, the string that defines the formatting of the date and time. See date-time entity formatting for more details.
       required:
         - type
         - offset
@@ -18557,6 +18822,10 @@ components:
           type: boolean
           description: Optional. True, if the original regular gift was exclusively purchaseable by Telegram Premium subscribers
           default: true
+        is_burned:
+          type: boolean
+          description: Optional. True, if the gift was used to craft another gift and isn't available anymore
+          default: true
         is_from_blockchain:
           type: boolean
           description: Optional. True, if the gift is assigned from the TON blockchain and can't be resold or transferred in Telegram
@@ -18706,7 +18975,10 @@ components:
               - $ref: '#/components/schemas/Sticker'
         rarity_per_mille:
           type: integer
-          description: The number of unique gifts that receive this model for every 1000 gifts upgraded
+          description: The number of unique gifts that receive this model for every 1000 gift upgrades. Always 0 for crafted gifts.
+        rarity:
+          type: string
+          description: Optional. Rarity of the model if it is a crafted model. Currently, can be “uncommon”, “rare”, “epic”, or “legendary”.
       required:
         - name
         - sticker
@@ -18888,6 +19160,9 @@ components:
         has_topics_enabled:
           type: boolean
           description: Optional. True, if the bot has forum topic mode enabled in private chats. Returned only in getMe.
+        allows_users_to_create_topics:
+          type: boolean
+          description: Optional. True, if the bot allows users to create and delete topics in private chats. Returned only in getMe.
       required:
         - id
         - is_bot
@@ -18906,6 +19181,24 @@ components:
               $ref: '#/components/schemas/ChatBoost'
       required:
         - boosts
+   UserProfileAudios:
+      type: object
+      description: |-
+        This object represents the audios displayed on a user's profile.
+      x-tags:
+        - Available types
+      properties:
+        total_count:
+          type: integer
+          description: Total number of profile audios for the target user
+        audios:
+          type: array
+          description: Requested profile audios
+          items:
+              $ref: '#/components/schemas/Audio'
+      required:
+        - total_count
+        - audios
    UserProfilePhotos:
       type: object
       description: |-
@@ -19034,6 +19327,11 @@ components:
         start_timestamp:
           type: integer
           description: Optional. Timestamp in seconds from which the video will play in the message
+        qualities:
+          type: array
+          description: Optional. List of available qualities of the video
+          items:
+              $ref: '#/components/schemas/VideoQuality'
         file_name:
           type: string
           description: Optional. Original filename as defined by the sender
@@ -19125,6 +19423,38 @@ components:
         - file_unique_id
         - length
         - duration
+   VideoQuality:
+      type: object
+      description: |-
+        This object represents a video file of a specific quality.
+      x-tags:
+        - Available types
+      properties:
+        file_id:
+          type: string
+          description: Identifier for this file, which can be used to download or reuse the file
+        file_unique_id:
+          type: string
+          description: Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+        width:
+          type: integer
+          description: Video width
+        height:
+          type: integer
+          description: Video height
+        codec:
+          type: string
+          description: Codec that was used to encode the video, for example, “h264”, “h265”, or “av01”
+        file_size:
+          type: integer
+          format: int64
+          description: Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
+      required:
+        - file_id
+        - file_unique_id
+        - width
+        - height
+        - codec
    Voice:
       type: object
       description: |-
