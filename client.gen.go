@@ -380,6 +380,9 @@ type ChatAdministratorRights struct {
 	// CanManageDirectMessages Optional. True, if the administrator can manage direct messages of the channel and decline suggested posts; for channels only
 	CanManageDirectMessages *bool `json:"can_manage_direct_messages,omitempty"`
 
+	// CanManageTags Optional. True, if the administrator can edit the tags of regular members; for groups and supergroups only. If omitted defaults to the value of can_pin_messages.
+	CanManageTags *bool `json:"can_manage_tags,omitempty"`
+
 	// CanManageTopics Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; for supergroups only
 	CanManageTopics *bool `json:"can_manage_topics,omitempty"`
 
@@ -514,6 +517,9 @@ type ChatFullInfo struct {
 
 	// FirstName Optional. First name of the other party in a private chat
 	FirstName *string `json:"first_name,omitempty"`
+
+	// FirstProfileAudio Optional. For private chats, the first audio added to the profile of the user
+	FirstProfileAudio *Audio `json:"first_profile_audio,omitempty"`
 
 	// HasAggressiveAntiSpamEnabled Optional. True, if aggressive anti-spam checks are enabled in the supergroup. The field is only available to chat administrators.
 	HasAggressiveAntiSpamEnabled *bool `json:"has_aggressive_anti_spam_enabled,omitempty"`
@@ -717,6 +723,18 @@ type ChatMemberUpdated struct {
 	ViaJoinRequest *bool `json:"via_join_request,omitempty"`
 }
 
+// ChatOwnerChanged Describes a service message about an ownership change in the chat.
+type ChatOwnerChanged struct {
+	// NewOwner The new owner of the chat
+	NewOwner User `json:"new_owner"`
+}
+
+// ChatOwnerLeft Describes a service message about the chat owner leaving the chat.
+type ChatOwnerLeft struct {
+	// NewOwner Optional. The user which will be the new owner of the chat if the previous owner does not return to the chat
+	NewOwner *User `json:"new_owner,omitempty"`
+}
+
 // ChatPermissions Describes actions that a non-administrator user is allowed to take in a chat.
 type ChatPermissions struct {
 	// CanAddWebPagePreviews Optional. True, if the user is allowed to add web page previews to their messages
@@ -724,6 +742,9 @@ type ChatPermissions struct {
 
 	// CanChangeInfo Optional. True, if the user is allowed to change the chat title, photo and other settings. Ignored in public supergroups
 	CanChangeInfo *bool `json:"can_change_info,omitempty"`
+
+	// CanEditTag Optional. True, if the user is allowed to edit their own tag
+	CanEditTag *bool `json:"can_edit_tag,omitempty"`
 
 	// CanInviteUsers Optional. True, if the user is allowed to invite new users to the chat
 	CanInviteUsers *bool `json:"can_invite_users,omitempty"`
@@ -1366,7 +1387,7 @@ type GiveawayWinners struct {
 	WinnersSelectionDate int `json:"winners_selection_date"`
 }
 
-// InlineKeyboardButton This object represents one button of an inline keyboard. Exactly one of the optional fields must be used to specify type of the button.
+// InlineKeyboardButton This object represents one button of an inline keyboard. Exactly one of the fields other than text, icon_custom_emoji_id, and style must be used to specify the type of the button.
 type InlineKeyboardButton struct {
 	// CallbackData Optional. Data to be sent in a callback query to the bot when the button is pressed, 1-64 bytes
 	CallbackData *string `json:"callback_data,omitempty"`
@@ -1377,11 +1398,17 @@ type InlineKeyboardButton struct {
 	// CopyText Optional. Description of the button that copies the specified text to the clipboard.
 	CopyText *CopyTextButton `json:"copy_text,omitempty"`
 
+	// IconCustomEmojiId Optional. Unique identifier of the custom emoji shown before the text of the button. Can only be used by bots that purchased additional usernames on Fragment or in the messages directly sent by the bot to private, group and supergroup chats if the owner of the bot has a Telegram Premium subscription.
+	IconCustomEmojiId *string `json:"icon_custom_emoji_id,omitempty"`
+
 	// LoginUrl Optional. An HTTPS URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget.
 	LoginUrl *LoginUrl `json:"login_url,omitempty"`
 
 	// Pay Optional. Specify True, to send a Pay button. Substrings “” and “XTR” in the buttons's text will be replaced with a Telegram Star icon.NOTE: This type of button must always be the first button in the first row and can only be used in invoice messages.
 	Pay *bool `json:"pay,omitempty"`
+
+	// Style Optional. Style of the button. Must be one of “danger” (red), “success” (green) or “primary” (blue). If omitted, then an app-specific style is used.
+	Style *string `json:"style,omitempty"`
 
 	// SwitchInlineQuery Optional. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. May be empty, in which case just the bot's username will be inserted. Not supported for messages sent in channel direct messages chats and on behalf of a Telegram Business account.
 	SwitchInlineQuery *string `json:"switch_inline_query,omitempty"`
@@ -1572,8 +1599,11 @@ type Invoice struct {
 	TotalAmount int `json:"total_amount"`
 }
 
-// KeyboardButton This object represents one button of the reply keyboard. At most one of the optional fields must be used to specify type of the button. For simple text buttons, String can be used instead of this object to specify the button text.
+// KeyboardButton This object represents one button of the reply keyboard. At most one of the fields other than text, icon_custom_emoji_id, and style must be used to specify the type of the button. For simple text buttons, String can be used instead of this object to specify the button text.
 type KeyboardButton struct {
+	// IconCustomEmojiId Optional. Unique identifier of the custom emoji shown before the text of the button. Can only be used by bots that purchased additional usernames on Fragment or in the messages directly sent by the bot to private, group and supergroup chats if the owner of the bot has a Telegram Premium subscription.
+	IconCustomEmojiId *string `json:"icon_custom_emoji_id,omitempty"`
+
 	// RequestChat Optional. If specified, pressing the button will open a list of suitable chats. Tapping on a chat will send its identifier to the bot in a “chat_shared” service message. Available in private chats only.
 	RequestChat *KeyboardButtonRequestChat `json:"request_chat,omitempty"`
 
@@ -1589,7 +1619,10 @@ type KeyboardButton struct {
 	// RequestUsers Optional. If specified, pressing the button will open a list of suitable users. Identifiers of selected users will be sent to the bot in a “users_shared” service message. Available in private chats only.
 	RequestUsers *KeyboardButtonRequestUsers `json:"request_users,omitempty"`
 
-	// Text Text of the button. If none of the optional fields are used, it will be sent as a message when the button is pressed
+	// Style Optional. Style of the button. Must be one of “danger” (red), “success” (green) or “primary” (blue). If omitted, then an app-specific style is used.
+	Style *string `json:"style,omitempty"`
+
+	// Text Text of the button. If none of the fields other than text, icon_custom_emoji_id, and style are used, it will be sent as a message when the button is pressed
 	Text string `json:"text"`
 
 	// WebApp Optional. If specified, the described Web App will be launched when the button is pressed. The Web App will be able to send a “web_app_data” service message. Available in private chats only.
@@ -1785,6 +1818,12 @@ type Message struct {
 	// ChatBackgroundSet Optional. Service message: chat background set
 	ChatBackgroundSet *ChatBackground `json:"chat_background_set,omitempty"`
 
+	// ChatOwnerChanged Optional. Service message: chat owner has changed
+	ChatOwnerChanged *ChatOwnerChanged `json:"chat_owner_changed,omitempty"`
+
+	// ChatOwnerLeft Optional. Service message: chat owner has left
+	ChatOwnerLeft *ChatOwnerLeft `json:"chat_owner_left,omitempty"`
+
 	// ChatShared Optional. Service message: a chat was shared with the bot
 	ChatShared *ChatShared `json:"chat_shared,omitempty"`
 
@@ -1911,7 +1950,7 @@ type Message struct {
 	// Location Optional. Message is a shared location, information about the location
 	Location *Location `json:"location,omitempty"`
 
-	// MediaGroupId Optional. The unique identifier of a media message group this message belongs to
+	// MediaGroupId Optional. The unique identifier inside this chat of a media message group this message belongs to
 	MediaGroupId *string `json:"media_group_id,omitempty"`
 
 	// MessageAutoDeleteTimerChanged Optional. Service message: auto-delete timer settings changed in the chat
@@ -1988,6 +2027,9 @@ type Message struct {
 
 	// SenderChat Optional. Sender of the message when sent on behalf of a chat. For example, the supergroup itself for messages sent by its anonymous administrators or a linked channel for messages automatically forwarded to the channel's discussion group. For backward compatibility, if the message was sent on behalf of a chat, the field from contains a fake sender user in non-channel chats.
 	SenderChat *Chat `json:"sender_chat,omitempty"`
+
+	// SenderTag Optional. Tag or custom title of the sender of the message; for supergroups only
+	SenderTag *string `json:"sender_tag,omitempty"`
 
 	// ShowCaptionAboveMedia Optional. True, if the caption must be shown above the message media
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
@@ -2076,6 +2118,9 @@ type MessageEntity struct {
 	// CustomEmojiId Optional. For “custom_emoji” only, unique identifier of the custom emoji. Use getCustomEmojiStickers to get full information about the sticker
 	CustomEmojiId *string `json:"custom_emoji_id,omitempty"`
 
+	// DateTimeFormat Optional. For “date_time” only, the string that defines the formatting of the date and time. See date-time entity formatting for more details.
+	DateTimeFormat *string `json:"date_time_format,omitempty"`
+
 	// Language Optional. For “pre” only, the programming language of the entity text
 	Language *string `json:"language,omitempty"`
 
@@ -2085,8 +2130,11 @@ type MessageEntity struct {
 	// Offset Offset in UTF-16 code units to the start of the entity
 	Offset int `json:"offset"`
 
-	// Type Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag or #hashtag@chatusername), “cashtag” ($USD or $USD@chatusername), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “blockquote” (block quotation), “expandable_blockquote” (collapsed-by-default block quotation), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames), “custom_emoji” (for inline custom emoji stickers)
+	// Type Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag or #hashtag@chatusername), “cashtag” ($USD or $USD@chatusername), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “blockquote” (block quotation), “expandable_blockquote” (collapsed-by-default block quotation), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames), “custom_emoji” (for inline custom emoji stickers), or “date_time” (for formatted date and time)
 	Type string `json:"type"`
+
+	// UnixTime Optional. For “date_time” only, the Unix time associated with the entity
+	UnixTime *int `json:"unix_time,omitempty"`
 
 	// Url Optional. For “text_link” only, URL that will be opened after user taps on the text
 	Url *string `json:"url,omitempty"`
@@ -2852,6 +2900,9 @@ type UniqueGift struct {
 	// GiftId Identifier of the regular gift from which the gift was upgraded
 	GiftId string `json:"gift_id"`
 
+	// IsBurned Optional. True, if the gift was used to craft another gift and isn't available anymore
+	IsBurned *bool `json:"is_burned,omitempty"`
+
 	// IsFromBlockchain Optional. True, if the gift is assigned from the TON blockchain and can't be resold or transferred in Telegram
 	IsFromBlockchain *bool `json:"is_from_blockchain,omitempty"`
 
@@ -2951,7 +3002,10 @@ type UniqueGiftModel struct {
 	// Name Name of the model
 	Name string `json:"name"`
 
-	// RarityPerMille The number of unique gifts that receive this model for every 1000 gifts upgraded
+	// Rarity Optional. Rarity of the model if it is a crafted model. Currently, can be “uncommon”, “rare”, “epic”, or “legendary”.
+	Rarity *string `json:"rarity,omitempty"`
+
+	// RarityPerMille The number of unique gifts that receive this model for every 1000 gift upgrades. Always 0 for crafted gifts.
 	RarityPerMille int `json:"rarity_per_mille"`
 
 	// Sticker The sticker that represents the unique gift
@@ -3050,6 +3104,9 @@ type User struct {
 	// AddedToAttachmentMenu Optional. True, if this user added the bot to the attachment menu
 	AddedToAttachmentMenu *bool `json:"added_to_attachment_menu,omitempty"`
 
+	// AllowsUsersToCreateTopics Optional. True, if the bot allows users to create and delete topics in private chats. Returned only in getMe.
+	AllowsUsersToCreateTopics *bool `json:"allows_users_to_create_topics,omitempty"`
+
 	// CanConnectToBusiness Optional. True, if the bot can be connected to a Telegram Business account to receive its messages. Returned only in getMe.
 	CanConnectToBusiness *bool `json:"can_connect_to_business,omitempty"`
 
@@ -3094,6 +3151,15 @@ type User struct {
 type UserChatBoosts struct {
 	// Boosts The list of boosts added to the chat by the user
 	Boosts []ChatBoost `json:"boosts"`
+}
+
+// UserProfileAudios This object represents the audios displayed on a user's profile.
+type UserProfileAudios struct {
+	// Audios Requested profile audios
+	Audios []Audio `json:"audios"`
+
+	// TotalCount Total number of profile audios for the target user
+	TotalCount int `json:"total_count"`
 }
 
 // UserProfilePhotos This object represent a user's profile pictures.
@@ -3179,6 +3245,9 @@ type Video struct {
 	// MimeType Optional. MIME type of the file as defined by the sender
 	MimeType *string `json:"mime_type,omitempty"`
 
+	// Qualities Optional. List of available qualities of the video
+	Qualities *[]VideoQuality `json:"qualities,omitempty"`
+
 	// StartTimestamp Optional. Timestamp in seconds from which the video will play in the message
 	StartTimestamp *int `json:"start_timestamp,omitempty"`
 
@@ -3229,6 +3298,27 @@ type VideoNote struct {
 
 	// Thumbnail Optional. Video thumbnail
 	Thumbnail *PhotoSize `json:"thumbnail,omitempty"`
+}
+
+// VideoQuality This object represents a video file of a specific quality.
+type VideoQuality struct {
+	// Codec Codec that was used to encode the video, for example, “h264”, “h265”, or “av01”
+	Codec string `json:"codec"`
+
+	// FileId Identifier for this file, which can be used to download or reuse the file
+	FileId string `json:"file_id"`
+
+	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
+	FileSize *int64 `json:"file_size,omitempty"`
+
+	// FileUniqueId Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+	FileUniqueId string `json:"file_unique_id"`
+
+	// Height Video height
+	Height int `json:"height"`
+
+	// Width Video width
+	Width int `json:"width"`
 }
 
 // Voice This object represents a voice note.
@@ -4422,6 +4512,18 @@ type GetUserGiftsJSONBody struct {
 	UserId int `json:"user_id"`
 }
 
+// GetUserProfileAudiosJSONBody defines parameters for GetUserProfileAudios.
+type GetUserProfileAudiosJSONBody struct {
+	// Limit Limits the number of audios to be retrieved. Values between 1-100 are accepted. Defaults to 100.
+	Limit *int `json:"limit,omitempty"`
+
+	// Offset Sequential number of the first audio to be returned. By default, all audios are returned.
+	Offset *int `json:"offset,omitempty"`
+
+	// UserId Unique identifier of the target user
+	UserId int `json:"user_id"`
+}
+
 // GetUserProfilePhotosJSONBody defines parameters for GetUserProfilePhotos.
 type GetUserProfilePhotosJSONBody struct {
 	// Limit Limits the number of photos to be retrieved. Values between 1-100 are accepted. Defaults to 100.
@@ -4537,6 +4639,9 @@ type PromoteChatMemberJSONBody struct {
 
 	// CanManageDirectMessages Pass True if the administrator can manage direct messages within the channel and decline suggested posts; for channels only
 	CanManageDirectMessages *bool `json:"can_manage_direct_messages,omitempty"`
+
+	// CanManageTags Pass True if the administrator can edit the tags of regular members; for groups and supergroups only
+	CanManageTags *bool `json:"can_manage_tags,omitempty"`
 
 	// CanManageTopics Pass True if the user is allowed to create, rename, close, and reopen forum topics; for supergroups only
 	CanManageTopics *bool `json:"can_manage_topics,omitempty"`
@@ -6978,6 +7083,18 @@ type SetChatDescriptionJSONBody struct {
 	Description *string `json:"description,omitempty"`
 }
 
+// SetChatMemberTagJSONBody defines parameters for SetChatMemberTag.
+type SetChatMemberTagJSONBody struct {
+	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+	ChatId int64 `json:"chat_id"`
+
+	// Tag New tag for the member; 0-16 characters, emoji are not allowed
+	Tag *string `json:"tag,omitempty"`
+
+	// UserId Unique identifier of the target user
+	UserId int `json:"user_id"`
+}
+
 // SetChatMenuButtonJSONBody defines parameters for SetChatMenuButton.
 type SetChatMenuButtonJSONBody struct {
 	// ChatId Unique identifier for the target private chat. If not specified, default bot's menu button will be changed
@@ -7117,6 +7234,12 @@ type SetMyNameJSONBody struct {
 
 	// Name New bot name; 0-64 characters. Pass an empty string to remove the dedicated name for the given language.
 	Name *string `json:"name,omitempty"`
+}
+
+// SetMyProfilePhotoJSONBody defines parameters for SetMyProfilePhoto.
+type SetMyProfilePhotoJSONBody struct {
+	// Photo The new profile photo to set
+	Photo InputProfilePhoto `json:"photo"`
 }
 
 // SetMyShortDescriptionJSONBody defines parameters for SetMyShortDescription.
@@ -7659,6 +7782,9 @@ type GetUserChatBoostsJSONRequestBody GetUserChatBoostsJSONBody
 // GetUserGiftsJSONRequestBody defines body for GetUserGifts for application/json ContentType.
 type GetUserGiftsJSONRequestBody GetUserGiftsJSONBody
 
+// GetUserProfileAudiosJSONRequestBody defines body for GetUserProfileAudios for application/json ContentType.
+type GetUserProfileAudiosJSONRequestBody GetUserProfileAudiosJSONBody
+
 // GetUserProfilePhotosJSONRequestBody defines body for GetUserProfilePhotos for application/json ContentType.
 type GetUserProfilePhotosJSONRequestBody GetUserProfilePhotosJSONBody
 
@@ -7833,6 +7959,9 @@ type SetChatAdministratorCustomTitleJSONRequestBody SetChatAdministratorCustomTi
 // SetChatDescriptionJSONRequestBody defines body for SetChatDescription for application/json ContentType.
 type SetChatDescriptionJSONRequestBody SetChatDescriptionJSONBody
 
+// SetChatMemberTagJSONRequestBody defines body for SetChatMemberTag for application/json ContentType.
+type SetChatMemberTagJSONRequestBody SetChatMemberTagJSONBody
+
 // SetChatMenuButtonJSONRequestBody defines body for SetChatMenuButton for application/json ContentType.
 type SetChatMenuButtonJSONRequestBody SetChatMenuButtonJSONBody
 
@@ -7871,6 +8000,9 @@ type SetMyDescriptionJSONRequestBody SetMyDescriptionJSONBody
 
 // SetMyNameJSONRequestBody defines body for SetMyName for application/json ContentType.
 type SetMyNameJSONRequestBody SetMyNameJSONBody
+
+// SetMyProfilePhotoJSONRequestBody defines body for SetMyProfilePhoto for application/json ContentType.
+type SetMyProfilePhotoJSONRequestBody SetMyProfilePhotoJSONBody
 
 // SetMyShortDescriptionJSONRequestBody defines body for SetMyShortDescription for application/json ContentType.
 type SetMyShortDescriptionJSONRequestBody SetMyShortDescriptionJSONBody
@@ -8394,6 +8526,11 @@ type ClientInterface interface {
 
 	GetUserGifts(ctx context.Context, body GetUserGiftsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetUserProfileAudiosWithBody request with any body
+	GetUserProfileAudiosWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	GetUserProfileAudios(ctx context.Context, body GetUserProfileAudiosJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetUserProfilePhotosWithBody request with any body
 	GetUserProfilePhotosWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -8454,6 +8591,9 @@ type ClientInterface interface {
 	RemoveChatVerificationWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	RemoveChatVerification(ctx context.Context, body RemoveChatVerificationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RemoveMyProfilePhoto request
+	RemoveMyProfilePhoto(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// RemoveUserVerificationWithBody request with any body
 	RemoveUserVerificationWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -8640,6 +8780,11 @@ type ClientInterface interface {
 
 	SetChatDescription(ctx context.Context, body SetChatDescriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// SetChatMemberTagWithBody request with any body
+	SetChatMemberTagWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SetChatMemberTag(ctx context.Context, body SetChatMemberTagJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// SetChatMenuButtonWithBody request with any body
 	SetChatMenuButtonWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -8699,6 +8844,11 @@ type ClientInterface interface {
 	SetMyNameWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	SetMyName(ctx context.Context, body SetMyNameJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SetMyProfilePhotoWithBody request with any body
+	SetMyProfilePhotoWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SetMyProfilePhoto(ctx context.Context, body SetMyProfilePhotoJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// SetMyShortDescriptionWithBody request with any body
 	SetMyShortDescriptionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -10566,6 +10716,30 @@ func (c *Client) GetUserGifts(ctx context.Context, body GetUserGiftsJSONRequestB
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetUserProfileAudiosWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetUserProfileAudiosRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetUserProfileAudios(ctx context.Context, body GetUserProfileAudiosJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetUserProfileAudiosRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetUserProfilePhotosWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetUserProfilePhotosRequestWithBody(c.Server, contentType, body)
 	if err != nil {
@@ -10844,6 +11018,18 @@ func (c *Client) RemoveChatVerificationWithBody(ctx context.Context, contentType
 
 func (c *Client) RemoveChatVerification(ctx context.Context, body RemoveChatVerificationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewRemoveChatVerificationRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RemoveMyProfilePhoto(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRemoveMyProfilePhotoRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -11742,6 +11928,30 @@ func (c *Client) SetChatDescription(ctx context.Context, body SetChatDescription
 	return c.Client.Do(req)
 }
 
+func (c *Client) SetChatMemberTagWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSetChatMemberTagRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SetChatMemberTag(ctx context.Context, body SetChatMemberTagJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSetChatMemberTagRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) SetChatMenuButtonWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewSetChatMenuButtonRequestWithBody(c.Server, contentType, body)
 	if err != nil {
@@ -12020,6 +12230,30 @@ func (c *Client) SetMyNameWithBody(ctx context.Context, contentType string, body
 
 func (c *Client) SetMyName(ctx context.Context, body SetMyNameJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewSetMyNameRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SetMyProfilePhotoWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSetMyProfilePhotoRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SetMyProfilePhoto(ctx context.Context, body SetMyProfilePhotoJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSetMyProfilePhotoRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -15565,6 +15799,46 @@ func NewGetUserGiftsRequestWithBody(server string, contentType string, body io.R
 	return req, nil
 }
 
+// NewGetUserProfileAudiosRequest calls the generic GetUserProfileAudios builder with application/json body
+func NewGetUserProfileAudiosRequest(server string, body GetUserProfileAudiosJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewGetUserProfileAudiosRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewGetUserProfileAudiosRequestWithBody generates requests for GetUserProfileAudios with any type of body
+func NewGetUserProfileAudiosRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/getUserProfileAudios")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewGetUserProfilePhotosRequest calls the generic GetUserProfilePhotos builder with application/json body
 func NewGetUserProfilePhotosRequest(server string, body GetUserProfilePhotosJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -16055,6 +16329,33 @@ func NewRemoveChatVerificationRequestWithBody(server string, contentType string,
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewRemoveMyProfilePhotoRequest generates requests for RemoveMyProfilePhoto
+func NewRemoveMyProfilePhotoRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/removeMyProfilePhoto")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -17539,6 +17840,46 @@ func NewSetChatDescriptionRequestWithBody(server string, contentType string, bod
 	return req, nil
 }
 
+// NewSetChatMemberTagRequest calls the generic SetChatMemberTag builder with application/json body
+func NewSetChatMemberTagRequest(server string, body SetChatMemberTagJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSetChatMemberTagRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewSetChatMemberTagRequestWithBody generates requests for SetChatMemberTag with any type of body
+func NewSetChatMemberTagRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/setChatMemberTag")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewSetChatMenuButtonRequest calls the generic SetChatMenuButton builder with application/json body
 func NewSetChatMenuButtonRequest(server string, body SetChatMenuButtonJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -18000,6 +18341,46 @@ func NewSetMyNameRequestWithBody(server string, contentType string, body io.Read
 	}
 
 	operationPath := fmt.Sprintf("/setMyName")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewSetMyProfilePhotoRequest calls the generic SetMyProfilePhoto builder with application/json body
+func NewSetMyProfilePhotoRequest(server string, body SetMyProfilePhotoJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSetMyProfilePhotoRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewSetMyProfilePhotoRequestWithBody generates requests for SetMyProfilePhoto with any type of body
+func NewSetMyProfilePhotoRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/setMyProfilePhoto")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19427,6 +19808,11 @@ type ClientWithResponsesInterface interface {
 
 	GetUserGiftsWithResponse(ctx context.Context, body GetUserGiftsJSONRequestBody, reqEditors ...RequestEditorFn) (*GetUserGiftsResponse, error)
 
+	// GetUserProfileAudiosWithBodyWithResponse request with any body
+	GetUserProfileAudiosWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetUserProfileAudiosResponse, error)
+
+	GetUserProfileAudiosWithResponse(ctx context.Context, body GetUserProfileAudiosJSONRequestBody, reqEditors ...RequestEditorFn) (*GetUserProfileAudiosResponse, error)
+
 	// GetUserProfilePhotosWithBodyWithResponse request with any body
 	GetUserProfilePhotosWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetUserProfilePhotosResponse, error)
 
@@ -19487,6 +19873,9 @@ type ClientWithResponsesInterface interface {
 	RemoveChatVerificationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RemoveChatVerificationResponse, error)
 
 	RemoveChatVerificationWithResponse(ctx context.Context, body RemoveChatVerificationJSONRequestBody, reqEditors ...RequestEditorFn) (*RemoveChatVerificationResponse, error)
+
+	// RemoveMyProfilePhotoWithResponse request
+	RemoveMyProfilePhotoWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*RemoveMyProfilePhotoResponse, error)
 
 	// RemoveUserVerificationWithBodyWithResponse request with any body
 	RemoveUserVerificationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RemoveUserVerificationResponse, error)
@@ -19673,6 +20062,11 @@ type ClientWithResponsesInterface interface {
 
 	SetChatDescriptionWithResponse(ctx context.Context, body SetChatDescriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*SetChatDescriptionResponse, error)
 
+	// SetChatMemberTagWithBodyWithResponse request with any body
+	SetChatMemberTagWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetChatMemberTagResponse, error)
+
+	SetChatMemberTagWithResponse(ctx context.Context, body SetChatMemberTagJSONRequestBody, reqEditors ...RequestEditorFn) (*SetChatMemberTagResponse, error)
+
 	// SetChatMenuButtonWithBodyWithResponse request with any body
 	SetChatMenuButtonWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetChatMenuButtonResponse, error)
 
@@ -19732,6 +20126,11 @@ type ClientWithResponsesInterface interface {
 	SetMyNameWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetMyNameResponse, error)
 
 	SetMyNameWithResponse(ctx context.Context, body SetMyNameJSONRequestBody, reqEditors ...RequestEditorFn) (*SetMyNameResponse, error)
+
+	// SetMyProfilePhotoWithBodyWithResponse request with any body
+	SetMyProfilePhotoWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetMyProfilePhotoResponse, error)
+
+	SetMyProfilePhotoWithResponse(ctx context.Context, body SetMyProfilePhotoJSONRequestBody, reqEditors ...RequestEditorFn) (*SetMyProfilePhotoResponse, error)
 
 	// SetMyShortDescriptionWithBodyWithResponse request with any body
 	SetMyShortDescriptionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetMyShortDescriptionResponse, error)
@@ -22047,6 +22446,36 @@ func (r GetUserGiftsResponse) StatusCode() int {
 	return 0
 }
 
+type GetUserProfileAudiosResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok GetUserProfileAudios200Ok `json:"ok"`
+
+		// Result This object represents the audios displayed on a user's profile.
+		Result UserProfileAudios `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type GetUserProfileAudios200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r GetUserProfileAudiosResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetUserProfileAudiosResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetUserProfilePhotosResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -22411,6 +22840,34 @@ func (r RemoveChatVerificationResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r RemoveChatVerificationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type RemoveMyProfilePhotoResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     RemoveMyProfilePhoto200Ok `json:"ok"`
+		Result bool                      `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type RemoveMyProfilePhoto200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r RemoveMyProfilePhotoResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RemoveMyProfilePhotoResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -23495,6 +23952,34 @@ func (r SetChatDescriptionResponse) StatusCode() int {
 	return 0
 }
 
+type SetChatMemberTagResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     SetChatMemberTag200Ok `json:"ok"`
+		Result bool                  `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type SetChatMemberTag200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r SetChatMemberTagResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SetChatMemberTagResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type SetChatMenuButtonResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -23829,6 +24314,34 @@ func (r SetMyNameResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r SetMyNameResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SetMyProfilePhotoResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     SetMyProfilePhoto200Ok `json:"ok"`
+		Result bool                   `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type SetMyProfilePhoto200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r SetMyProfilePhotoResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SetMyProfilePhotoResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -25778,6 +26291,23 @@ func (c *ClientWithResponses) GetUserGiftsWithResponse(ctx context.Context, body
 	return ParseGetUserGiftsResponse(rsp)
 }
 
+// GetUserProfileAudiosWithBodyWithResponse request with arbitrary body returning *GetUserProfileAudiosResponse
+func (c *ClientWithResponses) GetUserProfileAudiosWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetUserProfileAudiosResponse, error) {
+	rsp, err := c.GetUserProfileAudiosWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetUserProfileAudiosResponse(rsp)
+}
+
+func (c *ClientWithResponses) GetUserProfileAudiosWithResponse(ctx context.Context, body GetUserProfileAudiosJSONRequestBody, reqEditors ...RequestEditorFn) (*GetUserProfileAudiosResponse, error) {
+	rsp, err := c.GetUserProfileAudios(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetUserProfileAudiosResponse(rsp)
+}
+
 // GetUserProfilePhotosWithBodyWithResponse request with arbitrary body returning *GetUserProfilePhotosResponse
 func (c *ClientWithResponses) GetUserProfilePhotosWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetUserProfilePhotosResponse, error) {
 	rsp, err := c.GetUserProfilePhotosWithBody(ctx, contentType, body, reqEditors...)
@@ -25981,6 +26511,15 @@ func (c *ClientWithResponses) RemoveChatVerificationWithResponse(ctx context.Con
 		return nil, err
 	}
 	return ParseRemoveChatVerificationResponse(rsp)
+}
+
+// RemoveMyProfilePhotoWithResponse request returning *RemoveMyProfilePhotoResponse
+func (c *ClientWithResponses) RemoveMyProfilePhotoWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*RemoveMyProfilePhotoResponse, error) {
+	rsp, err := c.RemoveMyProfilePhoto(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRemoveMyProfilePhotoResponse(rsp)
 }
 
 // RemoveUserVerificationWithBodyWithResponse request with arbitrary body returning *RemoveUserVerificationResponse
@@ -26612,6 +27151,23 @@ func (c *ClientWithResponses) SetChatDescriptionWithResponse(ctx context.Context
 	return ParseSetChatDescriptionResponse(rsp)
 }
 
+// SetChatMemberTagWithBodyWithResponse request with arbitrary body returning *SetChatMemberTagResponse
+func (c *ClientWithResponses) SetChatMemberTagWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetChatMemberTagResponse, error) {
+	rsp, err := c.SetChatMemberTagWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSetChatMemberTagResponse(rsp)
+}
+
+func (c *ClientWithResponses) SetChatMemberTagWithResponse(ctx context.Context, body SetChatMemberTagJSONRequestBody, reqEditors ...RequestEditorFn) (*SetChatMemberTagResponse, error) {
+	rsp, err := c.SetChatMemberTag(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSetChatMemberTagResponse(rsp)
+}
+
 // SetChatMenuButtonWithBodyWithResponse request with arbitrary body returning *SetChatMenuButtonResponse
 func (c *ClientWithResponses) SetChatMenuButtonWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetChatMenuButtonResponse, error) {
 	rsp, err := c.SetChatMenuButtonWithBody(ctx, contentType, body, reqEditors...)
@@ -26814,6 +27370,23 @@ func (c *ClientWithResponses) SetMyNameWithResponse(ctx context.Context, body Se
 		return nil, err
 	}
 	return ParseSetMyNameResponse(rsp)
+}
+
+// SetMyProfilePhotoWithBodyWithResponse request with arbitrary body returning *SetMyProfilePhotoResponse
+func (c *ClientWithResponses) SetMyProfilePhotoWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetMyProfilePhotoResponse, error) {
+	rsp, err := c.SetMyProfilePhotoWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSetMyProfilePhotoResponse(rsp)
+}
+
+func (c *ClientWithResponses) SetMyProfilePhotoWithResponse(ctx context.Context, body SetMyProfilePhotoJSONRequestBody, reqEditors ...RequestEditorFn) (*SetMyProfilePhotoResponse, error) {
+	rsp, err := c.SetMyProfilePhoto(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSetMyProfilePhotoResponse(rsp)
 }
 
 // SetMyShortDescriptionWithBodyWithResponse request with arbitrary body returning *SetMyShortDescriptionResponse
@@ -30534,6 +31107,51 @@ func ParseGetUserGiftsResponse(rsp *http.Response) (*GetUserGiftsResponse, error
 	return response, nil
 }
 
+// ParseGetUserProfileAudiosResponse parses an HTTP response from a GetUserProfileAudiosWithResponse call
+func ParseGetUserProfileAudiosResponse(rsp *http.Response) (*GetUserProfileAudiosResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetUserProfileAudiosResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok GetUserProfileAudios200Ok `json:"ok"`
+
+			// Result This object represents the audios displayed on a user's profile.
+			Result UserProfileAudios `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetUserProfilePhotosResponse parses an HTTP response from a GetUserProfilePhotosWithResponse call
 func ParseGetUserProfilePhotosResponse(rsp *http.Response) (*GetUserProfilePhotosResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -31074,6 +31692,49 @@ func ParseRemoveChatVerificationResponse(rsp *http.Response) (*RemoveChatVerific
 		var dest struct {
 			Ok     RemoveChatVerification200Ok `json:"ok"`
 			Result bool                        `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRemoveMyProfilePhotoResponse parses an HTTP response from a RemoveMyProfilePhotoWithResponse call
+func ParseRemoveMyProfilePhotoResponse(rsp *http.Response) (*RemoveMyProfilePhotoResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RemoveMyProfilePhotoResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     RemoveMyProfilePhoto200Ok `json:"ok"`
+			Result bool                      `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -32732,6 +33393,49 @@ func ParseSetChatDescriptionResponse(rsp *http.Response) (*SetChatDescriptionRes
 	return response, nil
 }
 
+// ParseSetChatMemberTagResponse parses an HTTP response from a SetChatMemberTagWithResponse call
+func ParseSetChatMemberTagResponse(rsp *http.Response) (*SetChatMemberTagResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SetChatMemberTagResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     SetChatMemberTag200Ok `json:"ok"`
+			Result bool                  `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseSetChatMenuButtonResponse parses an HTTP response from a SetChatMenuButtonWithResponse call
 func ParseSetChatMenuButtonResponse(rsp *http.Response) (*SetChatMenuButtonResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -33223,6 +33927,49 @@ func ParseSetMyNameResponse(rsp *http.Response) (*SetMyNameResponse, error) {
 		var dest struct {
 			Ok     SetMyName200Ok `json:"ok"`
 			Result bool           `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSetMyProfilePhotoResponse parses an HTTP response from a SetMyProfilePhotoWithResponse call
+func ParseSetMyProfilePhotoResponse(rsp *http.Response) (*SetMyProfilePhotoResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SetMyProfilePhotoResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     SetMyProfilePhoto200Ok `json:"ok"`
+			Result bool                   `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
