@@ -16,8 +16,10 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
-      - name: Generate OpenAPI spec
-        run: go generate ./...
+      - name: Regenerate OpenAPI spec from upstream
+        run: |
+          rm -f spec_cache.html
+          go generate ./...
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
