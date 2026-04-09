@@ -8,3 +8,34 @@ To run the tests for this project, use the standard Go test command:
 go test -v ./...
 ```
 Alternatively, you can run all generation and tests using the tools provided in the repository.
+
+### Updating the Client
+When updating this client for a new Telegram Bot API release:
+
+1. Regenerate the OpenAPI spec and Go client. Prefer the standard project flow first:
+```bash
+go generate ./...
+```
+2. If the released `tgbotspec` version in `go.mod` does not yet support the new Bot API change, use the sibling source repo in `../tgbotspec` instead of patching generated files by hand:
+```bash
+mkdir -p /tmp/tgbotkit-client-update
+cd /tmp/tgbotkit-client-update
+go work init /home/bigboss/Projects/tgbotkit-client /home/bigboss/Projects/tgbotspec
+```
+Then from the `tgbotkit-client` repo run:
+```bash
+GOWORK=/tmp/tgbotkit-client-update/go.work GOCACHE=/tmp/tgbotkit-client-cache go run ../tgbotspec/cmd/tgbotspec --merge-union-types -o api/openapi.yaml
+GOCACHE=/tmp/tgbotkit-client-cache go tool oapi-codegen -config cfg.yaml api/openapi.yaml
+```
+3. Do not hand-edit generated artifacts. The expected generated files are:
+   - `api/openapi.yaml`
+   - `client.gen.go`
+4. Update `README.md` to record the new supported Bot API version and release date.
+5. Run verification:
+```bash
+go test -v ./...
+```
+6. Before tagging a release, inspect the diff and confirm any new upstream methods or fields are present in both `api/openapi.yaml` and `client.gen.go`.
+
+### Release Notes
+The tag-triggered GitHub release workflow regenerates the spec from upstream and publishes `api/openapi.yaml` as a release asset. Generation must still be verified locally before tagging so release output matches the reviewed commit.

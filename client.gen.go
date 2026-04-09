@@ -1509,7 +1509,7 @@ type InputChecklist struct {
 	// Title Title of the checklist; 1-255 characters after entities parsing
 	Title string `json:"title"`
 
-	// TitleEntities Optional. List of special entities that appear in the title, which can be specified instead of parse_mode. Currently, only bold, italic, underline, strikethrough, spoiler, and custom_emoji entities are allowed.
+	// TitleEntities Optional. List of special entities that appear in the title, which can be specified instead of parse_mode. Currently, only bold, italic, underline, strikethrough, spoiler, custom_emoji, and date_time entities are allowed.
 	TitleEntities *[]MessageEntity `json:"title_entities,omitempty"`
 }
 
@@ -1524,7 +1524,7 @@ type InputChecklistTask struct {
 	// Text Text of the task; 1-100 characters after entities parsing
 	Text string `json:"text"`
 
-	// TextEntities Optional. List of special entities that appear in the text, which can be specified instead of parse_mode. Currently, only bold, italic, underline, strikethrough, spoiler, and custom_emoji entities are allowed.
+	// TextEntities Optional. List of special entities that appear in the text, which can be specified instead of parse_mode. Currently, only bold, italic, underline, strikethrough, spoiler, custom_emoji, and date_time entities are allowed.
 	TextEntities *[]MessageEntity `json:"text_entities,omitempty"`
 }
 
@@ -1613,6 +1613,9 @@ type KeyboardButton struct {
 	// RequestLocation Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only.
 	RequestLocation *bool `json:"request_location,omitempty"`
 
+	// RequestManagedBot Optional. If specified, pressing the button will ask the user to create and share a bot that will be managed by the current bot. Available for bots that enabled management of other bots in the @BotFather Mini App. Available in private chats only.
+	RequestManagedBot *KeyboardButtonRequestManagedBot `json:"request_managed_bot,omitempty"`
+
 	// RequestPoll Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only.
 	RequestPoll *KeyboardButtonPollType `json:"request_poll,omitempty"`
 
@@ -1669,6 +1672,18 @@ type KeyboardButtonRequestChat struct {
 
 	// UserAdministratorRights Optional. A JSON-serialized object listing the required administrator rights of the user in the chat. The rights must be a superset of bot_administrator_rights. If not specified, no additional restrictions are applied.
 	UserAdministratorRights *ChatAdministratorRights `json:"user_administrator_rights,omitempty"`
+}
+
+// KeyboardButtonRequestManagedBot This object defines the parameters for the creation of a managed bot. Information about the created bot will be shared with the bot using the update managed_bot and a Message with the field managed_bot_created.
+type KeyboardButtonRequestManagedBot struct {
+	// RequestId Signed 32-bit identifier of the request. Must be unique within the message
+	RequestId int `json:"request_id"`
+
+	// SuggestedName Optional. Suggested name for the bot
+	SuggestedName *string `json:"suggested_name,omitempty"`
+
+	// SuggestedUsername Optional. Suggested username for the bot
+	SuggestedUsername *string `json:"suggested_username,omitempty"`
 }
 
 // KeyboardButtonRequestUsers This object defines the criteria used to request suitable users. Information about the selected users will be shared with the bot when the corresponding button is pressed. More about requesting users »
@@ -1757,6 +1772,21 @@ type LoginUrl struct {
 
 	// Url An HTTPS URL to be opened with user authorization data added to the query string when the button is pressed. If the user refuses to provide authorization data, the original URL without information about the user will be opened. The data added is the same as described in Receiving authorization data.NOTE: You must always check the hash of the received data to verify the authentication and the integrity of the data as described in Checking authorization.
 	Url string `json:"url"`
+}
+
+// ManagedBotCreated This object contains information about the bot that was created to be managed by the current bot.
+type ManagedBotCreated struct {
+	// Bot Information about the bot. The bot's token can be fetched using the method getManagedBotToken.
+	Bot User `json:"bot"`
+}
+
+// ManagedBotUpdated This object contains information about the creation, token update, or owner update of a bot that is managed by the current bot.
+type ManagedBotUpdated struct {
+	// Bot Information about the bot. Token of the bot can be fetched using the method getManagedBotToken.
+	Bot User `json:"bot"`
+
+	// User User that created the bot
+	User User `json:"user"`
 }
 
 // MaskPosition This object describes the position on faces where a mask should be placed by default.
@@ -1950,6 +1980,9 @@ type Message struct {
 	// Location Optional. Message is a shared location, information about the location
 	Location *Location `json:"location,omitempty"`
 
+	// ManagedBotCreated Optional. Service message: user created a bot that will be managed by the current bot
+	ManagedBotCreated *ManagedBotCreated `json:"managed_bot_created,omitempty"`
+
 	// MediaGroupId Optional. The unique identifier inside this chat of a media message group this message belongs to
 	MediaGroupId *string `json:"media_group_id,omitempty"`
 
@@ -1998,6 +2031,12 @@ type Message struct {
 	// Poll Optional. Message is a native poll, information about the poll
 	Poll *Poll `json:"poll,omitempty"`
 
+	// PollOptionAdded Optional. Service message: answer option was added to a poll
+	PollOptionAdded *PollOptionAdded `json:"poll_option_added,omitempty"`
+
+	// PollOptionDeleted Optional. Service message: answer option was deleted from a poll
+	PollOptionDeleted *PollOptionDeleted `json:"poll_option_deleted,omitempty"`
+
 	// ProximityAlertTriggered Optional. Service message. A user in the chat triggered another user's proximity alert while sharing Live Location.
 	ProximityAlertTriggered *ProximityAlertTriggered `json:"proximity_alert_triggered,omitempty"`
 
@@ -2015,6 +2054,9 @@ type Message struct {
 
 	// ReplyToMessage Optional. For replies in the same chat and message thread, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
 	ReplyToMessage *Message `json:"reply_to_message,omitempty"`
+
+	// ReplyToPollOptionId Optional. Persistent identifier of the specific poll option that is being replied to
+	ReplyToPollOptionId *string `json:"reply_to_poll_option_id,omitempty"`
 
 	// ReplyToStory Optional. For replies to a story, the original story
 	ReplyToStory *Story `json:"reply_to_story,omitempty"`
@@ -2324,11 +2366,20 @@ type Poll struct {
 	// AllowsMultipleAnswers True, if the poll allows multiple answers
 	AllowsMultipleAnswers bool `json:"allows_multiple_answers"`
 
+	// AllowsRevoting True, if the poll allows to change the chosen answer options
+	AllowsRevoting bool `json:"allows_revoting"`
+
 	// CloseDate Optional. Point in time (Unix timestamp) when the poll will be automatically closed
 	CloseDate *int `json:"close_date,omitempty"`
 
-	// CorrectOptionId Optional. 0-based identifier of the correct answer option. Available only for polls in the quiz mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot.
-	CorrectOptionId *int `json:"correct_option_id,omitempty"`
+	// CorrectOptionIds Optional. Array of 0-based identifiers of the correct answer options. Available only for polls in quiz mode which are closed or were sent (not forwarded) by the bot or to the private chat with the bot.
+	CorrectOptionIds *[]int `json:"correct_option_ids,omitempty"`
+
+	// Description Optional. Description of the poll; for polls inside the Message object only
+	Description *string `json:"description,omitempty"`
+
+	// DescriptionEntities Optional. Special entities like usernames, URLs, bot commands, etc. that appear in the description
+	DescriptionEntities *[]MessageEntity `json:"description_entities,omitempty"`
 
 	// Explanation Optional. Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters
 	Explanation *string `json:"explanation,omitempty"`
@@ -2369,6 +2420,9 @@ type PollAnswer struct {
 	// OptionIds 0-based identifiers of chosen answer options. May be empty if the vote was retracted.
 	OptionIds []int `json:"option_ids"`
 
+	// OptionPersistentIds Persistent identifiers of the chosen answer options. May be empty if the vote was retracted.
+	OptionPersistentIds []string `json:"option_persistent_ids"`
+
 	// PollId Unique poll identifier
 	PollId string `json:"poll_id"`
 
@@ -2381,14 +2435,56 @@ type PollAnswer struct {
 
 // PollOption This object contains information about one answer option in a poll.
 type PollOption struct {
+	// AddedByChat Optional. Chat that added the option; omitted if the option wasn't added by a chat after poll creation
+	AddedByChat *Chat `json:"added_by_chat,omitempty"`
+
+	// AddedByUser Optional. User who added the option; omitted if the option wasn't added by a user after poll creation
+	AddedByUser *User `json:"added_by_user,omitempty"`
+
+	// AdditionDate Optional. Point in time (Unix timestamp) when the option was added; omitted if the option existed in the original poll
+	AdditionDate *int `json:"addition_date,omitempty"`
+
+	// PersistentId Unique identifier of the option, persistent on option addition and deletion
+	PersistentId string `json:"persistent_id"`
+
 	// Text Option text, 1-100 characters
 	Text string `json:"text"`
 
 	// TextEntities Optional. Special entities that appear in the option text. Currently, only custom emoji entities are allowed in poll option texts
 	TextEntities *[]MessageEntity `json:"text_entities,omitempty"`
 
-	// VoterCount Number of users that voted for this option
+	// VoterCount Number of users who voted for this option; may be 0 if unknown
 	VoterCount int `json:"voter_count"`
+}
+
+// PollOptionAdded Describes a service message about an option added to a poll.
+type PollOptionAdded struct {
+	// OptionPersistentId Unique identifier of the added option
+	OptionPersistentId string `json:"option_persistent_id"`
+
+	// OptionText Option text
+	OptionText string `json:"option_text"`
+
+	// OptionTextEntities Optional. Special entities that appear in the option_text
+	OptionTextEntities *[]MessageEntity `json:"option_text_entities,omitempty"`
+
+	// PollMessage Optional. Message containing the poll to which the option was added, if known. Note that the Message object in this field will not contain the reply_to_message field even if it itself is a reply.
+	PollMessage *MaybeInaccessibleMessage `json:"poll_message,omitempty"`
+}
+
+// PollOptionDeleted Describes a service message about an option deleted from a poll.
+type PollOptionDeleted struct {
+	// OptionPersistentId Unique identifier of the deleted option
+	OptionPersistentId string `json:"option_persistent_id"`
+
+	// OptionText Option text
+	OptionText string `json:"option_text"`
+
+	// OptionTextEntities Optional. Special entities that appear in the option_text
+	OptionTextEntities *[]MessageEntity `json:"option_text_entities,omitempty"`
+
+	// PollMessage Optional. Message containing the poll from which the option was deleted, if known. Note that the Message object in this field will not contain the reply_to_message field even if it itself is a reply.
+	PollMessage *MaybeInaccessibleMessage `json:"poll_message,omitempty"`
 }
 
 // PreCheckoutQuery This object contains information about an incoming pre-checkout query.
@@ -2421,6 +2517,12 @@ type PreparedInlineMessage struct {
 	ExpirationDate int `json:"expiration_date"`
 
 	// Id Unique identifier of the prepared message
+	Id string `json:"id"`
+}
+
+// PreparedKeyboardButton Describes a keyboard button to be used by a user of a Mini App.
+type PreparedKeyboardButton struct {
+	// Id Unique identifier of the keyboard button
 	Id string `json:"id"`
 }
 
@@ -2483,7 +2585,10 @@ type ReplyParameters struct {
 	// MessageId Identifier of the message that will be replied to in the current chat, or in the chat chat_id if it is specified
 	MessageId int `json:"message_id"`
 
-	// Quote Optional. Quoted part of the message to be replied to; 0-1024 characters after entities parsing. The quote must be an exact substring of the message to be replied to, including bold, italic, underline, strikethrough, spoiler, and custom_emoji entities. The message will fail to send if the quote isn't found in the original message.
+	// PollOptionId Optional. Persistent identifier of the specific poll option to be replied to
+	PollOptionId *string `json:"poll_option_id,omitempty"`
+
+	// Quote Optional. Quoted part of the message to be replied to; 0-1024 characters after entities parsing. The quote must be an exact substring of the message to be replied to, including bold, italic, underline, strikethrough, spoiler, custom_emoji, and date_time entities. The message will fail to send if the quote isn't found in the original message.
 	Quote *string `json:"quote,omitempty"`
 
 	// QuoteEntities Optional. A JSON-serialized list of special entities that appear in the quote. It can be specified instead of quote_parse_mode.
@@ -2863,7 +2968,7 @@ type SwitchInlineQueryChosenChat struct {
 
 // TextQuote This object contains information about the quoted part of a message that is replied to by the given message.
 type TextQuote struct {
-	// Entities Optional. Special entities that appear in the quote. Currently, only bold, italic, underline, strikethrough, spoiler, and custom_emoji entities are kept in quotes.
+	// Entities Optional. Special entities that appear in the quote. Currently, only bold, italic, underline, strikethrough, spoiler, custom_emoji, and date_time entities are kept in quotes.
 	Entities *[]MessageEntity `json:"entities,omitempty"`
 
 	// IsManual Optional. True, if the quote was chosen manually by the message sender. Otherwise, the quote was added automatically by the server.
@@ -3065,6 +3170,9 @@ type Update struct {
 	// InlineQuery Optional. New incoming inline query
 	InlineQuery *InlineQuery `json:"inline_query,omitempty"`
 
+	// ManagedBot Optional. A new bot was created to be managed by the bot, or token or owner of a managed bot was changed
+	ManagedBot *ManagedBotUpdated `json:"managed_bot,omitempty"`
+
 	// Message Optional. New incoming message of any kind - text, photo, sticker, etc.
 	Message *Message `json:"message,omitempty"`
 
@@ -3112,6 +3220,9 @@ type User struct {
 
 	// CanJoinGroups Optional. True, if the bot can be invited to groups. Returned only in getMe.
 	CanJoinGroups *bool `json:"can_join_groups,omitempty"`
+
+	// CanManageBots Optional. True, if other bots can be created to be controlled by the bot. Returned only in getMe.
+	CanManageBots *bool `json:"can_manage_bots,omitempty"`
 
 	// CanReadAllGroupMessages Optional. True, if privacy mode is disabled for the bot. Returned only in getMe.
 	CanReadAllGroupMessages *bool `json:"can_read_all_group_messages,omitempty"`
@@ -4410,6 +4521,12 @@ type GetGameHighScoresJSONBody struct {
 	UserId int `json:"user_id"`
 }
 
+// GetManagedBotTokenJSONBody defines parameters for GetManagedBotToken.
+type GetManagedBotTokenJSONBody struct {
+	// UserId User identifier of the managed bot whose token will be returned
+	UserId int `json:"user_id"`
+}
+
 // GetMyCommandsJSONBody defines parameters for GetMyCommands.
 type GetMyCommandsJSONBody struct {
 	// LanguageCode A two-letter ISO 639-1 language code or an empty string
@@ -4547,10 +4664,10 @@ type GiftPremiumSubscriptionJSONBody struct {
 	// Text Text that will be shown along with the service message about the subscription; 0-128 characters
 	Text *string `json:"text,omitempty"`
 
-	// TextEntities A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
+	// TextEntities A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and “date_time” are ignored.
 	TextEntities *[]MessageEntity `json:"text_entities,omitempty"`
 
-	// TextParseMode Mode for parsing entities in the text. See formatting options for more details. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
+	// TextParseMode Mode for parsing entities in the text. See formatting options for more details. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and “date_time” are ignored.
 	TextParseMode *string `json:"text_parse_mode,omitempty"`
 
 	// UserId Unique identifier of the target user who will receive a Telegram Premium subscription
@@ -4731,6 +4848,12 @@ type ReopenGeneralForumTopicJSONBody struct {
 	ChatId int64 `json:"chat_id"`
 }
 
+// ReplaceManagedBotTokenJSONBody defines parameters for ReplaceManagedBotToken.
+type ReplaceManagedBotTokenJSONBody struct {
+	// UserId User identifier of the managed bot whose token will be replaced
+	UserId int `json:"user_id"`
+}
+
 // ReplaceStickerInSetJSONBody defines parameters for ReplaceStickerInSet.
 type ReplaceStickerInSetJSONBody struct {
 	// Name Sticker set name
@@ -4827,6 +4950,15 @@ type SavePreparedInlineMessageJSONBody struct {
 	Result InlineQueryResult `json:"result"`
 
 	// UserId Unique identifier of the target user that can use the prepared message
+	UserId int `json:"user_id"`
+}
+
+// SavePreparedKeyboardButtonJSONBody defines parameters for SavePreparedKeyboardButton.
+type SavePreparedKeyboardButtonJSONBody struct {
+	// Button A JSON-serialized object describing the button to be saved. The button must be of the type request_users, request_chat, or request_managed_bot
+	Button KeyboardButton `json:"button"`
+
+	// UserId Unique identifier of the target user that can use the button
 	UserId int `json:"user_id"`
 }
 
@@ -5582,10 +5714,10 @@ type SendGiftJSONBody struct {
 	// Text Text that will be shown along with the gift; 0-128 characters
 	Text *string `json:"text,omitempty"`
 
-	// TextEntities A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
+	// TextEntities A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and “date_time” are ignored.
 	TextEntities *[]MessageEntity `json:"text_entities,omitempty"`
 
-	// TextParseMode Mode for parsing entities in the text. See formatting options for more details. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
+	// TextParseMode Mode for parsing entities in the text. See formatting options for more details. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and “date_time” are ignored.
 	TextParseMode *string `json:"text_parse_mode,omitempty"`
 
 	// UserId Required if chat_id is not specified. Unique identifier of the target user who will receive the gift.
@@ -6176,11 +6308,17 @@ type SendPhotoMultipartBody struct {
 
 // SendPollJSONBody defines parameters for SendPoll.
 type SendPollJSONBody struct {
+	// AllowAddingOptions Pass True, if answer options can be added to the poll after creation; not supported for anonymous polls and quizzes
+	AllowAddingOptions *bool `json:"allow_adding_options,omitempty"`
+
 	// AllowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
 	AllowPaidBroadcast *bool `json:"allow_paid_broadcast,omitempty"`
 
-	// AllowsMultipleAnswers True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False
+	// AllowsMultipleAnswers Pass True, if the poll allows multiple answers, defaults to False
 	AllowsMultipleAnswers *bool `json:"allows_multiple_answers,omitempty"`
+
+	// AllowsRevoting Pass True, if the poll allows to change chosen answer options, defaults to False for quizzes and to True for regular polls
+	AllowsRevoting *bool `json:"allows_revoting,omitempty"`
 
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
@@ -6188,11 +6326,20 @@ type SendPollJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername). Polls can't be sent to channel direct messages chats.
 	ChatId int64 `json:"chat_id"`
 
-	// CloseDate Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 600 seconds in the future. Can't be used together with open_period.
+	// CloseDate Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 2628000 seconds in the future. Can't be used together with open_period.
 	CloseDate *int `json:"close_date,omitempty"`
 
-	// CorrectOptionId 0-based identifier of the correct answer option, required for polls in quiz mode
-	CorrectOptionId *int `json:"correct_option_id,omitempty"`
+	// CorrectOptionIds A JSON-serialized list of monotonically increasing 0-based identifiers of the correct answer options, required for polls in quiz mode
+	CorrectOptionIds *[]int `json:"correct_option_ids,omitempty"`
+
+	// Description Description of the poll to be sent, 0-1024 characters after entities parsing
+	Description *string `json:"description,omitempty"`
+
+	// DescriptionEntities A JSON-serialized list of special entities that appear in the poll description, which can be specified instead of description_parse_mode
+	DescriptionEntities *[]MessageEntity `json:"description_entities,omitempty"`
+
+	// DescriptionParseMode Mode for parsing entities in the poll description. See formatting options for more details.
+	DescriptionParseMode *string `json:"description_parse_mode,omitempty"`
 
 	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
@@ -6206,6 +6353,9 @@ type SendPollJSONBody struct {
 	// ExplanationParseMode Mode for parsing entities in the explanation. See formatting options for more details.
 	ExplanationParseMode *string `json:"explanation_parse_mode,omitempty"`
 
+	// HideResultsUntilCloses Pass True, if poll results must be shown only after the poll closes
+	HideResultsUntilCloses *bool `json:"hide_results_until_closes,omitempty"`
+
 	// IsAnonymous True, if the poll needs to be anonymous, defaults to True
 	IsAnonymous *bool `json:"is_anonymous,omitempty"`
 
@@ -6218,7 +6368,7 @@ type SendPollJSONBody struct {
 	// MessageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
 	MessageThreadId *int `json:"message_thread_id,omitempty"`
 
-	// OpenPeriod Amount of time in seconds the poll will be active after creation, 5-600. Can't be used together with close_date.
+	// OpenPeriod Amount of time in seconds the poll will be active after creation, 5-2628000. Can't be used together with close_date.
 	OpenPeriod *int `json:"open_period,omitempty"`
 
 	// Options A JSON-serialized list of 2-12 answer options
@@ -6268,6 +6418,9 @@ type SendPollJSONBody struct {
 
 	// ReplyParameters Description of the message to reply to
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
+
+	// ShuffleOptions Pass True, if the poll options must be shown in random order
+	ShuffleOptions *bool `json:"shuffle_options,omitempty"`
 
 	// Type Poll type, “quiz” or “regular”, defaults to “regular”
 	Type *string `json:"type,omitempty"`
@@ -7752,6 +7905,9 @@ type GetFileJSONRequestBody GetFileJSONBody
 // GetGameHighScoresJSONRequestBody defines body for GetGameHighScores for application/json ContentType.
 type GetGameHighScoresJSONRequestBody GetGameHighScoresJSONBody
 
+// GetManagedBotTokenJSONRequestBody defines body for GetManagedBotToken for application/json ContentType.
+type GetManagedBotTokenJSONRequestBody GetManagedBotTokenJSONBody
+
 // GetMyCommandsJSONRequestBody defines body for GetMyCommands for application/json ContentType.
 type GetMyCommandsJSONRequestBody GetMyCommandsJSONBody
 
@@ -7827,6 +7983,9 @@ type ReopenForumTopicJSONRequestBody ReopenForumTopicJSONBody
 // ReopenGeneralForumTopicJSONRequestBody defines body for ReopenGeneralForumTopic for application/json ContentType.
 type ReopenGeneralForumTopicJSONRequestBody ReopenGeneralForumTopicJSONBody
 
+// ReplaceManagedBotTokenJSONRequestBody defines body for ReplaceManagedBotToken for application/json ContentType.
+type ReplaceManagedBotTokenJSONRequestBody ReplaceManagedBotTokenJSONBody
+
 // ReplaceStickerInSetJSONRequestBody defines body for ReplaceStickerInSet for application/json ContentType.
 type ReplaceStickerInSetJSONRequestBody ReplaceStickerInSetJSONBody
 
@@ -7844,6 +8003,9 @@ type RevokeChatInviteLinkJSONRequestBody RevokeChatInviteLinkJSONBody
 
 // SavePreparedInlineMessageJSONRequestBody defines body for SavePreparedInlineMessage for application/json ContentType.
 type SavePreparedInlineMessageJSONRequestBody SavePreparedInlineMessageJSONBody
+
+// SavePreparedKeyboardButtonJSONRequestBody defines body for SavePreparedKeyboardButton for application/json ContentType.
+type SavePreparedKeyboardButtonJSONRequestBody SavePreparedKeyboardButtonJSONBody
 
 // SendAnimationJSONRequestBody defines body for SendAnimation for application/json ContentType.
 type SendAnimationJSONRequestBody SendAnimationJSONBody
@@ -8470,6 +8632,11 @@ type ClientInterface interface {
 
 	GetGameHighScores(ctx context.Context, body GetGameHighScoresJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetManagedBotTokenWithBody request with any body
+	GetManagedBotTokenWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	GetManagedBotToken(ctx context.Context, body GetManagedBotTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetMe request
 	GetMe(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -8610,6 +8777,11 @@ type ClientInterface interface {
 
 	ReopenGeneralForumTopic(ctx context.Context, body ReopenGeneralForumTopicJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ReplaceManagedBotTokenWithBody request with any body
+	ReplaceManagedBotTokenWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ReplaceManagedBotToken(ctx context.Context, body ReplaceManagedBotTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ReplaceStickerInSetWithBody request with any body
 	ReplaceStickerInSetWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -8634,6 +8806,11 @@ type ClientInterface interface {
 	SavePreparedInlineMessageWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	SavePreparedInlineMessage(ctx context.Context, body SavePreparedInlineMessageJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SavePreparedKeyboardButtonWithBody request with any body
+	SavePreparedKeyboardButtonWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SavePreparedKeyboardButton(ctx context.Context, body SavePreparedKeyboardButtonJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// SendAnimationWithBody request with any body
 	SendAnimationWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -10452,6 +10629,30 @@ func (c *Client) GetGameHighScores(ctx context.Context, body GetGameHighScoresJS
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetManagedBotTokenWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetManagedBotTokenRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetManagedBotToken(ctx context.Context, body GetManagedBotTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetManagedBotTokenRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetMe(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetMeRequest(c.Server)
 	if err != nil {
@@ -11112,6 +11313,30 @@ func (c *Client) ReopenGeneralForumTopic(ctx context.Context, body ReopenGeneral
 	return c.Client.Do(req)
 }
 
+func (c *Client) ReplaceManagedBotTokenWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReplaceManagedBotTokenRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ReplaceManagedBotToken(ctx context.Context, body ReplaceManagedBotTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReplaceManagedBotTokenRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ReplaceStickerInSetWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewReplaceStickerInSetRequestWithBody(c.Server, contentType, body)
 	if err != nil {
@@ -11222,6 +11447,30 @@ func (c *Client) SavePreparedInlineMessageWithBody(ctx context.Context, contentT
 
 func (c *Client) SavePreparedInlineMessage(ctx context.Context, body SavePreparedInlineMessageJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewSavePreparedInlineMessageRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SavePreparedKeyboardButtonWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSavePreparedKeyboardButtonRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SavePreparedKeyboardButton(ctx context.Context, body SavePreparedKeyboardButtonJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSavePreparedKeyboardButtonRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -15345,6 +15594,46 @@ func NewGetGameHighScoresRequestWithBody(server string, contentType string, body
 	return req, nil
 }
 
+// NewGetManagedBotTokenRequest calls the generic GetManagedBotToken builder with application/json body
+func NewGetManagedBotTokenRequest(server string, body GetManagedBotTokenJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewGetManagedBotTokenRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewGetManagedBotTokenRequestWithBody generates requests for GetManagedBotToken with any type of body
+func NewGetManagedBotTokenRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/getManagedBotToken")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewGetMeRequest generates requests for GetMe
 func NewGetMeRequest(server string) (*http.Request, error) {
 	var err error
@@ -16480,6 +16769,46 @@ func NewReopenGeneralForumTopicRequestWithBody(server string, contentType string
 	return req, nil
 }
 
+// NewReplaceManagedBotTokenRequest calls the generic ReplaceManagedBotToken builder with application/json body
+func NewReplaceManagedBotTokenRequest(server string, body ReplaceManagedBotTokenJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewReplaceManagedBotTokenRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewReplaceManagedBotTokenRequestWithBody generates requests for ReplaceManagedBotToken with any type of body
+func NewReplaceManagedBotTokenRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/replaceManagedBotToken")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewReplaceStickerInSetRequest calls the generic ReplaceStickerInSet builder with application/json body
 func NewReplaceStickerInSetRequest(server string, body ReplaceStickerInSetJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -16661,6 +16990,46 @@ func NewSavePreparedInlineMessageRequestWithBody(server string, contentType stri
 	}
 
 	operationPath := fmt.Sprintf("/savePreparedInlineMessage")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewSavePreparedKeyboardButtonRequest calls the generic SavePreparedKeyboardButton builder with application/json body
+func NewSavePreparedKeyboardButtonRequest(server string, body SavePreparedKeyboardButtonJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSavePreparedKeyboardButtonRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewSavePreparedKeyboardButtonRequestWithBody generates requests for SavePreparedKeyboardButton with any type of body
+func NewSavePreparedKeyboardButtonRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/savePreparedKeyboardButton")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19752,6 +20121,11 @@ type ClientWithResponsesInterface interface {
 
 	GetGameHighScoresWithResponse(ctx context.Context, body GetGameHighScoresJSONRequestBody, reqEditors ...RequestEditorFn) (*GetGameHighScoresResponse, error)
 
+	// GetManagedBotTokenWithBodyWithResponse request with any body
+	GetManagedBotTokenWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetManagedBotTokenResponse, error)
+
+	GetManagedBotTokenWithResponse(ctx context.Context, body GetManagedBotTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*GetManagedBotTokenResponse, error)
+
 	// GetMeWithResponse request
 	GetMeWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMeResponse, error)
 
@@ -19892,6 +20266,11 @@ type ClientWithResponsesInterface interface {
 
 	ReopenGeneralForumTopicWithResponse(ctx context.Context, body ReopenGeneralForumTopicJSONRequestBody, reqEditors ...RequestEditorFn) (*ReopenGeneralForumTopicResponse, error)
 
+	// ReplaceManagedBotTokenWithBodyWithResponse request with any body
+	ReplaceManagedBotTokenWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReplaceManagedBotTokenResponse, error)
+
+	ReplaceManagedBotTokenWithResponse(ctx context.Context, body ReplaceManagedBotTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*ReplaceManagedBotTokenResponse, error)
+
 	// ReplaceStickerInSetWithBodyWithResponse request with any body
 	ReplaceStickerInSetWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReplaceStickerInSetResponse, error)
 
@@ -19916,6 +20295,11 @@ type ClientWithResponsesInterface interface {
 	SavePreparedInlineMessageWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SavePreparedInlineMessageResponse, error)
 
 	SavePreparedInlineMessageWithResponse(ctx context.Context, body SavePreparedInlineMessageJSONRequestBody, reqEditors ...RequestEditorFn) (*SavePreparedInlineMessageResponse, error)
+
+	// SavePreparedKeyboardButtonWithBodyWithResponse request with any body
+	SavePreparedKeyboardButtonWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SavePreparedKeyboardButtonResponse, error)
+
+	SavePreparedKeyboardButtonWithResponse(ctx context.Context, body SavePreparedKeyboardButtonJSONRequestBody, reqEditors ...RequestEditorFn) (*SavePreparedKeyboardButtonResponse, error)
 
 	// SendAnimationWithBodyWithResponse request with any body
 	SendAnimationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendAnimationResponse, error)
@@ -22090,6 +22474,34 @@ func (r GetGameHighScoresResponse) StatusCode() int {
 	return 0
 }
 
+type GetManagedBotTokenResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     GetManagedBotToken200Ok `json:"ok"`
+		Result string                  `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type GetManagedBotToken200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r GetManagedBotTokenResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetManagedBotTokenResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetMeResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -22958,6 +23370,34 @@ func (r ReopenGeneralForumTopicResponse) StatusCode() int {
 	return 0
 }
 
+type ReplaceManagedBotTokenResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     ReplaceManagedBotToken200Ok `json:"ok"`
+		Result string                      `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type ReplaceManagedBotToken200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r ReplaceManagedBotTokenResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ReplaceManagedBotTokenResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type ReplaceStickerInSetResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -23098,6 +23538,36 @@ func (r SavePreparedInlineMessageResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r SavePreparedInlineMessageResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SavePreparedKeyboardButtonResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok SavePreparedKeyboardButton200Ok `json:"ok"`
+
+		// Result Describes a keyboard button to be used by a user of a Mini App.
+		Result PreparedKeyboardButton `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type SavePreparedKeyboardButton200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r SavePreparedKeyboardButtonResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SavePreparedKeyboardButtonResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -26103,6 +26573,23 @@ func (c *ClientWithResponses) GetGameHighScoresWithResponse(ctx context.Context,
 	return ParseGetGameHighScoresResponse(rsp)
 }
 
+// GetManagedBotTokenWithBodyWithResponse request with arbitrary body returning *GetManagedBotTokenResponse
+func (c *ClientWithResponses) GetManagedBotTokenWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetManagedBotTokenResponse, error) {
+	rsp, err := c.GetManagedBotTokenWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetManagedBotTokenResponse(rsp)
+}
+
+func (c *ClientWithResponses) GetManagedBotTokenWithResponse(ctx context.Context, body GetManagedBotTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*GetManagedBotTokenResponse, error) {
+	rsp, err := c.GetManagedBotToken(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetManagedBotTokenResponse(rsp)
+}
+
 // GetMeWithResponse request returning *GetMeResponse
 func (c *ClientWithResponses) GetMeWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMeResponse, error) {
 	rsp, err := c.GetMe(ctx, reqEditors...)
@@ -26573,6 +27060,23 @@ func (c *ClientWithResponses) ReopenGeneralForumTopicWithResponse(ctx context.Co
 	return ParseReopenGeneralForumTopicResponse(rsp)
 }
 
+// ReplaceManagedBotTokenWithBodyWithResponse request with arbitrary body returning *ReplaceManagedBotTokenResponse
+func (c *ClientWithResponses) ReplaceManagedBotTokenWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReplaceManagedBotTokenResponse, error) {
+	rsp, err := c.ReplaceManagedBotTokenWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReplaceManagedBotTokenResponse(rsp)
+}
+
+func (c *ClientWithResponses) ReplaceManagedBotTokenWithResponse(ctx context.Context, body ReplaceManagedBotTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*ReplaceManagedBotTokenResponse, error) {
+	rsp, err := c.ReplaceManagedBotToken(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReplaceManagedBotTokenResponse(rsp)
+}
+
 // ReplaceStickerInSetWithBodyWithResponse request with arbitrary body returning *ReplaceStickerInSetResponse
 func (c *ClientWithResponses) ReplaceStickerInSetWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReplaceStickerInSetResponse, error) {
 	rsp, err := c.ReplaceStickerInSetWithBody(ctx, contentType, body, reqEditors...)
@@ -26656,6 +27160,23 @@ func (c *ClientWithResponses) SavePreparedInlineMessageWithResponse(ctx context.
 		return nil, err
 	}
 	return ParseSavePreparedInlineMessageResponse(rsp)
+}
+
+// SavePreparedKeyboardButtonWithBodyWithResponse request with arbitrary body returning *SavePreparedKeyboardButtonResponse
+func (c *ClientWithResponses) SavePreparedKeyboardButtonWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SavePreparedKeyboardButtonResponse, error) {
+	rsp, err := c.SavePreparedKeyboardButtonWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSavePreparedKeyboardButtonResponse(rsp)
+}
+
+func (c *ClientWithResponses) SavePreparedKeyboardButtonWithResponse(ctx context.Context, body SavePreparedKeyboardButtonJSONRequestBody, reqEditors ...RequestEditorFn) (*SavePreparedKeyboardButtonResponse, error) {
+	rsp, err := c.SavePreparedKeyboardButton(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSavePreparedKeyboardButtonResponse(rsp)
 }
 
 // SendAnimationWithBodyWithResponse request with arbitrary body returning *SendAnimationResponse
@@ -30571,6 +31092,49 @@ func ParseGetGameHighScoresResponse(rsp *http.Response) (*GetGameHighScoresRespo
 	return response, nil
 }
 
+// ParseGetManagedBotTokenResponse parses an HTTP response from a GetManagedBotTokenWithResponse call
+func ParseGetManagedBotTokenResponse(rsp *http.Response) (*GetManagedBotTokenResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetManagedBotTokenResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     GetManagedBotToken200Ok `json:"ok"`
+			Result string                  `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetMeResponse parses an HTTP response from a GetMeWithResponse call
 func ParseGetMeResponse(rsp *http.Response) (*GetMeResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -31889,6 +32453,49 @@ func ParseReopenGeneralForumTopicResponse(rsp *http.Response) (*ReopenGeneralFor
 	return response, nil
 }
 
+// ParseReplaceManagedBotTokenResponse parses an HTTP response from a ReplaceManagedBotTokenWithResponse call
+func ParseReplaceManagedBotTokenResponse(rsp *http.Response) (*ReplaceManagedBotTokenResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ReplaceManagedBotTokenResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     ReplaceManagedBotToken200Ok `json:"ok"`
+			Result string                      `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseReplaceStickerInSetResponse parses an HTTP response from a ReplaceStickerInSetWithResponse call
 func ParseReplaceStickerInSetResponse(rsp *http.Response) (*ReplaceStickerInSetResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -32085,6 +32692,51 @@ func ParseSavePreparedInlineMessageResponse(rsp *http.Response) (*SavePreparedIn
 
 			// Result Describes an inline message to be sent by a user of a Mini App.
 			Result PreparedInlineMessage `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSavePreparedKeyboardButtonResponse parses an HTTP response from a SavePreparedKeyboardButtonWithResponse call
+func ParseSavePreparedKeyboardButtonResponse(rsp *http.Response) (*SavePreparedKeyboardButtonResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SavePreparedKeyboardButtonResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok SavePreparedKeyboardButton200Ok `json:"ok"`
+
+			// Result Describes a keyboard button to be used by a user of a Mini App.
+			Result PreparedKeyboardButton `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err

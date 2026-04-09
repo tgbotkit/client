@@ -73,6 +73,8 @@ github.com/metalagman/tgbotspec v0.2.2 h1:dg13FcBdn2VpxMOFXlZlGz/F7NZ1ruxSeOsTn0
 github.com/metalagman/tgbotspec v0.2.2/go.mod h1:+w+pl8AdZPGV3B1EBuHc7f9Ob0QZFNZ/0bw3AKw3Tzc=
 github.com/metalagman/tgbotspec v0.2.3 h1:V5XxRxRI/BmXR6GWfEw/nZFAlbLAhv9i1wom3hAToko=
 github.com/metalagman/tgbotspec v0.2.3/go.mod h1:+w+pl8AdZPGV3B1EBuHc7f9Ob0QZFNZ/0bw3AKw3Tzc=
+github.com/metalagman/tgbotspec v0.2.4 h1:aXIuydZZzqymc9lcGhqUyYyNJEixCt3jGPwbZnIQseA=
+github.com/metalagman/tgbotspec v0.2.4/go.mod h1:+w+pl8AdZPGV3B1EBuHc7f9Ob0QZFNZ/0bw3AKw3Tzc=
 github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 h1:RWengNIwukTxcDr9M+97sNutRR1RKhG96O6jWumTTnw=
 github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826/go.mod h1:TaXosZuwdSHYgviHp1DAtfrULt5eUgsSMsZf+YrPgl8=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=

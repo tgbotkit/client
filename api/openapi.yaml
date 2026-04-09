@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: "Telegram Bot API"
-  version: "9.5"
+  version: "9.6"
   description: |-
     This OpenAPI specification was generated using the [tgbotspec](https://github.com/metalagman/tgbotspec) tool.
 servers:
@@ -325,7 +325,7 @@ paths:
     post:
       operationId: answerWebAppQuery
       tags:
-        - Inline mode
+        - Available methods
       description: |-
         Use this method to set the result of an interaction with a Web App and send a corresponding message on behalf of the user to the chat from which the query originated. On success, a SentWebAppMessage object is returned.
       requestBody:
@@ -3689,6 +3689,51 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /getManagedBotToken:
+    post:
+      operationId: getManagedBotToken
+      tags:
+        - Available methods
+      description: |-
+        Use this method to get the token of a managed bot. Returns the token as String on success.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: User identifier of the managed bot whose token will be returned
+              required:
+                - user_id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/OkResponse'
+                  - type: object
+                    properties:
+                      result:
+                        type: string
+                    required:
+                      - result
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /getMe:
     post:
       operationId: getMe
@@ -4402,12 +4447,12 @@ paths:
                   description: Text that will be shown along with the service message about the subscription; 0-128 characters
                 text_entities:
                   type: array
-                  description: A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
+                  description: A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and “date_time” are ignored.
                   items:
                       $ref: '#/components/schemas/MessageEntity'
                 text_parse_mode:
                   type: string
-                  description: Mode for parsing entities in the text. See formatting options for more details. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
+                  description: Mode for parsing entities in the text. See formatting options for more details. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and “date_time” are ignored.
                 user_id:
                   type: integer
                   description: Unique identifier of the target user who will receive a Telegram Premium subscription
@@ -5184,6 +5229,51 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /replaceManagedBotToken:
+    post:
+      operationId: replaceManagedBotToken
+      tags:
+        - Available methods
+      description: |-
+        Use this method to revoke the current token of a managed bot and generate a new one. Returns the new token as String on success.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: User identifier of the managed bot whose token will be replaced
+              required:
+                - user_id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/OkResponse'
+                  - type: object
+                    properties:
+                      result:
+                        type: string
+                    required:
+                      - result
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /replaceStickerInSet:
     post:
       operationId: replaceStickerInSet
@@ -5445,7 +5535,7 @@ paths:
     post:
       operationId: savePreparedInlineMessage
       tags:
-        - Inline mode
+        - Available methods
       description: |-
         Stores a message that can be sent by a user of a Mini App. Returns a PreparedInlineMessage object.
       requestBody:
@@ -5489,6 +5579,56 @@ paths:
                     properties:
                       result:
                         $ref: '#/components/schemas/PreparedInlineMessage'
+                    required:
+                      - result
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /savePreparedKeyboardButton:
+    post:
+      operationId: savePreparedKeyboardButton
+      tags:
+        - Available methods
+      description: |-
+        Stores a keyboard button that can be used by a user within a Mini App. Returns a PreparedKeyboardButton object.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                button:
+                  description: A JSON-serialized object describing the button to be saved. The button must be of the type request_users, request_chat, or request_managed_bot
+                  allOf:
+                      - $ref: '#/components/schemas/KeyboardButton'
+                user_id:
+                  type: integer
+                  description: Unique identifier of the target user that can use the button
+              required:
+                - button
+                - user_id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/OkResponse'
+                  - type: object
+                    properties:
+                      result:
+                        $ref: '#/components/schemas/PreparedKeyboardButton'
                     required:
                       - result
         '400':
@@ -6744,12 +6884,12 @@ paths:
                   description: Text that will be shown along with the gift; 0-128 characters
                 text_entities:
                   type: array
-                  description: A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
+                  description: A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and “date_time” are ignored.
                   items:
                       $ref: '#/components/schemas/MessageEntity'
                 text_parse_mode:
                   type: string
-                  description: Mode for parsing entities in the text. See formatting options for more details. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
+                  description: Mode for parsing entities in the text. See formatting options for more details. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and “date_time” are ignored.
                 user_id:
                   type: integer
                   description: Required if chat_id is not specified. Unique identifier of the target user who will receive the gift.
@@ -7777,12 +7917,18 @@ paths:
             schema:
               type: object
               properties:
+                allow_adding_options:
+                  type: boolean
+                  description: Pass True, if answer options can be added to the poll after creation; not supported for anonymous polls and quizzes
                 allow_paid_broadcast:
                   type: boolean
                   description: Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
                 allows_multiple_answers:
                   type: boolean
-                  description: True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False
+                  description: Pass True, if the poll allows multiple answers, defaults to False
+                allows_revoting:
+                  type: boolean
+                  description: Pass True, if the poll allows to change chosen answer options, defaults to False for quizzes and to True for regular polls
                 business_connection_id:
                   type: string
                   description: Unique identifier of the business connection on behalf of which the message will be sent
@@ -7792,10 +7938,23 @@ paths:
                   description: Unique identifier for the target chat or username of the target channel (in the format @channelusername). Polls can't be sent to channel direct messages chats.
                 close_date:
                   type: integer
-                  description: Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 600 seconds in the future. Can't be used together with open_period.
-                correct_option_id:
-                  type: integer
-                  description: 0-based identifier of the correct answer option, required for polls in quiz mode
+                  description: Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 2628000 seconds in the future. Can't be used together with open_period.
+                correct_option_ids:
+                  type: array
+                  description: A JSON-serialized list of monotonically increasing 0-based identifiers of the correct answer options, required for polls in quiz mode
+                  items:
+                      type: integer
+                description:
+                  type: string
+                  description: Description of the poll to be sent, 0-1024 characters after entities parsing
+                description_entities:
+                  type: array
+                  description: A JSON-serialized list of special entities that appear in the poll description, which can be specified instead of description_parse_mode
+                  items:
+                      $ref: '#/components/schemas/MessageEntity'
+                description_parse_mode:
+                  type: string
+                  description: Mode for parsing entities in the poll description. See formatting options for more details.
                 disable_notification:
                   type: boolean
                   description: Sends the message silently. Users will receive a notification with no sound.
@@ -7810,6 +7969,9 @@ paths:
                 explanation_parse_mode:
                   type: string
                   description: Mode for parsing entities in the explanation. See formatting options for more details.
+                hide_results_until_closes:
+                  type: boolean
+                  description: Pass True, if poll results must be shown only after the poll closes
                 is_anonymous:
                   type: boolean
                   description: True, if the poll needs to be anonymous, defaults to True
@@ -7824,7 +7986,7 @@ paths:
                   description: Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
                 open_period:
                   type: integer
-                  description: Amount of time in seconds the poll will be active after creation, 5-600. Can't be used together with close_date.
+                  description: Amount of time in seconds the poll will be active after creation, 5-2628000. Can't be used together with close_date.
                 options:
                   type: array
                   description: A JSON-serialized list of 2-12 answer options
@@ -7889,6 +8051,9 @@ paths:
                   description: Description of the message to reply to
                   allOf:
                       - $ref: '#/components/schemas/ReplyParameters'
+                shuffle_options:
+                  type: boolean
+                  description: Pass True, if the poll options must be shown in random order
                 type:
                   type: string
                   description: Poll type, “quiz” or “regular”, defaults to “regular”
@@ -15273,7 +15438,7 @@ components:
           description: Optional. Mode for parsing entities in the title. See formatting options for more details.
         title_entities:
           type: array
-          description: Optional. List of special entities that appear in the title, which can be specified instead of parse_mode. Currently, only bold, italic, underline, strikethrough, spoiler, and custom_emoji entities are allowed.
+          description: Optional. List of special entities that appear in the title, which can be specified instead of parse_mode. Currently, only bold, italic, underline, strikethrough, spoiler, custom_emoji, and date_time entities are allowed.
           items:
               $ref: '#/components/schemas/MessageEntity'
         tasks:
@@ -15308,7 +15473,7 @@ components:
           description: Optional. Mode for parsing entities in the text. See formatting options for more details.
         text_entities:
           type: array
-          description: Optional. List of special entities that appear in the text, which can be specified instead of parse_mode. Currently, only bold, italic, underline, strikethrough, spoiler, and custom_emoji entities are allowed.
+          description: Optional. List of special entities that appear in the text, which can be specified instead of parse_mode. Currently, only bold, italic, underline, strikethrough, spoiler, custom_emoji, and date_time entities are allowed.
           items:
               $ref: '#/components/schemas/MessageEntity'
       required:
@@ -15983,6 +16148,10 @@ components:
           description: Optional. If specified, pressing the button will open a list of suitable chats. Tapping on a chat will send its identifier to the bot in a “chat_shared” service message. Available in private chats only.
           allOf:
               - $ref: '#/components/schemas/KeyboardButtonRequestChat'
+        request_managed_bot:
+          description: Optional. If specified, pressing the button will ask the user to create and share a bot that will be managed by the current bot. Available for bots that enabled management of other bots in the @BotFather Mini App. Available in private chats only.
+          allOf:
+              - $ref: '#/components/schemas/KeyboardButtonRequestManagedBot'
         request_contact:
           type: boolean
           description: Optional. If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only.
@@ -16054,6 +16223,24 @@ components:
       required:
         - request_id
         - chat_is_channel
+   KeyboardButtonRequestManagedBot:
+      type: object
+      description: |-
+        This object defines the parameters for the creation of a managed bot. Information about the created bot will be shared with the bot using the update managed_bot and a Message with the field managed_bot_created.
+      x-tags:
+        - Available types
+      properties:
+        request_id:
+          type: integer
+          description: Signed 32-bit identifier of the request. Must be unique within the message
+        suggested_name:
+          type: string
+          description: Optional. Suggested name for the bot
+        suggested_username:
+          type: string
+          description: Optional. Suggested username for the bot
+      required:
+        - request_id
    KeyboardButtonRequestUsers:
       type: object
       description: |-
@@ -16193,6 +16380,37 @@ components:
           description: Optional. Pass True to request the permission for your bot to send messages to the user.
       required:
         - url
+   ManagedBotCreated:
+      type: object
+      description: |-
+        This object contains information about the bot that was created to be managed by the current bot.
+      x-tags:
+        - Available types
+      properties:
+        bot:
+          description: Information about the bot. The bot's token can be fetched using the method getManagedBotToken.
+          allOf:
+              - $ref: '#/components/schemas/User'
+      required:
+        - bot
+   ManagedBotUpdated:
+      type: object
+      description: |-
+        This object contains information about the creation, token update, or owner update of a bot that is managed by the current bot.
+      x-tags:
+        - Available types
+      properties:
+        user:
+          description: User that created the bot
+          allOf:
+              - $ref: '#/components/schemas/User'
+        bot:
+          description: Information about the bot. Token of the bot can be fetched using the method getManagedBotToken.
+          allOf:
+              - $ref: '#/components/schemas/User'
+      required:
+        - user
+        - bot
    MaskPosition:
       type: object
       description: |-
@@ -16356,6 +16574,9 @@ components:
         reply_to_checklist_task_id:
           type: integer
           description: Optional. Identifier of the specific checklist task that is being replied to
+        reply_to_poll_option_id:
+          type: string
+          description: Optional. Persistent identifier of the specific poll option that is being replied to
         via_bot:
           description: Optional. Bot through which the message was sent
           allOf:
@@ -16652,10 +16873,22 @@ components:
           description: 'Optional. Service message: a giveaway without public winners was completed'
           allOf:
               - $ref: '#/components/schemas/GiveawayCompleted'
+        managed_bot_created:
+          description: 'Optional. Service message: user created a bot that will be managed by the current bot'
+          allOf:
+              - $ref: '#/components/schemas/ManagedBotCreated'
         paid_message_price_changed:
           description: 'Optional. Service message: the price for paid messages has changed in the chat'
           allOf:
               - $ref: '#/components/schemas/PaidMessagePriceChanged'
+        poll_option_added:
+          description: 'Optional. Service message: answer option was added to a poll'
+          allOf:
+              - $ref: '#/components/schemas/PollOptionAdded'
+        poll_option_deleted:
+          description: 'Optional. Service message: answer option was deleted from a poll'
+          allOf:
+              - $ref: '#/components/schemas/PollOptionDeleted'
         suggested_post_approved:
           description: 'Optional. Service message: a suggested post was approved'
           allOf:
@@ -17553,9 +17786,14 @@ components:
         allows_multiple_answers:
           type: boolean
           description: True, if the poll allows multiple answers
-        correct_option_id:
-          type: integer
-          description: Optional. 0-based identifier of the correct answer option. Available only for polls in the quiz mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot.
+        allows_revoting:
+          type: boolean
+          description: True, if the poll allows to change the chosen answer options
+        correct_option_ids:
+          type: array
+          description: Optional. Array of 0-based identifiers of the correct answer options. Available only for polls in quiz mode which are closed or were sent (not forwarded) by the bot or to the private chat with the bot.
+          items:
+              type: integer
         explanation:
           type: string
           description: Optional. Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters
@@ -17570,6 +17808,14 @@ components:
         close_date:
           type: integer
           description: Optional. Point in time (Unix timestamp) when the poll will be automatically closed
+        description:
+          type: string
+          description: Optional. Description of the poll; for polls inside the Message object only
+        description_entities:
+          type: array
+          description: Optional. Special entities like usernames, URLs, bot commands, etc. that appear in the description
+          items:
+              $ref: '#/components/schemas/MessageEntity'
       required:
         - id
         - question
@@ -17579,6 +17825,7 @@ components:
         - is_anonymous
         - type
         - allows_multiple_answers
+        - allows_revoting
    PollAnswer:
       type: object
       description: |-
@@ -17602,9 +17849,15 @@ components:
           description: 0-based identifiers of chosen answer options. May be empty if the vote was retracted.
           items:
               type: integer
+        option_persistent_ids:
+          type: array
+          description: Persistent identifiers of the chosen answer options. May be empty if the vote was retracted.
+          items:
+              type: string
       required:
         - poll_id
         - option_ids
+        - option_persistent_ids
    PollOption:
       type: object
       description: |-
@@ -17612,6 +17865,9 @@ components:
       x-tags:
         - Available types
       properties:
+        persistent_id:
+          type: string
+          description: Unique identifier of the option, persistent on option addition and deletion
         text:
           type: string
           description: Option text, 1-100 characters
@@ -17622,10 +17878,72 @@ components:
               $ref: '#/components/schemas/MessageEntity'
         voter_count:
           type: integer
-          description: Number of users that voted for this option
+          description: Number of users who voted for this option; may be 0 if unknown
+        added_by_user:
+          description: Optional. User who added the option; omitted if the option wasn't added by a user after poll creation
+          allOf:
+              - $ref: '#/components/schemas/User'
+        added_by_chat:
+          description: Optional. Chat that added the option; omitted if the option wasn't added by a chat after poll creation
+          allOf:
+              - $ref: '#/components/schemas/Chat'
+        addition_date:
+          type: integer
+          description: Optional. Point in time (Unix timestamp) when the option was added; omitted if the option existed in the original poll
       required:
+        - persistent_id
         - text
         - voter_count
+   PollOptionAdded:
+      type: object
+      description: |-
+        Describes a service message about an option added to a poll.
+      x-tags:
+        - Available types
+      properties:
+        poll_message:
+          description: Optional. Message containing the poll to which the option was added, if known. Note that the Message object in this field will not contain the reply_to_message field even if it itself is a reply.
+          allOf:
+              - $ref: '#/components/schemas/MaybeInaccessibleMessage'
+        option_persistent_id:
+          type: string
+          description: Unique identifier of the added option
+        option_text:
+          type: string
+          description: Option text
+        option_text_entities:
+          type: array
+          description: Optional. Special entities that appear in the option_text
+          items:
+              $ref: '#/components/schemas/MessageEntity'
+      required:
+        - option_persistent_id
+        - option_text
+   PollOptionDeleted:
+      type: object
+      description: |-
+        Describes a service message about an option deleted from a poll.
+      x-tags:
+        - Available types
+      properties:
+        poll_message:
+          description: Optional. Message containing the poll from which the option was deleted, if known. Note that the Message object in this field will not contain the reply_to_message field even if it itself is a reply.
+          allOf:
+              - $ref: '#/components/schemas/MaybeInaccessibleMessage'
+        option_persistent_id:
+          type: string
+          description: Unique identifier of the deleted option
+        option_text:
+          type: string
+          description: Option text
+        option_text_entities:
+          type: array
+          description: Optional. Special entities that appear in the option_text
+          items:
+              $ref: '#/components/schemas/MessageEntity'
+      required:
+        - option_persistent_id
+        - option_text
    PreCheckoutQuery:
       type: object
       description: |-
@@ -17667,7 +17985,7 @@ components:
       description: |-
         Describes an inline message to be sent by a user of a Mini App.
       x-tags:
-        - Inline mode
+        - Available types
       properties:
         id:
           type: string
@@ -17678,6 +17996,18 @@ components:
       required:
         - id
         - expiration_date
+   PreparedKeyboardButton:
+      type: object
+      description: |-
+        Describes a keyboard button to be used by a user of a Mini App.
+      x-tags:
+        - Available types
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the keyboard button
+      required:
+        - id
    ProximityAlertTriggered:
       type: object
       description: |-
@@ -17863,7 +18193,7 @@ components:
           description: Optional. Pass True if the message should be sent even if the specified message to be replied to is not found. Always False for replies in another chat or forum topic. Always True for messages sent on behalf of a business account.
         quote:
           type: string
-          description: Optional. Quoted part of the message to be replied to; 0-1024 characters after entities parsing. The quote must be an exact substring of the message to be replied to, including bold, italic, underline, strikethrough, spoiler, and custom_emoji entities. The message will fail to send if the quote isn't found in the original message.
+          description: Optional. Quoted part of the message to be replied to; 0-1024 characters after entities parsing. The quote must be an exact substring of the message to be replied to, including bold, italic, underline, strikethrough, spoiler, custom_emoji, and date_time entities. The message will fail to send if the quote isn't found in the original message.
         quote_parse_mode:
           type: string
           description: Optional. Mode for parsing entities in the quote. See formatting options for more details.
@@ -17878,6 +18208,9 @@ components:
         checklist_task_id:
           type: integer
           description: Optional. Identifier of the specific checklist task to be replied to
+        poll_option_id:
+          type: string
+          description: Optional. Persistent identifier of the specific poll option to be replied to
       required:
         - message_id
    ResponseParameters:
@@ -17952,7 +18285,7 @@ components:
       description: |-
         Describes an inline message sent by a Web App on behalf of a user.
       x-tags:
-        - Inline mode
+        - Available types
       properties:
         inline_message_id:
           type: string
@@ -18618,7 +18951,7 @@ components:
           description: Text of the quoted part of a message that is replied to by the given message
         entities:
           type: array
-          description: Optional. Special entities that appear in the quote. Currently, only bold, italic, underline, strikethrough, spoiler, and custom_emoji entities are kept in quotes.
+          description: Optional. Special entities that appear in the quote. Currently, only bold, italic, underline, strikethrough, spoiler, custom_emoji, and date_time entities are kept in quotes.
           items:
               $ref: '#/components/schemas/MessageEntity'
         position:
@@ -19106,6 +19439,10 @@ components:
           description: Optional. A boost was removed from a chat. The bot must be an administrator in the chat to receive these updates.
           allOf:
               - $ref: '#/components/schemas/ChatBoostRemoved'
+        managed_bot:
+          description: Optional. A new bot was created to be managed by the bot, or token or owner of a managed bot was changed
+          allOf:
+              - $ref: '#/components/schemas/ManagedBotUpdated'
       required:
         - update_id
    User:
@@ -19163,6 +19500,9 @@ components:
         allows_users_to_create_topics:
           type: boolean
           description: Optional. True, if the bot allows users to create and delete topics in private chats. Returned only in getMe.
+        can_manage_bots:
+          type: boolean
+          description: Optional. True, if other bots can be created to be controlled by the bot. Returned only in getMe.
       required:
         - id
         - is_bot
