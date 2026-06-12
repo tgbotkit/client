@@ -530,6 +530,9 @@ type ChatFullInfo struct {
 	// FirstProfileAudio Optional. For private chats, the first audio added to the profile of the user
 	FirstProfileAudio *Audio `json:"first_profile_audio,omitempty"`
 
+	// GuardBot Optional. The bot that processes join request queries in the chat. The field is only available to chat administrators.
+	GuardBot *User `json:"guard_bot,omitempty"`
+
 	// HasAggressiveAntiSpamEnabled Optional. True, if aggressive anti-spam checks are enabled in the supergroup. The field is only available to chat administrators.
 	HasAggressiveAntiSpamEnabled *bool `json:"has_aggressive_anti_spam_enabled,omitempty"`
 
@@ -581,7 +584,7 @@ type ChatFullInfo struct {
 	// MessageAutoDeleteTime Optional. The time after which all messages sent to the chat will be automatically deleted; in seconds
 	MessageAutoDeleteTime *int `json:"message_auto_delete_time,omitempty"`
 
-	// PaidMessageStarCount Optional. The number of Telegram Stars a general user have to pay to send a message to the chat
+	// PaidMessageStarCount Optional. The number of Telegram Stars a general user has to pay to send a message to the chat
 	PaidMessageStarCount *int `json:"paid_message_star_count,omitempty"`
 
 	// ParentChat Optional. Information about the corresponding channel chat; for direct messages chats only
@@ -683,6 +686,9 @@ type ChatJoinRequest struct {
 	// InviteLink Optional. Chat invite link that was used by the user to send the join request
 	InviteLink *ChatInviteLink `json:"invite_link,omitempty"`
 
+	// QueryId Optional. Identifier of the join request query. If present, then the bot must call sendChatJoinRequestWebApp or directly call answerChatJoinRequestQuery within 10 seconds.
+	QueryId *string `json:"query_id,omitempty"`
+
 	// UserChatId Identifier of a private chat with the user who sent the join request. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. The bot can use this identifier for 5 minutes to send messages until the join request is processed, assuming no other administrator contacted the user.
 	UserChatId int64 `json:"user_chat_id"`
 }
@@ -773,7 +779,7 @@ type ChatPermissions struct {
 	// CanSendDocuments Optional. True, if the user is allowed to send documents
 	CanSendDocuments *bool `json:"can_send_documents,omitempty"`
 
-	// CanSendMessages Optional. True, if the user is allowed to send text messages, contacts, giveaways, giveaway winners, invoices, locations and venues
+	// CanSendMessages Optional. True, if the user is allowed to send text messages, rich messages, contacts, giveaways, giveaway winners, invoices, locations and venues
 	CanSendMessages *bool `json:"can_send_messages,omitempty"`
 
 	// CanSendOtherMessages Optional. True, if the user is allowed to send animations, games, stickers and use inline bots
@@ -1586,6 +1592,7 @@ type InputPollOption struct {
 
 // InputPollOptionMedia This object represents the content of a poll option to be sent. It should be one of
 // InputMediaAnimation
+// InputMediaLink
 // InputMediaLivePhoto
 // InputMediaLocation
 // InputMediaPhoto
@@ -1598,6 +1605,21 @@ type InputPollOptionMedia = map[string]interface{}
 // InputProfilePhotoStatic
 // InputProfilePhotoAnimated
 type InputProfilePhoto = map[string]interface{}
+
+// InputRichMessage Describes a rich message to be sent. Exactly one of the fields html or markdown must be used.
+type InputRichMessage struct {
+	// Html Optional. Content of the rich message to send described using HTML formatting. See rich message formatting options for more details.
+	Html *string `json:"html,omitempty"`
+
+	// IsRtl Optional. Pass True if the rich message must be shown right-to-left
+	IsRtl *bool `json:"is_rtl,omitempty"`
+
+	// Markdown Optional. Content of the rich message to send described using Markdown formatting. See rich message formatting options for more details.
+	Markdown *string `json:"markdown,omitempty"`
+
+	// SkipEntityDetection Optional. Pass True to skip automatic detection of entities (e.g., URLs, email addresses, username mentions, hashtags, cashtags, bot commands, or phone numbers) in the text
+	SkipEntityDetection *bool `json:"skip_entity_detection,omitempty"`
+}
 
 // InputSticker This object describes a sticker to be added to a sticker set.
 type InputSticker struct {
@@ -1758,6 +1780,12 @@ type LabeledPrice struct {
 
 	// Label Portion label
 	Label string `json:"label"`
+}
+
+// Link Represents an HTTP link.
+type Link struct {
+	// Url URL of the link
+	Url string `json:"url"`
 }
 
 // LinkPreviewOptions Describes the options used for link preview generation.
@@ -2140,6 +2168,9 @@ type Message struct {
 
 	// ReplyToStory Optional. For replies to a story, the original story
 	ReplyToStory *Story `json:"reply_to_story,omitempty"`
+
+	// RichMessage Optional. Message is a rich formatted message
+	RichMessage *RichMessage `json:"rich_message,omitempty"`
 
 	// SenderBoostCount Optional. If the sender of the message boosted the chat, the number of boosts added by the user
 	SenderBoostCount *int `json:"sender_boost_count,omitempty"`
@@ -2537,6 +2568,9 @@ type PollMedia struct {
 	// Document Optional. Media is a general file, information about the file; currently, can't be received in a poll option
 	Document *Document `json:"document,omitempty"`
 
+	// Link Optional. The HTTP link attached to the poll option
+	Link *Link `json:"link,omitempty"`
+
 	// LivePhoto Optional. Media is a live photo, information about the live photo
 	LivePhoto *LivePhoto `json:"live_photo,omitempty"`
 
@@ -2734,6 +2768,39 @@ type ResponseParameters struct {
 
 	// RetryAfter Optional. In case of exceeding flood control, the number of seconds left to wait before the request can be repeated
 	RetryAfter *int `json:"retry_after,omitempty"`
+}
+
+// RichBlock This object represents a block in a rich formatted message. Currently, it can be any of the following types:
+// RichBlockParagraph
+// RichBlockSectionHeading
+// RichBlockPreformatted
+// RichBlockFooter
+// RichBlockDivider
+// RichBlockMathematicalExpression
+// RichBlockAnchor
+// RichBlockList
+// RichBlockBlockQuotation
+// RichBlockPullQuotation
+// RichBlockCollage
+// RichBlockSlideshow
+// RichBlockTable
+// RichBlockDetails
+// RichBlockMap
+// RichBlockAnimation
+// RichBlockAudio
+// RichBlockPhoto
+// RichBlockVideo
+// RichBlockVoiceNote
+// RichBlockThinking
+type RichBlock = map[string]interface{}
+
+// RichMessage Rich formatted message.
+type RichMessage struct {
+	// Blocks Content of the message
+	Blocks []RichBlock `json:"blocks"`
+
+	// IsRtl Optional. True, if the rich message must be shown right-to-left
+	IsRtl *bool `json:"is_rtl,omitempty"`
 }
 
 // SentGuestMessage Describes an inline message sent by a guest bot.
@@ -3392,6 +3459,9 @@ type User struct {
 	// SupportsInlineQueries Optional. True, if the bot supports inline queries. Returned only in getMe.
 	SupportsInlineQueries *bool `json:"supports_inline_queries,omitempty"`
 
+	// SupportsJoinRequestQueries Optional. True, if the bot supports join request queries and can be assigned to process them. Returned only in getMe.
+	SupportsJoinRequestQueries *bool `json:"supports_join_request_queries,omitempty"`
+
 	// Username Optional. User's or bot's username
 	Username *string `json:"username,omitempty"`
 }
@@ -3605,7 +3675,7 @@ type WebAppInfo struct {
 
 // WebhookInfo Describes the current status of a webhook.
 type WebhookInfo struct {
-	// AllowedUpdates Optional. A list of update types the bot is subscribed to. Defaults to all update types except chat_member.
+	// AllowedUpdates Optional. A list of update types the bot is subscribed to. Defaults to all update types except chat_member, message_reaction, and message_reaction_count.
 	AllowedUpdates *[]string `json:"allowed_updates,omitempty"`
 
 	// HasCustomCertificate True, if a custom certificate was provided for webhook certificate checks
@@ -3685,6 +3755,15 @@ type AnswerCallbackQueryJSONBody struct {
 
 	// Url URL that will be opened by the user's client. If you have created a Game and accepted the conditions via @BotFather, specify the URL that opens your game - note that this will only work if the query comes from a callback_game button.Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
 	Url *string `json:"url,omitempty"`
+}
+
+// AnswerChatJoinRequestQueryJSONBody defines parameters for AnswerChatJoinRequestQuery.
+type AnswerChatJoinRequestQueryJSONBody struct {
+	// ChatJoinRequestQueryId Unique identifier of the join request query
+	ChatJoinRequestQueryId string `json:"chat_join_request_query_id"`
+
+	// Result Result of the query. Must be either “approve” to allow the user to join the chat, “decline” to disallow the user to join the chat, or “queue” to leave the decision to other administrators.
+	Result string `json:"result"`
 }
 
 // AnswerGuestQueryJSONBody defines parameters for AnswerGuestQuery.
@@ -4115,7 +4194,7 @@ type DeleteAllMessageReactionsJSONBody struct {
 	// ActorChatId Identifier of the chat whose reactions will be removed, if the reactions were added by a chat
 	ActorChatId *int64 `json:"actor_chat_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @username)
+	// ChatId Unique identifier for the target chat or username of the target supergroup in the format @username
 	ChatId int64 `json:"chat_id"`
 
 	// UserId Identifier of the user whose reactions will be removed, if the reactions were added by a user
@@ -4166,7 +4245,7 @@ type DeleteMessageReactionJSONBody struct {
 	// ActorChatId Identifier of the chat whose reaction will be removed, if the reaction was added by a chat
 	ActorChatId *int64 `json:"actor_chat_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target supergroup (in the format @username)
+	// ChatId Unique identifier for the target chat or username of the target supergroup in the format @username
 	ChatId int64 `json:"chat_id"`
 
 	// MessageId Identifier of the target message
@@ -4448,8 +4527,11 @@ type EditMessageTextJSONBody struct {
 	// ReplyMarkup A JSON-serialized object for an inline keyboard
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
-	// Text New text of the message, 1-4096 characters after entities parsing
-	Text string `json:"text"`
+	// RichMessage New rich content of the message; required if text isn't specified
+	RichMessage *InputRichMessage `json:"rich_message,omitempty"`
+
+	// Text New text of the message, 1-4096 characters after entity parsing; required if rich_message isn't specified
+	Text *string `json:"text,omitempty"`
 }
 
 // EditStoryJSONBody defines parameters for EditStory.
@@ -4667,7 +4749,7 @@ type GetChatMemberCountJSONBody struct {
 
 // GetChatMenuButtonJSONBody defines parameters for GetChatMenuButton.
 type GetChatMenuButtonJSONBody struct {
-	// ChatId Unique identifier for the target private chat. If not specified, default bot's menu button will be returned.
+	// ChatId Unique identifier for the target private chat. If not specified, the bot's default menu button will be returned.
 	ChatId *int64 `json:"chat_id,omitempty"`
 }
 
@@ -5522,11 +5604,20 @@ type SendChatActionJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the action will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username. Channel chats and channel direct messages chats aren't supported.
+	// ChatId Unique identifier for the target chat or username of the target bot or supergroup in the format @username. Channel chats and channel direct messages chats aren't supported.
 	ChatId int64 `json:"chat_id"`
 
 	// MessageThreadId Unique identifier for the target message thread or topic of a forum; for supergroups and private chats of bots with forum topic mode enabled only
 	MessageThreadId *int `json:"message_thread_id,omitempty"`
+}
+
+// SendChatJoinRequestWebAppJSONBody defines parameters for SendChatJoinRequestWebApp.
+type SendChatJoinRequestWebAppJSONBody struct {
+	// ChatJoinRequestQueryId Unique identifier of the join request query
+	ChatJoinRequestQueryId string `json:"chat_join_request_query_id"`
+
+	// WebAppUrl The URL of the Mini App to be opened
+	WebAppUrl string `json:"web_app_url"`
 }
 
 // SendChecklistJSONBody defines parameters for SendChecklist.
@@ -6798,6 +6889,87 @@ type SendPollJSONBody struct {
 	Type *string `json:"type,omitempty"`
 }
 
+// SendRichMessageJSONBody defines parameters for SendRichMessage.
+type SendRichMessageJSONBody struct {
+	// AllowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
+	AllowPaidBroadcast *bool `json:"allow_paid_broadcast,omitempty"`
+
+	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
+	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
+
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+	ChatId int64 `json:"chat_id"`
+
+	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
+	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
+
+	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
+	DisableNotification *bool `json:"disable_notification,omitempty"`
+
+	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
+	MessageEffectId *string `json:"message_effect_id,omitempty"`
+
+	// MessageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
+	MessageThreadId *int `json:"message_thread_id,omitempty"`
+
+	// ProtectContent Protects the contents of the sent message from forwarding and saving
+	ProtectContent *bool `json:"protect_content,omitempty"`
+
+	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
+	ReplyMarkup *struct {
+		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		ForceReply *bool `json:"force_reply,omitempty"`
+
+		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
+		InlineKeyboard *[][]InlineKeyboardButton `json:"inline_keyboard,omitempty"`
+
+		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
+		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
+
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		IsPersistent *bool `json:"is_persistent,omitempty"`
+
+		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
+		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
+
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
+
+		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
+
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
+
+		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
+		Selective *bool `json:"selective,omitempty"`
+	} `json:"reply_markup,omitempty"`
+
+	// ReplyParameters Description of the message to reply to
+	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
+
+	// RichMessage The message to be sent
+	RichMessage InputRichMessage `json:"rich_message"`
+
+	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
+	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
+}
+
+// SendRichMessageDraftJSONBody defines parameters for SendRichMessageDraft.
+type SendRichMessageDraftJSONBody struct {
+	// ChatId Unique identifier for the target private chat
+	ChatId int64 `json:"chat_id"`
+
+	// DraftId Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated.
+	DraftId int `json:"draft_id"`
+
+	// MessageThreadId Unique identifier for the target message thread
+	MessageThreadId *int `json:"message_thread_id,omitempty"`
+
+	// RichMessage The partial message to be streamed
+	RichMessage InputRichMessage `json:"rich_message"`
+}
+
 // SendStickerJSONBody defines parameters for SendSticker.
 type SendStickerJSONBody struct {
 	// AllowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
@@ -7622,7 +7794,7 @@ type SetChatMemberTagJSONBody struct {
 
 // SetChatMenuButtonJSONBody defines parameters for SetChatMenuButton.
 type SetChatMenuButtonJSONBody struct {
-	// ChatId Unique identifier for the target private chat. If not specified, default bot's menu button will be changed.
+	// ChatId Unique identifier for the target private chat. If not specified, the bot's default menu button will be changed.
 	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// MenuButton A JSON-serialized object for the bot's new menu button. Defaults to MenuButtonDefault.
@@ -8109,6 +8281,9 @@ type AddStickerToSetMultipartRequestBody AddStickerToSetMultipartBody
 // AnswerCallbackQueryJSONRequestBody defines body for AnswerCallbackQuery for application/json ContentType.
 type AnswerCallbackQueryJSONRequestBody AnswerCallbackQueryJSONBody
 
+// AnswerChatJoinRequestQueryJSONRequestBody defines body for AnswerChatJoinRequestQuery for application/json ContentType.
+type AnswerChatJoinRequestQueryJSONRequestBody AnswerChatJoinRequestQueryJSONBody
+
 // AnswerGuestQueryJSONRequestBody defines body for AnswerGuestQuery for application/json ContentType.
 type AnswerGuestQueryJSONRequestBody AnswerGuestQueryJSONBody
 
@@ -8421,6 +8596,9 @@ type SendAudioMultipartRequestBody SendAudioMultipartBody
 // SendChatActionJSONRequestBody defines body for SendChatAction for application/json ContentType.
 type SendChatActionJSONRequestBody SendChatActionJSONBody
 
+// SendChatJoinRequestWebAppJSONRequestBody defines body for SendChatJoinRequestWebApp for application/json ContentType.
+type SendChatJoinRequestWebAppJSONRequestBody SendChatJoinRequestWebAppJSONBody
+
 // SendChecklistJSONRequestBody defines body for SendChecklist for application/json ContentType.
 type SendChecklistJSONRequestBody SendChecklistJSONBody
 
@@ -8477,6 +8655,12 @@ type SendPhotoMultipartRequestBody SendPhotoMultipartBody
 
 // SendPollJSONRequestBody defines body for SendPoll for application/json ContentType.
 type SendPollJSONRequestBody SendPollJSONBody
+
+// SendRichMessageJSONRequestBody defines body for SendRichMessage for application/json ContentType.
+type SendRichMessageJSONRequestBody SendRichMessageJSONBody
+
+// SendRichMessageDraftJSONRequestBody defines body for SendRichMessageDraft for application/json ContentType.
+type SendRichMessageDraftJSONRequestBody SendRichMessageDraftJSONBody
 
 // SendStickerJSONRequestBody defines body for SendSticker for application/json ContentType.
 type SendStickerJSONRequestBody SendStickerJSONBody
@@ -8740,6 +8924,11 @@ type ClientInterface interface {
 	AnswerCallbackQueryWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	AnswerCallbackQuery(ctx context.Context, body AnswerCallbackQueryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AnswerChatJoinRequestQueryWithBody request with any body
+	AnswerChatJoinRequestQueryWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AnswerChatJoinRequestQuery(ctx context.Context, body AnswerChatJoinRequestQueryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AnswerGuestQueryWithBody request with any body
 	AnswerGuestQueryWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -9260,6 +9449,11 @@ type ClientInterface interface {
 
 	SendChatAction(ctx context.Context, body SendChatActionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// SendChatJoinRequestWebAppWithBody request with any body
+	SendChatJoinRequestWebAppWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SendChatJoinRequestWebApp(ctx context.Context, body SendChatJoinRequestWebAppJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// SendChecklistWithBody request with any body
 	SendChecklistWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -9334,6 +9528,16 @@ type ClientInterface interface {
 	SendPollWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	SendPoll(ctx context.Context, body SendPollJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SendRichMessageWithBody request with any body
+	SendRichMessageWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SendRichMessage(ctx context.Context, body SendRichMessageJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SendRichMessageDraftWithBody request with any body
+	SendRichMessageDraftWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SendRichMessageDraft(ctx context.Context, body SendRichMessageDraftJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// SendStickerWithBody request with any body
 	SendStickerWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -9634,6 +9838,30 @@ func (c *Client) AnswerCallbackQueryWithBody(ctx context.Context, contentType st
 
 func (c *Client) AnswerCallbackQuery(ctx context.Context, body AnswerCallbackQueryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAnswerCallbackQueryRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AnswerChatJoinRequestQueryWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAnswerChatJoinRequestQueryRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AnswerChatJoinRequestQuery(ctx context.Context, body AnswerChatJoinRequestQueryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAnswerChatJoinRequestQueryRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -12116,6 +12344,30 @@ func (c *Client) SendChatAction(ctx context.Context, body SendChatActionJSONRequ
 	return c.Client.Do(req)
 }
 
+func (c *Client) SendChatJoinRequestWebAppWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSendChatJoinRequestWebAppRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SendChatJoinRequestWebApp(ctx context.Context, body SendChatJoinRequestWebAppJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSendChatJoinRequestWebAppRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) SendChecklistWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewSendChecklistRequestWithBody(c.Server, contentType, body)
 	if err != nil {
@@ -12466,6 +12718,54 @@ func (c *Client) SendPollWithBody(ctx context.Context, contentType string, body 
 
 func (c *Client) SendPoll(ctx context.Context, body SendPollJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewSendPollRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SendRichMessageWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSendRichMessageRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SendRichMessage(ctx context.Context, body SendRichMessageJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSendRichMessageRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SendRichMessageDraftWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSendRichMessageDraftRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SendRichMessageDraft(ctx context.Context, body SendRichMessageDraftJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSendRichMessageDraftRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -13785,6 +14085,46 @@ func NewAnswerCallbackQueryRequestWithBody(server string, contentType string, bo
 	}
 
 	operationPath := fmt.Sprintf("/answerCallbackQuery")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewAnswerChatJoinRequestQueryRequest calls the generic AnswerChatJoinRequestQuery builder with application/json body
+func NewAnswerChatJoinRequestQueryRequest(server string, body AnswerChatJoinRequestQueryJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAnswerChatJoinRequestQueryRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewAnswerChatJoinRequestQueryRequestWithBody generates requests for AnswerChatJoinRequestQuery with any type of body
+func NewAnswerChatJoinRequestQueryRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/answerChatJoinRequestQuery")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17980,6 +18320,46 @@ func NewSendChatActionRequestWithBody(server string, contentType string, body io
 	return req, nil
 }
 
+// NewSendChatJoinRequestWebAppRequest calls the generic SendChatJoinRequestWebApp builder with application/json body
+func NewSendChatJoinRequestWebAppRequest(server string, body SendChatJoinRequestWebAppJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSendChatJoinRequestWebAppRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewSendChatJoinRequestWebAppRequestWithBody generates requests for SendChatJoinRequestWebApp with any type of body
+func NewSendChatJoinRequestWebAppRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/sendChatJoinRequestWebApp")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewSendChecklistRequest calls the generic SendChecklist builder with application/json body
 func NewSendChecklistRequest(server string, body SendChecklistJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -18561,6 +18941,86 @@ func NewSendPollRequestWithBody(server string, contentType string, body io.Reade
 	}
 
 	operationPath := fmt.Sprintf("/sendPoll")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewSendRichMessageRequest calls the generic SendRichMessage builder with application/json body
+func NewSendRichMessageRequest(server string, body SendRichMessageJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSendRichMessageRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewSendRichMessageRequestWithBody generates requests for SendRichMessage with any type of body
+func NewSendRichMessageRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/sendRichMessage")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewSendRichMessageDraftRequest calls the generic SendRichMessageDraft builder with application/json body
+func NewSendRichMessageDraftRequest(server string, body SendRichMessageDraftJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSendRichMessageDraftRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewSendRichMessageDraftRequestWithBody generates requests for SendRichMessageDraft with any type of body
+func NewSendRichMessageDraftRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/sendRichMessageDraft")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20713,6 +21173,11 @@ type ClientWithResponsesInterface interface {
 
 	AnswerCallbackQueryWithResponse(ctx context.Context, body AnswerCallbackQueryJSONRequestBody, reqEditors ...RequestEditorFn) (*AnswerCallbackQueryResponse, error)
 
+	// AnswerChatJoinRequestQueryWithBodyWithResponse request with any body
+	AnswerChatJoinRequestQueryWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AnswerChatJoinRequestQueryResponse, error)
+
+	AnswerChatJoinRequestQueryWithResponse(ctx context.Context, body AnswerChatJoinRequestQueryJSONRequestBody, reqEditors ...RequestEditorFn) (*AnswerChatJoinRequestQueryResponse, error)
+
 	// AnswerGuestQueryWithBodyWithResponse request with any body
 	AnswerGuestQueryWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AnswerGuestQueryResponse, error)
 
@@ -21232,6 +21697,11 @@ type ClientWithResponsesInterface interface {
 
 	SendChatActionWithResponse(ctx context.Context, body SendChatActionJSONRequestBody, reqEditors ...RequestEditorFn) (*SendChatActionResponse, error)
 
+	// SendChatJoinRequestWebAppWithBodyWithResponse request with any body
+	SendChatJoinRequestWebAppWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendChatJoinRequestWebAppResponse, error)
+
+	SendChatJoinRequestWebAppWithResponse(ctx context.Context, body SendChatJoinRequestWebAppJSONRequestBody, reqEditors ...RequestEditorFn) (*SendChatJoinRequestWebAppResponse, error)
+
 	// SendChecklistWithBodyWithResponse request with any body
 	SendChecklistWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendChecklistResponse, error)
 
@@ -21306,6 +21776,16 @@ type ClientWithResponsesInterface interface {
 	SendPollWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendPollResponse, error)
 
 	SendPollWithResponse(ctx context.Context, body SendPollJSONRequestBody, reqEditors ...RequestEditorFn) (*SendPollResponse, error)
+
+	// SendRichMessageWithBodyWithResponse request with any body
+	SendRichMessageWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendRichMessageResponse, error)
+
+	SendRichMessageWithResponse(ctx context.Context, body SendRichMessageJSONRequestBody, reqEditors ...RequestEditorFn) (*SendRichMessageResponse, error)
+
+	// SendRichMessageDraftWithBodyWithResponse request with any body
+	SendRichMessageDraftWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendRichMessageDraftResponse, error)
+
+	SendRichMessageDraftWithResponse(ctx context.Context, body SendRichMessageDraftJSONRequestBody, reqEditors ...RequestEditorFn) (*SendRichMessageDraftResponse, error)
 
 	// SendStickerWithBodyWithResponse request with any body
 	SendStickerWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendStickerResponse, error)
@@ -21618,6 +22098,34 @@ func (r AnswerCallbackQueryResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r AnswerCallbackQueryResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AnswerChatJoinRequestQueryResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     AnswerChatJoinRequestQuery200Ok `json:"ok"`
+		Result bool                            `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type AnswerChatJoinRequestQuery200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r AnswerChatJoinRequestQueryResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AnswerChatJoinRequestQueryResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -24732,6 +25240,34 @@ func (r SendChatActionResponse) StatusCode() int {
 	return 0
 }
 
+type SendChatJoinRequestWebAppResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     SendChatJoinRequestWebApp200Ok `json:"ok"`
+		Result bool                           `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type SendChatJoinRequestWebApp200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r SendChatJoinRequestWebAppResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SendChatJoinRequestWebAppResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type SendChecklistResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -25170,6 +25706,64 @@ func (r SendPollResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r SendPollResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SendRichMessageResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok SendRichMessage200Ok `json:"ok"`
+
+		// Result This object represents a message.
+		Result Message `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type SendRichMessage200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r SendRichMessageResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SendRichMessageResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SendRichMessageDraftResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     SendRichMessageDraft200Ok `json:"ok"`
+		Result bool                      `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type SendRichMessageDraft200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r SendRichMessageDraftResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SendRichMessageDraftResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -26686,6 +27280,23 @@ func (c *ClientWithResponses) AnswerCallbackQueryWithResponse(ctx context.Contex
 		return nil, err
 	}
 	return ParseAnswerCallbackQueryResponse(rsp)
+}
+
+// AnswerChatJoinRequestQueryWithBodyWithResponse request with arbitrary body returning *AnswerChatJoinRequestQueryResponse
+func (c *ClientWithResponses) AnswerChatJoinRequestQueryWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AnswerChatJoinRequestQueryResponse, error) {
+	rsp, err := c.AnswerChatJoinRequestQueryWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAnswerChatJoinRequestQueryResponse(rsp)
+}
+
+func (c *ClientWithResponses) AnswerChatJoinRequestQueryWithResponse(ctx context.Context, body AnswerChatJoinRequestQueryJSONRequestBody, reqEditors ...RequestEditorFn) (*AnswerChatJoinRequestQueryResponse, error) {
+	rsp, err := c.AnswerChatJoinRequestQuery(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAnswerChatJoinRequestQueryResponse(rsp)
 }
 
 // AnswerGuestQueryWithBodyWithResponse request with arbitrary body returning *AnswerGuestQueryResponse
@@ -28443,6 +29054,23 @@ func (c *ClientWithResponses) SendChatActionWithResponse(ctx context.Context, bo
 	return ParseSendChatActionResponse(rsp)
 }
 
+// SendChatJoinRequestWebAppWithBodyWithResponse request with arbitrary body returning *SendChatJoinRequestWebAppResponse
+func (c *ClientWithResponses) SendChatJoinRequestWebAppWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendChatJoinRequestWebAppResponse, error) {
+	rsp, err := c.SendChatJoinRequestWebAppWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSendChatJoinRequestWebAppResponse(rsp)
+}
+
+func (c *ClientWithResponses) SendChatJoinRequestWebAppWithResponse(ctx context.Context, body SendChatJoinRequestWebAppJSONRequestBody, reqEditors ...RequestEditorFn) (*SendChatJoinRequestWebAppResponse, error) {
+	rsp, err := c.SendChatJoinRequestWebApp(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSendChatJoinRequestWebAppResponse(rsp)
+}
+
 // SendChecklistWithBodyWithResponse request with arbitrary body returning *SendChecklistResponse
 func (c *ClientWithResponses) SendChecklistWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendChecklistResponse, error) {
 	rsp, err := c.SendChecklistWithBody(ctx, contentType, body, reqEditors...)
@@ -28696,6 +29324,40 @@ func (c *ClientWithResponses) SendPollWithResponse(ctx context.Context, body Sen
 		return nil, err
 	}
 	return ParseSendPollResponse(rsp)
+}
+
+// SendRichMessageWithBodyWithResponse request with arbitrary body returning *SendRichMessageResponse
+func (c *ClientWithResponses) SendRichMessageWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendRichMessageResponse, error) {
+	rsp, err := c.SendRichMessageWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSendRichMessageResponse(rsp)
+}
+
+func (c *ClientWithResponses) SendRichMessageWithResponse(ctx context.Context, body SendRichMessageJSONRequestBody, reqEditors ...RequestEditorFn) (*SendRichMessageResponse, error) {
+	rsp, err := c.SendRichMessage(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSendRichMessageResponse(rsp)
+}
+
+// SendRichMessageDraftWithBodyWithResponse request with arbitrary body returning *SendRichMessageDraftResponse
+func (c *ClientWithResponses) SendRichMessageDraftWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendRichMessageDraftResponse, error) {
+	rsp, err := c.SendRichMessageDraftWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSendRichMessageDraftResponse(rsp)
+}
+
+func (c *ClientWithResponses) SendRichMessageDraftWithResponse(ctx context.Context, body SendRichMessageDraftJSONRequestBody, reqEditors ...RequestEditorFn) (*SendRichMessageDraftResponse, error) {
+	rsp, err := c.SendRichMessageDraft(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSendRichMessageDraftResponse(rsp)
 }
 
 // SendStickerWithBodyWithResponse request with arbitrary body returning *SendStickerResponse
@@ -29643,6 +30305,49 @@ func ParseAnswerCallbackQueryResponse(rsp *http.Response) (*AnswerCallbackQueryR
 		var dest struct {
 			Ok     AnswerCallbackQuery200Ok `json:"ok"`
 			Result bool                     `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAnswerChatJoinRequestQueryResponse parses an HTTP response from a AnswerChatJoinRequestQueryWithResponse call
+func ParseAnswerChatJoinRequestQueryResponse(rsp *http.Response) (*AnswerChatJoinRequestQueryResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AnswerChatJoinRequestQueryResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     AnswerChatJoinRequestQuery200Ok `json:"ok"`
+			Result bool                            `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -34361,6 +35066,49 @@ func ParseSendChatActionResponse(rsp *http.Response) (*SendChatActionResponse, e
 	return response, nil
 }
 
+// ParseSendChatJoinRequestWebAppResponse parses an HTTP response from a SendChatJoinRequestWebAppWithResponse call
+func ParseSendChatJoinRequestWebAppResponse(rsp *http.Response) (*SendChatJoinRequestWebAppResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SendChatJoinRequestWebAppResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     SendChatJoinRequestWebApp200Ok `json:"ok"`
+			Result bool                           `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseSendChecklistResponse parses an HTTP response from a SendChecklistWithResponse call
 func ParseSendChecklistResponse(rsp *http.Response) (*SendChecklistResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -35005,6 +35753,94 @@ func ParseSendPollResponse(rsp *http.Response) (*SendPollResponse, error) {
 
 			// Result This object represents a message.
 			Result Message `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSendRichMessageResponse parses an HTTP response from a SendRichMessageWithResponse call
+func ParseSendRichMessageResponse(rsp *http.Response) (*SendRichMessageResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SendRichMessageResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok SendRichMessage200Ok `json:"ok"`
+
+			// Result This object represents a message.
+			Result Message `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSendRichMessageDraftResponse parses an HTTP response from a SendRichMessageDraftWithResponse call
+func ParseSendRichMessageDraftResponse(rsp *http.Response) (*SendRichMessageDraftResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SendRichMessageDraftResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     SendRichMessageDraft200Ok `json:"ok"`
+			Result bool                      `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err

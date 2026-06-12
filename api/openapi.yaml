@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: "Telegram Bot API"
-  version: "10.0"
+  version: "10.1"
   description: |-
     This OpenAPI specification was generated using the [tgbotspec](https://github.com/metalagman/tgbotspec) tool.
 servers:
@@ -118,6 +118,56 @@ paths:
                   description: URL that will be opened by the user's client. If you have created a Game and accepted the conditions via @BotFather, specify the URL that opens your game - note that this will only work if the query comes from a callback_game button.Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
               required:
                 - callback_query_id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/OkResponse'
+                  - type: object
+                    properties:
+                      result:
+                        type: boolean
+                        default: true
+                    required:
+                      - result
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /answerChatJoinRequestQuery:
+    post:
+      operationId: answerChatJoinRequestQuery
+      tags:
+        - Available methods
+      description: |-
+        Use this method to process a received chat join request query. Returns True on success.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                chat_join_request_query_id:
+                  type: string
+                  description: Unique identifier of the join request query
+                result:
+                  type: string
+                  description: Result of the query. Must be either “approve” to allow the user to join the chat, “decline” to disallow the user to join the chat, or “queue” to leave the decision to other administrators.
+              required:
+                - chat_join_request_query_id
+                - result
       responses:
         '200':
           description: OK
@@ -1539,7 +1589,7 @@ paths:
                 chat_id:
                   type: integer
                   format: int64
-                  description: Unique identifier for the target chat or username of the target supergroup (in the format @username)
+                  description: Unique identifier for the target chat or username of the target supergroup in the format @username
                 user_id:
                   type: integer
                   description: Identifier of the user whose reactions will be removed, if the reactions were added by a user
@@ -1841,7 +1891,7 @@ paths:
                 chat_id:
                   type: integer
                   format: int64
-                  description: Unique identifier for the target chat or username of the target supergroup (in the format @username)
+                  description: Unique identifier for the target chat or username of the target supergroup in the format @username
                 message_id:
                   type: integer
                   description: Identifier of the target message
@@ -2032,8 +2082,7 @@ paths:
         - Stickers
       description: |-
         Use this method to delete a sticker set that was created by the bot. Returns True on success.
-        The following methods and objects allow your bot to work in inline mode.Please see our Introduction to Inline bots for more details.
-        To enable this option, send the /setinline command to @BotFather and provide the placeholder text that the user will see in the input field after typing your bot's name.
+        The following methods and objects allow your bot to handle and send rich messages.
       requestBody:
         required: true
         content:
@@ -2614,7 +2663,7 @@ paths:
       tags:
         - Updating messages
       description: |-
-        Use this method to edit animation, audio, document, live photo, photo, or video messages, or to add media to text messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo, a live photo, or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
+        Use this method to edit animation, audio, document, live photo, photo, or video messages, or to replace a text or a rich message with a media. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo, a live photo, or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
       requestBody:
         required: true
         content:
@@ -2767,7 +2816,7 @@ paths:
       tags:
         - Updating messages
       description: |-
-        Use this method to edit text and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
+        Use this method to edit text, rich and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
       requestBody:
         required: true
         content:
@@ -2804,11 +2853,13 @@ paths:
                   description: A JSON-serialized object for an inline keyboard
                   allOf:
                       - $ref: '#/components/schemas/InlineKeyboardMarkup'
+                rich_message:
+                  description: New rich content of the message; required if text isn't specified
+                  allOf:
+                      - $ref: '#/components/schemas/InputRichMessage'
                 text:
                   type: string
-                  description: New text of the message, 1-4096 characters after entities parsing
-              required:
-                - text
+                  description: New text of the message, 1-4096 characters after entity parsing; required if rich_message isn't specified
       responses:
         '200':
           description: OK
@@ -3640,7 +3691,7 @@ paths:
                 chat_id:
                   type: integer
                   format: int64
-                  description: Unique identifier for the target private chat. If not specified, default bot's menu button will be returned.
+                  description: Unique identifier for the target private chat. If not specified, the bot's default menu button will be returned.
       responses:
         '200':
           description: OK
@@ -6445,13 +6496,63 @@ paths:
                 chat_id:
                   type: integer
                   format: int64
-                  description: Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username. Channel chats and channel direct messages chats aren't supported.
+                  description: Unique identifier for the target chat or username of the target bot or supergroup in the format @username. Channel chats and channel direct messages chats aren't supported.
                 message_thread_id:
                   type: integer
                   description: Unique identifier for the target message thread or topic of a forum; for supergroups and private chats of bots with forum topic mode enabled only
               required:
                 - action
                 - chat_id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/OkResponse'
+                  - type: object
+                    properties:
+                      result:
+                        type: boolean
+                        default: true
+                    required:
+                      - result
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /sendChatJoinRequestWebApp:
+    post:
+      operationId: sendChatJoinRequestWebApp
+      tags:
+        - Available methods
+      description: |-
+        Use this method to process a received chat join request query by showing a Mini App to the user before deciding the outcome. Returns True on success.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                chat_join_request_query_id:
+                  type: string
+                  description: Unique identifier of the join request query
+                web_app_url:
+                  type: string
+                  description: The URL of the Mini App to be opened
+              required:
+                - chat_join_request_query_id
+                - web_app_url
       responses:
         '200':
           description: OK
@@ -8611,6 +8712,186 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /sendRichMessage:
+    post:
+      operationId: sendRichMessage
+      tags:
+        - Rich messages
+      description: |-
+        Use this method to send rich messages. If the message contains a block with a media element, then the bot must have the right to send the media to the chat. On success, the sent Message is returned.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                allow_paid_broadcast:
+                  type: boolean
+                  description: Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
+                business_connection_id:
+                  type: string
+                  description: Unique identifier of the business connection on behalf of which the message will be sent
+                chat_id:
+                  type: integer
+                  format: int64
+                  description: Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+                direct_messages_topic_id:
+                  type: integer
+                  description: Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
+                disable_notification:
+                  type: boolean
+                  description: Sends the message silently. Users will receive a notification with no sound.
+                message_effect_id:
+                  type: string
+                  description: Unique identifier of the message effect to be added to the message; for private chats only
+                message_thread_id:
+                  type: integer
+                  description: Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
+                protect_content:
+                  type: boolean
+                  description: Protects the contents of the sent message from forwarding and saving
+                reply_markup:
+                  type: object
+                  description: Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
+                  properties:
+                      force_reply:
+                          type: boolean
+                          description: Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+                          default: true
+                      inline_keyboard:
+                          type: array
+                          description: Array of button rows, each represented by an Array of InlineKeyboardButton objects
+                          items:
+                              type: array
+                              items:
+                                  $ref: '#/components/schemas/InlineKeyboardButton'
+                      input_field_placeholder:
+                          type: string
+                          description: Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
+                      is_persistent:
+                          type: boolean
+                          description: Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+                      keyboard:
+                          type: array
+                          description: Array of button rows, each represented by an Array of KeyboardButton objects
+                          items:
+                              type: array
+                              items:
+                                  $ref: '#/components/schemas/KeyboardButton'
+                      one_time_keyboard:
+                          type: boolean
+                          description: Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+                      remove_keyboard:
+                          type: boolean
+                          description: Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+                          default: true
+                      resize_keyboard:
+                          type: boolean
+                          description: Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+                      selective:
+                          type: boolean
+                          description: 'Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot''s message is a reply to a message in the same chat and forum topic, sender of the original message.'
+                reply_parameters:
+                  description: Description of the message to reply to
+                  allOf:
+                      - $ref: '#/components/schemas/ReplyParameters'
+                rich_message:
+                  description: The message to be sent
+                  allOf:
+                      - $ref: '#/components/schemas/InputRichMessage'
+                suggested_post_parameters:
+                  description: A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
+                  allOf:
+                      - $ref: '#/components/schemas/SuggestedPostParameters'
+              required:
+                - chat_id
+                - rich_message
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/OkResponse'
+                  - type: object
+                    properties:
+                      result:
+                        $ref: '#/components/schemas/Message'
+                    required:
+                      - result
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /sendRichMessageDraft:
+    post:
+      operationId: sendRichMessageDraft
+      tags:
+        - Rich messages
+      description: |-
+        Use this method to stream a partial rich message to a user while the message is being generated. Note that the streamed draft is ephemeral and acts as a temporary 30-second preview - once the output is finalized, you must call sendRichMessage with the complete message to persist it in the user's chat. Returns True on success.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  type: integer
+                  format: int64
+                  description: Unique identifier for the target private chat
+                draft_id:
+                  type: integer
+                  description: Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated.
+                message_thread_id:
+                  type: integer
+                  description: Unique identifier for the target message thread
+                rich_message:
+                  description: The partial message to be streamed
+                  allOf:
+                      - $ref: '#/components/schemas/InputRichMessage'
+              required:
+                - chat_id
+                - draft_id
+                - rich_message
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/OkResponse'
+                  - type: object
+                    properties:
+                      result:
+                        type: boolean
+                        default: true
+                    required:
+                      - result
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /sendSticker:
     post:
       operationId: sendSticker
@@ -10142,7 +10423,7 @@ paths:
                 chat_id:
                   type: integer
                   format: int64
-                  description: Unique identifier for the target private chat. If not specified, default bot's menu button will be changed.
+                  description: Unique identifier for the target private chat. If not specified, the bot's default menu button will be changed.
                 menu_button:
                   description: A JSON-serialized object for the bot's new menu button. Defaults to MenuButtonDefault.
                   allOf:
@@ -13458,7 +13739,11 @@ components:
               - $ref: '#/components/schemas/UniqueGiftColors'
         paid_message_star_count:
           type: integer
-          description: Optional. The number of Telegram Stars a general user have to pay to send a message to the chat
+          description: Optional. The number of Telegram Stars a general user has to pay to send a message to the chat
+        guard_bot:
+          description: Optional. The bot that processes join request queries in the chat. The field is only available to chat administrators.
+          allOf:
+              - $ref: '#/components/schemas/User'
       required:
         - id
         - type
@@ -13541,6 +13826,9 @@ components:
           description: Optional. Chat invite link that was used by the user to send the join request
           allOf:
               - $ref: '#/components/schemas/ChatInviteLink'
+        query_id:
+          type: string
+          description: Optional. Identifier of the join request query. If present, then the bot must call sendChatJoinRequestWebApp or directly call answerChatJoinRequestQuery within 10 seconds.
       required:
         - chat
         - from
@@ -13768,7 +14056,7 @@ components:
           description: True, if the user is a member of the chat at the moment of the request
         can_send_messages:
           type: boolean
-          description: True, if the user is allowed to send text messages, contacts, giveaways, giveaway winners, invoices, locations and venues
+          description: True, if the user is allowed to send text messages, rich messages, contacts, giveaways, giveaway winners, invoices, locations and venues
         can_send_audios:
           type: boolean
           description: True, if the user is allowed to send audios
@@ -13913,7 +14201,7 @@ components:
       properties:
         can_send_messages:
           type: boolean
-          description: Optional. True, if the user is allowed to send text messages, contacts, giveaways, giveaway winners, invoices, locations and venues
+          description: Optional. True, if the user is allowed to send text messages, rich messages, contacts, giveaways, giveaway winners, invoices, locations and venues
         can_send_audios:
           type: boolean
           description: Optional. True, if the user is allowed to send audios
@@ -16342,6 +16630,22 @@ components:
       required:
         - type
         - media
+   InputMediaLink:
+      type: object
+      description: |-
+        Represents an HTTP link to be sent.
+      x-tags:
+        - Available types
+      properties:
+        type:
+          type: string
+          description: Type of the result, must be link
+        url:
+          type: string
+          description: HTTP URL of the link
+      required:
+        - type
+        - url
    InputMediaLivePhoto:
       type: object
       description: |-
@@ -16551,8 +16855,9 @@ components:
    InputMessageContent:
       type: object
       description: |-
-        This object represents the content of a message to be sent as a result of an inline query. Telegram clients currently support the following 5 types:
+        This object represents the content of a message to be sent as a result of an inline query. Telegram clients currently support the following types:
         InputTextMessageContent
+        InputRichMessageContent
         InputLocationMessageContent
         InputVenueMessageContent
         InputContactMessageContent
@@ -16684,6 +16989,7 @@ components:
       description: |-
         This object represents the content of a poll option to be sent. It should be one of
         InputMediaAnimation
+        InputMediaLink
         InputMediaLivePhoto
         InputMediaLocation
         InputMediaPhoto
@@ -16735,6 +17041,38 @@ components:
       required:
         - type
         - photo
+   InputRichMessage:
+      type: object
+      description: |-
+        Describes a rich message to be sent. Exactly one of the fields html or markdown must be used.
+      x-tags:
+        - Rich messages
+      properties:
+        html:
+          type: string
+          description: Optional. Content of the rich message to send described using HTML formatting. See rich message formatting options for more details.
+        markdown:
+          type: string
+          description: Optional. Content of the rich message to send described using Markdown formatting. See rich message formatting options for more details.
+        is_rtl:
+          type: boolean
+          description: Optional. Pass True if the rich message must be shown right-to-left
+        skip_entity_detection:
+          type: boolean
+          description: Optional. Pass True to skip automatic detection of entities (e.g., URLs, email addresses, username mentions, hashtags, cashtags, bot commands, or phone numbers) in the text
+   InputRichMessageContent:
+      type: object
+      description: |-
+        Represents the content of a rich message to be sent as the result of an inline query.
+      x-tags:
+        - Inline mode
+      properties:
+        rich_message:
+          description: The message to be sent
+          allOf:
+              - $ref: '#/components/schemas/InputRichMessage'
+      required:
+        - rich_message
    InputSticker:
       type: object
       description: |-
@@ -17066,6 +17404,18 @@ components:
       required:
         - label
         - amount
+   Link:
+      type: object
+      description: |-
+        Represents an HTTP link.
+      x-tags:
+        - Available types
+      properties:
+        url:
+          type: string
+          description: URL of the link
+      required:
+        - url
    LinkPreviewOptions:
       type: object
       description: |-
@@ -17454,6 +17804,10 @@ components:
         effect_id:
           type: string
           description: Optional. Unique identifier of the message effect added to the message
+        rich_message:
+          description: Optional. Message is a rich formatted message
+          allOf:
+              - $ref: '#/components/schemas/RichMessage'
         animation:
           description: Optional. Message is an animation, information about the animation. For backward compatibility, when this field is set, the document field will also be set.
           allOf:
@@ -18746,6 +19100,10 @@ components:
           description: Optional. Media is a general file, information about the file; currently, can't be received in a poll option
           allOf:
               - $ref: '#/components/schemas/Document'
+        link:
+          description: Optional. The HTTP link attached to the poll option
+          allOf:
+              - $ref: '#/components/schemas/Link'
         live_photo:
           description: Optional. Media is a live photo, information about the live photo
           allOf:
@@ -19196,6 +19554,1094 @@ components:
       required:
         - type
         - date
+        - url
+   RichBlock:
+      type: object
+      description: |-
+        This object represents a block in a rich formatted message. Currently, it can be any of the following types:
+        RichBlockParagraph
+        RichBlockSectionHeading
+        RichBlockPreformatted
+        RichBlockFooter
+        RichBlockDivider
+        RichBlockMathematicalExpression
+        RichBlockAnchor
+        RichBlockList
+        RichBlockBlockQuotation
+        RichBlockPullQuotation
+        RichBlockCollage
+        RichBlockSlideshow
+        RichBlockTable
+        RichBlockDetails
+        RichBlockMap
+        RichBlockAnimation
+        RichBlockAudio
+        RichBlockPhoto
+        RichBlockVideo
+        RichBlockVoiceNote
+        RichBlockThinking
+      x-tags:
+        - Rich messages
+   RichBlockAnchor:
+      type: object
+      description: |-
+        A block with an anchor, corresponding to the HTML tag <a> with the attribute name.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “anchor”
+        name:
+          type: string
+          description: The name of the anchor
+      required:
+        - type
+        - name
+   RichBlockAnimation:
+      type: object
+      description: |-
+        A block with an animation, corresponding to the HTML tag <video>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “animation”
+        animation:
+          description: The animation
+          allOf:
+              - $ref: '#/components/schemas/Animation'
+        has_spoiler:
+          type: boolean
+          description: Optional. True, if the media preview is covered by a spoiler animation
+          default: true
+        caption:
+          description: Optional. Caption of the block
+          allOf:
+              - $ref: '#/components/schemas/RichBlockCaption'
+      required:
+        - type
+        - animation
+   RichBlockAudio:
+      type: object
+      description: |-
+        A block with a music file, corresponding to the HTML tag <audio>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “audio”
+        audio:
+          description: The audio
+          allOf:
+              - $ref: '#/components/schemas/Audio'
+        caption:
+          description: Optional. Caption of the block
+          allOf:
+              - $ref: '#/components/schemas/RichBlockCaption'
+      required:
+        - type
+        - audio
+   RichBlockBlockQuotation:
+      type: object
+      description: |-
+        A block quotation, corresponding to the HTML tag <blockquote>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “blockquote”
+        blocks:
+          type: array
+          description: Content of the block
+          items:
+              $ref: '#/components/schemas/RichBlock'
+        credit:
+          description: Optional. Credit of the block
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - type
+        - blocks
+   RichBlockCaption:
+      type: object
+      description: |-
+        Caption of a rich formatted block.
+      x-tags:
+        - Rich messages
+      properties:
+        text:
+          description: Block caption
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        credit:
+          description: Optional. Block credit which corresponds to the HTML tag <cite>
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - text
+   RichBlockCollage:
+      type: object
+      description: |-
+        A collage, corresponding to the custom HTML tag <tg-collage>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “collage”
+        blocks:
+          type: array
+          description: Elements of the collage
+          items:
+              $ref: '#/components/schemas/RichBlock'
+        caption:
+          description: Optional. Caption of the block
+          allOf:
+              - $ref: '#/components/schemas/RichBlockCaption'
+      required:
+        - type
+        - blocks
+   RichBlockDetails:
+      type: object
+      description: |-
+        An expandable block for details disclosure, corresponding to the HTML tag <details>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “details”
+        summary:
+          description: Always shown summary of the block
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        blocks:
+          type: array
+          description: Content of the block
+          items:
+              $ref: '#/components/schemas/RichBlock'
+        is_open:
+          type: boolean
+          description: Optional. True, if the content of the block is visible by default
+          default: true
+      required:
+        - type
+        - summary
+        - blocks
+   RichBlockDivider:
+      type: object
+      description: |-
+        A divider, corresponding to the HTML tag <hr/>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “divider”
+      required:
+        - type
+   RichBlockFooter:
+      type: object
+      description: |-
+        A footer, corresponding to the HTML tag <footer>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “footer”
+        text:
+          description: Text of the block
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - type
+        - text
+   RichBlockList:
+      type: object
+      description: |-
+        A list of blocks, corresponding to the HTML tag <ul> or <ol> with multiple nested tags <li>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “list”
+        items:
+          type: array
+          description: Items of the list
+          items:
+              $ref: '#/components/schemas/RichBlockListItem'
+      required:
+        - type
+        - items
+   RichBlockListItem:
+      type: object
+      description: |-
+        An item of a list.
+      x-tags:
+        - Rich messages
+      properties:
+        label:
+          type: string
+          description: Label of the item
+        blocks:
+          type: array
+          description: The content of the item
+          items:
+              $ref: '#/components/schemas/RichBlock'
+        has_checkbox:
+          type: boolean
+          description: Optional. True, if the item has a checkbox
+          default: true
+        is_checked:
+          type: boolean
+          description: Optional. True, if the item has a checked checkbox
+          default: true
+        value:
+          type: integer
+          description: Optional. For ordered lists, the numeric value of the item label
+        type:
+          type: string
+          description: Optional. For ordered lists, the type of the item label; must be one of “a” for lowercase letters, “A” for uppercase letters, “i” for lowercase Roman numerals, “I” for uppercase Roman numerals, or “1” for decimal numbers
+      required:
+        - label
+        - blocks
+   RichBlockMap:
+      type: object
+      description: |-
+        A block with a map, corresponding to the custom HTML tag <tg-map>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “map”
+        location:
+          description: Location of the center of the map
+          allOf:
+              - $ref: '#/components/schemas/Location'
+        zoom:
+          type: integer
+          description: Map zoom level; 13-20
+        width:
+          type: integer
+          description: Expected width of the map
+        height:
+          type: integer
+          description: Expected height of the map
+        caption:
+          description: Optional. Caption of the block
+          allOf:
+              - $ref: '#/components/schemas/RichBlockCaption'
+      required:
+        - type
+        - location
+        - zoom
+        - width
+        - height
+   RichBlockMathematicalExpression:
+      type: object
+      description: |-
+        A block with a mathematical expression in LaTeX format, corresponding to the custom HTML tag <tg-math-block>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “mathematical_expression”
+        expression:
+          type: string
+          description: The mathematical expression in LaTeX format
+      required:
+        - type
+        - expression
+   RichBlockParagraph:
+      type: object
+      description: |-
+        A text paragraph, corresponding to the HTML tag <p>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “paragraph”
+        text:
+          description: Text of the block
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - type
+        - text
+   RichBlockPhoto:
+      type: object
+      description: |-
+        A block with a photo, corresponding to the HTML tag <photo>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “photo”
+        photo:
+          type: array
+          description: Available sizes of the photo
+          items:
+              $ref: '#/components/schemas/PhotoSize'
+        has_spoiler:
+          type: boolean
+          description: Optional. True, if the media preview is covered by a spoiler animation
+          default: true
+        caption:
+          description: Optional. Caption of the block
+          allOf:
+              - $ref: '#/components/schemas/RichBlockCaption'
+      required:
+        - type
+        - photo
+   RichBlockPreformatted:
+      type: object
+      description: |-
+        A preformatted text block, corresponding to the nested HTML tags <pre> and <code>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “pre”
+        text:
+          description: Text of the block
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        language:
+          type: string
+          description: Optional. The programming language of the text
+      required:
+        - type
+        - text
+   RichBlockPullQuotation:
+      type: object
+      description: |-
+        A quotation with centered text, loosely corresponding to the HTML tag <aside>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “pullquote”
+        text:
+          description: Text of the block
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        credit:
+          description: Optional. Credit of the block
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - type
+        - text
+   RichBlockSectionHeading:
+      type: object
+      description: |-
+        A section heading, corresponding to the HTML tags <h1>, <h2>, <h3>, <h4>, <h5>, or <h6>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “heading”
+        text:
+          description: Text of the block
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        size:
+          type: integer
+          description: Relative size of the text font; 1-6, 1 is the largest, 6 is the smallest
+      required:
+        - type
+        - text
+        - size
+   RichBlockSlideshow:
+      type: object
+      description: |-
+        A slideshow, corresponding to the custom HTML tag <tg-slideshow>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “slideshow”
+        blocks:
+          type: array
+          description: Elements of the slideshow
+          items:
+              $ref: '#/components/schemas/RichBlock'
+        caption:
+          description: Optional. Caption of the block
+          allOf:
+              - $ref: '#/components/schemas/RichBlockCaption'
+      required:
+        - type
+        - blocks
+   RichBlockTable:
+      type: object
+      description: |-
+        A table, corresponding to the HTML tag <table>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “table”
+        cells:
+          type: array
+          description: Cells of the table
+          items:
+              type: array
+              items:
+                  $ref: '#/components/schemas/RichBlockTableCell'
+        is_bordered:
+          type: boolean
+          description: Optional. True, if the table has borders
+          default: true
+        is_striped:
+          type: boolean
+          description: Optional. True, if the table is striped
+          default: true
+        caption:
+          description: Optional. Caption of the table
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - type
+        - cells
+   RichBlockTableCell:
+      type: object
+      description: |-
+        Cell in a table.
+      x-tags:
+        - Rich messages
+      properties:
+        text:
+          description: Optional. Text in the cell. If omitted, then the cell is invisible.
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        is_header:
+          type: boolean
+          description: Optional. True, if the cell is a header cell
+          default: true
+        colspan:
+          type: integer
+          description: Optional. The number of columns the cell spans if it is bigger than 1
+        rowspan:
+          type: integer
+          description: Optional. The number of rows the cell spans if it is bigger than 1
+        align:
+          type: string
+          description: Horizontal cell content alignment. Currently, must be one of “left”, “center”, or “right”.
+        valign:
+          type: string
+          description: Vertical cell content alignment. Currently, must be one of “top”, “middle”, or “bottom”.
+      required:
+        - align
+        - valign
+   RichBlockThinking:
+      type: object
+      description: |-
+        A block with a “Thinking…” placeholder, corresponding to the custom HTML tag <tg-thinking>. The block may be used only in sendRichMessageDraft, therefore it can't be received in messages. See https://t.me/addemoji/AIActions for examples of custom emoji, which are recommended for usage in the block.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “thinking”
+        text:
+          description: Text of the block. See https://t.me/addemoji/AIActions for examples of custom emoji, which are recommended for usage in the block.
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - type
+        - text
+   RichBlockVideo:
+      type: object
+      description: |-
+        A block with a video, corresponding to the HTML tag <video>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “video”
+        video:
+          description: The video
+          allOf:
+              - $ref: '#/components/schemas/Video'
+        has_spoiler:
+          type: boolean
+          description: Optional. True, if the media preview is covered by a spoiler animation
+          default: true
+        caption:
+          description: Optional. Caption of the block
+          allOf:
+              - $ref: '#/components/schemas/RichBlockCaption'
+      required:
+        - type
+        - video
+   RichBlockVoiceNote:
+      type: object
+      description: |-
+        A block with a voice note, corresponding to the HTML tag <audio>.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the block, always “voice_note”
+        voice_note:
+          description: The voice note
+          allOf:
+              - $ref: '#/components/schemas/Voice'
+        caption:
+          description: Optional. Caption of the block
+          allOf:
+              - $ref: '#/components/schemas/RichBlockCaption'
+      required:
+        - type
+        - voice_note
+   RichMessage:
+      type: object
+      description: |-
+        Rich formatted message.
+      x-tags:
+        - Rich messages
+      properties:
+        blocks:
+          type: array
+          description: Content of the message
+          items:
+              $ref: '#/components/schemas/RichBlock'
+        is_rtl:
+          type: boolean
+          description: Optional. True, if the rich message must be shown right-to-left
+      required:
+        - blocks
+   RichText:
+      type: object
+      description: |-
+        This object represents a rich formatted text. Currently, it can be either a String for plain text, an Array of RichText, or any of the following types:
+        RichTextBold
+        RichTextItalic
+        RichTextUnderline
+        RichTextStrikethrough
+        RichTextSpoiler
+        RichTextDateTime
+        RichTextTextMention
+        RichTextSubscript
+        RichTextSuperscript
+        RichTextMarked
+        RichTextCode
+        RichTextCustomEmoji
+        RichTextMathematicalExpression
+        RichTextUrl
+        RichTextEmailAddress
+        RichTextPhoneNumber
+        RichTextBankCardNumber
+        RichTextMention
+        RichTextHashtag
+        RichTextCashtag
+        RichTextBotCommand
+        RichTextAnchor
+        RichTextAnchorLink
+        RichTextReference
+        RichTextReferenceLink
+      x-tags:
+        - Rich messages
+   RichTextAnchor:
+      type: object
+      description: |-
+        An anchor.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “anchor”
+        name:
+          type: string
+          description: The name of the anchor
+      required:
+        - type
+        - name
+   RichTextAnchorLink:
+      type: object
+      description: |-
+        A link to an anchor.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “anchor_link”
+        text:
+          description: The link text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        anchor_name:
+          type: string
+          description: The name of the anchor. If the name is empty, then the link brings back to the top of the message.
+      required:
+        - type
+        - text
+        - anchor_name
+   RichTextBankCardNumber:
+      type: object
+      description: |-
+        A text with a bank card number.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “bank_card_number”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        bank_card_number:
+          type: string
+          description: The bank card number
+      required:
+        - type
+        - text
+        - bank_card_number
+   RichTextBold:
+      type: object
+      description: |-
+        A bold text.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “bold”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - type
+        - text
+   RichTextBotCommand:
+      type: object
+      description: |-
+        A bot command.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “bot_command”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        bot_command:
+          type: string
+          description: The bot command
+      required:
+        - type
+        - text
+        - bot_command
+   RichTextCashtag:
+      type: object
+      description: |-
+        A cashtag.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “cashtag”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        cashtag:
+          type: string
+          description: The cashtag
+      required:
+        - type
+        - text
+        - cashtag
+   RichTextCode:
+      type: object
+      description: |-
+        A monowidth text.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “code”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - type
+        - text
+   RichTextCustomEmoji:
+      type: object
+      description: |-
+        A custom emoji.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “custom_emoji”
+        custom_emoji_id:
+          type: string
+          description: Unique identifier of the custom emoji. Use getCustomEmojiStickers to get full information about the sticker.
+        alternative_text:
+          type: string
+          description: Alternative emoji for the custom emoji
+      required:
+        - type
+        - custom_emoji_id
+        - alternative_text
+   RichTextDateTime:
+      type: object
+      description: |-
+        Formatted date and time.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “date_time”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        unix_time:
+          type: integer
+          description: The Unix time associated with the entity
+        date_time_format:
+          type: string
+          description: The string that defines the formatting of the date and time. See date-time entity formatting for more details.
+      required:
+        - type
+        - text
+        - unix_time
+        - date_time_format
+   RichTextEmailAddress:
+      type: object
+      description: |-
+        A text with an email address.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “email_address”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        email_address:
+          type: string
+          description: The email address
+      required:
+        - type
+        - text
+        - email_address
+   RichTextHashtag:
+      type: object
+      description: |-
+        A hashtag.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “hashtag”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        hashtag:
+          type: string
+          description: The hashtag
+      required:
+        - type
+        - text
+        - hashtag
+   RichTextItalic:
+      type: object
+      description: |-
+        An italicized text.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “italic”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - type
+        - text
+   RichTextMarked:
+      type: object
+      description: |-
+        A marked text.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “marked”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - type
+        - text
+   RichTextMathematicalExpression:
+      type: object
+      description: |-
+        A mathematical expression.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “mathematical_expression”
+        expression:
+          type: string
+          description: The expression in LaTeX format
+      required:
+        - type
+        - expression
+   RichTextMention:
+      type: object
+      description: |-
+        A mention by a username.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “mention”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        username:
+          type: string
+          description: The username
+      required:
+        - type
+        - text
+        - username
+   RichTextPhoneNumber:
+      type: object
+      description: |-
+        A text with a phone number.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “phone_number”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        phone_number:
+          type: string
+          description: The phone number
+      required:
+        - type
+        - text
+        - phone_number
+   RichTextReference:
+      type: object
+      description: |-
+        A reference.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “reference”
+        text:
+          description: Text of the reference
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        name:
+          type: string
+          description: The name of the reference
+      required:
+        - type
+        - text
+        - name
+   RichTextReferenceLink:
+      type: object
+      description: |-
+        A link to a reference.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “reference_link”
+        text:
+          description: The link text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        reference_name:
+          type: string
+          description: The name of the reference
+      required:
+        - type
+        - text
+        - reference_name
+   RichTextSpoiler:
+      type: object
+      description: |-
+        A text covered by a spoiler.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “spoiler”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - type
+        - text
+   RichTextStrikethrough:
+      type: object
+      description: |-
+        A strikethrough text.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “strikethrough”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - type
+        - text
+   RichTextSubscript:
+      type: object
+      description: |-
+        A subscript text.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “subscript”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - type
+        - text
+   RichTextSuperscript:
+      type: object
+      description: |-
+        A superscript text.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “superscript”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - type
+        - text
+   RichTextTextMention:
+      type: object
+      description: |-
+        A mention of a Telegram user by their identifier.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “text_mention”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        user:
+          description: The mentioned user
+          allOf:
+              - $ref: '#/components/schemas/User'
+      required:
+        - type
+        - text
+        - user
+   RichTextUnderline:
+      type: object
+      description: |-
+        An underlined text.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “underline”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+      required:
+        - type
+        - text
+   RichTextUrl:
+      type: object
+      description: |-
+        A text with a link.
+      x-tags:
+        - Rich messages
+      properties:
+        type:
+          type: string
+          description: Type of the rich text, always “url”
+        text:
+          description: The text
+          allOf:
+              - $ref: '#/components/schemas/RichText'
+        url:
+          type: string
+          description: URL of the link
+      required:
+        - type
+        - text
         - url
    SentGuestMessage:
       type: object
@@ -20439,6 +21885,9 @@ components:
         can_manage_bots:
           type: boolean
           description: Optional. True, if other bots can be created to be controlled by the bot. Returned only in getMe.
+        supports_join_request_queries:
+          type: boolean
+          description: Optional. True, if the bot supports join request queries and can be assigned to process them. Returned only in getMe.
       required:
         - id
         - is_bot
@@ -20819,7 +22268,7 @@ components:
           description: Optional. The maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery
         allowed_updates:
           type: array
-          description: Optional. A list of update types the bot is subscribed to. Defaults to all update types except chat_member.
+          description: Optional. A list of update types the bot is subscribed to. Defaults to all update types except chat_member, message_reaction, and message_reaction_count.
           items:
               type: string
       required:
