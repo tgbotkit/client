@@ -21,7 +21,7 @@ jobs:
           rm -f spec_cache.html
           go generate ./...
       - name: Create GitHub release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: api/openapi.yaml
           generate_release_notes: true
