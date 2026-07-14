@@ -1,0 +1,28 @@
+name: lint
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+      - feature/*
+      - hotfix/*
+      - bugfix/*
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  golangci:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: false
+      - name: golangci-lint
+        run: go tool golangci-lint run
