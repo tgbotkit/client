@@ -162,6 +162,9 @@ type BotCommand struct {
 
 	// Description Description of the command; 1-256 characters
 	Description string `json:"description"`
+
+	// IsEphemeral Optional. True, if the command sends an ephemeral message, which can be seen only by the sender of the message and the bot
+	IsEphemeral *bool `json:"is_ephemeral,omitempty"`
 }
 
 // BotCommandScope This object represents the scope to which bot commands are applied. Currently, the following 7 scopes are supported:
@@ -190,6 +193,18 @@ type BotName struct {
 type BotShortDescription struct {
 	// ShortDescription The bot's short description
 	ShortDescription string `json:"short_description"`
+}
+
+// BotSubscriptionUpdated This object contains information about changes to a user payment subscription toward the current bot.
+type BotSubscriptionUpdated struct {
+	// InvoicePayload Bot-specified invoice payload
+	InvoicePayload string `json:"invoice_payload"`
+
+	// State The new state of the subscription. Currently, it can be one of “canceled” if the user canceled the subscription, “active” if the user re-enabled a previously canceled subscription, or “failed” if payment for the subscription failed.
+	State string `json:"state"`
+
+	// User User who subscribed for payments toward the bot
+	User User `json:"user"`
 }
 
 // BusinessBotRights Represents the rights of a business bot.
@@ -389,7 +404,7 @@ type ChatAdministratorRights struct {
 	// CanManageDirectMessages Optional. True, if the administrator can manage direct messages of the channel and decline suggested posts; for channels only
 	CanManageDirectMessages *bool `json:"can_manage_direct_messages,omitempty"`
 
-	// CanManageTags Optional. True, if the administrator can edit the tags of regular members; for groups and supergroups only. If omitted defaults to the value of can_pin_messages.
+	// CanManageTags Optional. True, if the administrator can edit the tags of regular members; for groups and supergroups only. If omitted, defaults to the value of can_pin_messages.
 	CanManageTags *bool `json:"can_manage_tags,omitempty"`
 
 	// CanManageTopics Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; for supergroups only
@@ -511,6 +526,9 @@ type ChatFullInfo struct {
 
 	// CanSetStickerSet Optional. True, if the bot can change the group sticker set
 	CanSetStickerSet *bool `json:"can_set_sticker_set,omitempty"`
+
+	// Community Optional. The Community to which the chat belongs
+	Community *Community `json:"community,omitempty"`
 
 	// CustomEmojiStickerSetName Optional. For supergroups, the name of the group's custom emoji sticker set. Custom emoji from this set can be used by all users and bots in the group.
 	CustomEmojiStickerSetName *string `json:"custom_emoji_sticker_set_name,omitempty"`
@@ -686,7 +704,7 @@ type ChatJoinRequest struct {
 	// InviteLink Optional. Chat invite link that was used by the user to send the join request
 	InviteLink *ChatInviteLink `json:"invite_link,omitempty"`
 
-	// QueryId Optional. Identifier of the join request query. If present, then the bot must call sendChatJoinRequestWebApp or directly call answerChatJoinRequestQuery within 10 seconds.
+	// QueryId Optional. Identifier of the join request query; for bots assigned to process join requests only. If present, then the bot must call sendChatJoinRequestWebApp or directly call answerChatJoinRequestQuery within 10 seconds.
 	QueryId *string `json:"query_id,omitempty"`
 
 	// UserChatId Identifier of a private chat with the user who sent the join request. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. The bot can use this identifier for 5 minutes to send messages until the join request is processed, assuming no other administrator contacted the user.
@@ -764,7 +782,7 @@ type ChatPermissions struct {
 	// CanInviteUsers Optional. True, if the user is allowed to invite new users to the chat
 	CanInviteUsers *bool `json:"can_invite_users,omitempty"`
 
-	// CanManageTopics Optional. True, if the user is allowed to create forum topics. If omitted defaults to the value of can_pin_messages.
+	// CanManageTopics Optional. True, if the user is allowed to create forum topics. If omitted, defaults to the value of can_pin_messages.
 	CanManageTopics *bool `json:"can_manage_topics,omitempty"`
 
 	// CanPinMessages Optional. True, if the user is allowed to pin messages. Ignored in public supergroups.
@@ -912,6 +930,24 @@ type ChosenInlineResult struct {
 	ResultId string `json:"result_id"`
 }
 
+// Community Represents a community (a group of chats).
+type Community struct {
+	// Id Unique identifier for this community. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
+	Id int64 `json:"id"`
+
+	// Name Name of the community
+	Name string `json:"name"`
+}
+
+// CommunityChatAdded Describes a service message about a chat being added to a community.
+type CommunityChatAdded struct {
+	// Community The new community to which the chat belongs
+	Community Community `json:"community"`
+}
+
+// CommunityChatRemoved Describes a service message about a chat being removed from a community. Currently holds no information.
+type CommunityChatRemoved = map[string]interface{}
+
 // Contact This object represents a phone contact.
 type Contact struct {
 	// FirstName Contact's first name
@@ -947,7 +983,7 @@ type Dice struct {
 
 // DirectMessagePriceChanged Describes a service message about a change in the price of direct messages sent to a channel chat.
 type DirectMessagePriceChanged struct {
-	// AreDirectMessagesEnabled True, if direct messages are enabled for the channel chat; false otherwise
+	// AreDirectMessagesEnabled True, if direct messages are enabled for the channel chat; False otherwise
 	AreDirectMessagesEnabled bool `json:"are_direct_messages_enabled"`
 
 	// DirectMessageStarCount Optional. The new number of Telegram Stars that must be paid by users for each direct message sent to the channel. Does not apply to users who have been exempted by administrators. Defaults to 0.
@@ -1606,19 +1642,58 @@ type InputPollOptionMedia = map[string]interface{}
 // InputProfilePhotoAnimated
 type InputProfilePhoto = map[string]interface{}
 
-// InputRichMessage Describes a rich message to be sent. Exactly one of the fields html or markdown must be used.
+// InputRichBlock This object represents a block in a rich formatted message to be sent. Currently, it can be any of the following types:
+// InputRichBlockParagraph
+// InputRichBlockSectionHeading
+// InputRichBlockPreformatted
+// InputRichBlockFooter
+// InputRichBlockDivider
+// InputRichBlockMathematicalExpression
+// InputRichBlockAnchor
+// InputRichBlockList
+// InputRichBlockBlockQuotation
+// InputRichBlockPullQuotation
+// InputRichBlockCollage
+// InputRichBlockSlideshow
+// InputRichBlockTable
+// InputRichBlockDetails
+// InputRichBlockMap
+// InputRichBlockAnimation
+// InputRichBlockAudio
+// InputRichBlockPhoto
+// InputRichBlockVideo
+// InputRichBlockVoiceNote
+// InputRichBlockThinking
+type InputRichBlock = map[string]interface{}
+
+// InputRichMessage Describes a rich message to be sent. Exactly one of the fields html, markdown, or blocks must be used.
 type InputRichMessage struct {
-	// Html Optional. Content of the rich message to send described using HTML formatting. See rich message formatting options for more details.
+	// Blocks Optional. Content of the rich message to send described as a list of blocks
+	Blocks *[]InputRichBlock `json:"blocks,omitempty"`
+
+	// Html Optional. Content of the rich message to send described using HTML formatting. See rich message formatting options for more details. Use media field to specify the media used in the message.
 	Html *string `json:"html,omitempty"`
 
 	// IsRtl Optional. Pass True if the rich message must be shown right-to-left
 	IsRtl *bool `json:"is_rtl,omitempty"`
 
-	// Markdown Optional. Content of the rich message to send described using Markdown formatting. See rich message formatting options for more details.
+	// Markdown Optional. Content of the rich message to send described using Markdown formatting. See rich message formatting options for more details. Use media field to specify the media used in the message.
 	Markdown *string `json:"markdown,omitempty"`
+
+	// Media Optional. List of media that are specified in the markdown or html fields using tg://photo?id=, tg://video?id=, and tg://audio?id= links
+	Media *[]InputRichMessageMedia `json:"media,omitempty"`
 
 	// SkipEntityDetection Optional. Pass True to skip automatic detection of entities (e.g., URLs, email addresses, username mentions, hashtags, cashtags, bot commands, or phone numbers) in the text
 	SkipEntityDetection *bool `json:"skip_entity_detection,omitempty"`
+}
+
+// InputRichMessageMedia Describes a media element embedded in an outgoing rich message.
+type InputRichMessageMedia struct {
+	// Id Unique identifier of the media used in a tg://photo?id=, tg://video?id=, or tg://audio?id= link. 1-64 characters, only A-Z, a-z, 0-9, _ and - are allowed.
+	Id string `json:"id"`
+
+	// Media The media to be sent. Everything except the media itself and its properties is ignored.
+	Media InputMedia `json:"media"`
 }
 
 // InputSticker This object describes a sticker to be added to a sticker set.
@@ -1962,6 +2037,12 @@ type Message struct {
 	// ChecklistTasksDone Optional. Service message: some tasks in a checklist were marked as done or not done
 	ChecklistTasksDone *ChecklistTasksDone `json:"checklist_tasks_done,omitempty"`
 
+	// CommunityChatAdded Optional. Service message: chat added to a Community
+	CommunityChatAdded *CommunityChatAdded `json:"community_chat_added,omitempty"`
+
+	// CommunityChatRemoved Optional. Service message: chat removed from a Community
+	CommunityChatRemoved *CommunityChatRemoved `json:"community_chat_removed,omitempty"`
+
 	// ConnectedWebsite Optional. The domain name of the website on which the user has logged in. More about Telegram Login »
 	ConnectedWebsite *string `json:"connected_website,omitempty"`
 
@@ -1994,6 +2075,9 @@ type Message struct {
 
 	// Entities Optional. For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text
 	Entities *[]MessageEntity `json:"entities,omitempty"`
+
+	// EphemeralMessageId Optional. For ephemeral messages, identifier of the ephemeral message inside this chat. The identifier may be reused for another ephemeral message after the message is deleted or expires.
+	EphemeralMessageId *int `json:"ephemeral_message_id,omitempty"`
 
 	// ExternalReply Optional. Information about the message that is being replied to, which may come from another chat or forum topic
 	ExternalReply *ExternalReplyInfo `json:"external_reply,omitempty"`
@@ -2097,7 +2181,7 @@ type Message struct {
 	// MessageAutoDeleteTimerChanged Optional. Service message: auto-delete timer settings changed in the chat
 	MessageAutoDeleteTimerChanged *MessageAutoDeleteTimerChanged `json:"message_auto_delete_timer_changed,omitempty"`
 
-	// MessageId Unique message identifier inside this chat. In specific instances (e.g., message containing a video sent to a big chat), the server might automatically schedule a message instead of sending it immediately. In such cases, this field will be 0 and the relevant message will be unusable until it is actually sent.
+	// MessageId Unique message identifier inside this chat; 0 for ephemeral messages. In specific instances (e.g., a message containing a video sent to a big chat), the server might automatically schedule a message instead of sending it immediately. In such cases, this field will be 0 and the relevant message will be unusable until it is actually sent.
 	MessageId int `json:"message_id"`
 
 	// MessageThreadId Optional. Unique identifier of a message thread or forum topic to which the message belongs; for supergroups and private chats only
@@ -2151,6 +2235,9 @@ type Message struct {
 	// Quote Optional. For replies that quote part of the original message, the quoted part of the message
 	Quote *TextQuote `json:"quote,omitempty"`
 
+	// ReceiverUser Optional. For ephemeral messages, the user who received the message
+	ReceiverUser *User `json:"receiver_user,omitempty"`
+
 	// RefundedPayment Optional. Message is a service message about a refunded payment, information about the payment. More about payments »
 	RefundedPayment *RefundedPayment `json:"refunded_payment,omitempty"`
 
@@ -2160,7 +2247,7 @@ type Message struct {
 	// ReplyToChecklistTaskId Optional. Identifier of the specific checklist task that is being replied to
 	ReplyToChecklistTaskId *int `json:"reply_to_checklist_task_id,omitempty"`
 
-	// ReplyToMessage Optional. For replies in the same chat and message thread, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
+	// ReplyToMessage Optional. For replies in the same chat and message thread, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply. If the message is a reply to an ephemeral message, then this field may be omitted.
 	ReplyToMessage *Message `json:"reply_to_message,omitempty"`
 
 	// ReplyToPollOptionId Optional. Persistent identifier of the specific poll option that is being replied to
@@ -2733,22 +2820,25 @@ type RefundedPayment struct {
 
 // ReplyParameters Describes reply parameters for the message that is being sent.
 type ReplyParameters struct {
-	// AllowSendingWithoutReply Optional. Pass True if the message should be sent even if the specified message to be replied to is not found. Always False for replies in another chat or forum topic. Always True for messages sent on behalf of a business account.
+	// AllowSendingWithoutReply Optional. Pass True if the message should be sent even if the specified message to be replied to is not found. Always False for replies in another chat or forum topic, and sent ephemeral messages. Always True for messages sent on behalf of a business account.
 	AllowSendingWithoutReply *bool `json:"allow_sending_without_reply,omitempty"`
 
-	// ChatId Optional. If the message to be replied to is from a different chat, unique identifier for the chat or username of the bot, supergroup or channel in the format @username. Not supported for messages sent on behalf of a business account and messages from channel direct messages chats.
+	// ChatId Optional. If the message to be replied to is from a different chat, unique identifier for the chat or username of the bot, supergroup or channel in the format @username. Not supported for messages sent on behalf of a business account, messages from channel direct messages chats and ephemeral messages.
 	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// ChecklistTaskId Optional. Identifier of the specific checklist task to be replied to
 	ChecklistTaskId *int `json:"checklist_task_id,omitempty"`
 
-	// MessageId Identifier of the message that will be replied to in the current chat, or in the chat chat_id if it is specified
-	MessageId int `json:"message_id"`
+	// EphemeralMessageId Optional. Identifier of the incoming ephemeral message that will be replied to in the current chat. A reply to an ephemeral message must itself be an ephemeral message. An ephemeral message may only be replied to within 15 seconds of being sent. Required if message_id isn't specified.
+	EphemeralMessageId *int `json:"ephemeral_message_id,omitempty"`
+
+	// MessageId Optional. Identifier of the message that will be replied to in the current chat, or in the chat chat_id if it is specified. Required if ephemeral_message_id isn't specified.
+	MessageId *int `json:"message_id,omitempty"`
 
 	// PollOptionId Optional. Persistent identifier of the specific poll option to be replied to
 	PollOptionId *string `json:"poll_option_id,omitempty"`
 
-	// Quote Optional. Quoted part of the message to be replied to; 0-1024 characters after entities parsing. The quote must be an exact substring of the message to be replied to, including bold, italic, underline, strikethrough, spoiler, custom_emoji, and date_time entities. The message will fail to send if the quote isn't found in the original message.
+	// Quote Optional. Quoted part of the message to be replied to; 0-1024 characters after entities parsing. The quote must be an exact substring of the message to be replied to, including bold, italic, underline, strikethrough, spoiler, custom_emoji, and date_time entities. The message will fail to send if the quote isn't found in the original message. Ignored for ephemeral messages.
 	Quote *string `json:"quote,omitempty"`
 
 	// QuoteEntities Optional. A JSON-serialized list of special entities that appear in the quote. It can be specified instead of quote_parse_mode.
@@ -3107,10 +3197,10 @@ type SuggestedPostInfo struct {
 
 // SuggestedPostPaid Describes a service message about a successful payment for a suggested post.
 type SuggestedPostPaid struct {
-	// Amount Optional. The amount of the currency that was received by the channel in nanotoncoins; for payments in toncoins only
+	// Amount Optional. The amount of the currency that was received by the channel in nanograms; for payments in TON grams only
 	Amount *int `json:"amount,omitempty"`
 
-	// Currency Currency in which the payment was made. Currently, one of “XTR” for Telegram Stars or “TON” for toncoins.
+	// Currency Currency in which the payment was made. Currently, one of “XTR” for Telegram Stars or “TON” for TON grams.
 	Currency string `json:"currency"`
 
 	// StarAmount Optional. The amount of Telegram Stars that was received by the channel; for payments in Telegram Stars only
@@ -3131,10 +3221,10 @@ type SuggestedPostParameters struct {
 
 // SuggestedPostPrice Describes the price of a suggested post.
 type SuggestedPostPrice struct {
-	// Amount The amount of the currency that will be paid for the post in the smallest units of the currency, i.e. Telegram Stars or nanotoncoins. Currently, price in Telegram Stars must be between 5 and 100000, and price in nanotoncoins must be between 10000000 and 10000000000000.
+	// Amount The amount of the currency that will be paid for the post in the smallest units of the currency, i.e. Telegram Stars or nanograms. Currently, price in Telegram Stars must be between 5 and 100000, and price in nanograms must be between 10000000 and 10000000000000.
 	Amount int `json:"amount"`
 
-	// Currency Currency in which the post will be paid. Currently, must be one of “XTR” for Telegram Stars or “TON” for toncoins.
+	// Currency Currency in which the post will be paid. Currently, must be one of “XTR” for Telegram Stars or “TON” for TON grams.
 	Currency string `json:"currency"`
 }
 
@@ -3282,10 +3372,10 @@ type UniqueGiftInfo struct {
 	// Gift Information about the gift
 	Gift UniqueGift `json:"gift"`
 
-	// LastResaleAmount Optional. For gifts bought from other users, the price paid for the gift in either Telegram Stars or nanotoncoins
+	// LastResaleAmount Optional. For gifts bought from other users, the price paid for the gift in either Telegram Stars or nanograms
 	LastResaleAmount *int `json:"last_resale_amount,omitempty"`
 
-	// LastResaleCurrency Optional. For gifts bought from other users, the currency in which the payment for the gift was done. Currently, one of “XTR” for Telegram Stars or “TON” for toncoins.
+	// LastResaleCurrency Optional. For gifts bought from other users, the currency in which the payment for the gift was done. Currently, one of “XTR” for Telegram Stars or “TON” for TON grams.
 	LastResaleCurrency *string `json:"last_resale_currency,omitempty"`
 
 	// NextTransferDate Optional. Point in time (Unix timestamp) when the gift can be transferred. If it is in the past, then the gift can be transferred now.
@@ -3404,6 +3494,9 @@ type Update struct {
 
 	// ShippingQuery Optional. New incoming shipping query. Only for invoices with flexible price.
 	ShippingQuery *ShippingQuery `json:"shipping_query,omitempty"`
+
+	// Subscription Optional. User payment subscription has changed
+	Subscription *BotSubscriptionUpdated `json:"subscription,omitempty"`
 
 	// UpdateId The update's unique identifier. Update identifiers start from a certain positive number and increase sequentially. This identifier becomes especially handy if you're using webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then identifier of the next update will be chosen randomly instead of sequentially.
 	UpdateId int `json:"update_id"`
@@ -3733,7 +3826,7 @@ type AddStickerToSetMultipartBody struct {
 	Name string `json:"name"`
 
 	// Sticker A JSON-serialized object with information about the added sticker. If exactly the same sticker had already been added to the set, then the set isn't changed.
-	Sticker InputSticker `json:"sticker"`
+	Sticker string `json:"sticker"`
 
 	// UserId User identifier of sticker set owner
 	UserId int `json:"user_id"`
@@ -3747,7 +3840,7 @@ type AnswerCallbackQueryJSONBody struct {
 	// CallbackQueryId Unique identifier for the query to be answered
 	CallbackQueryId string `json:"callback_query_id"`
 
-	// ShowAlert If True, an alert will be shown by the client instead of a notification at the top of the chat screen. Defaults to false.
+	// ShowAlert If True, an alert will be shown by the client instead of a notification at the top of the chat screen. Defaults to False.
 	ShowAlert *bool `json:"show_alert,omitempty"`
 
 	// Text Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters.
@@ -3792,7 +3885,7 @@ type AnswerInlineQueryJSONBody struct {
 	// NextOffset Pass the offset that a client should send in the next query with the same text to receive more results. Pass an empty string if there are no more results or if you don't support pagination. Offset length can't exceed 64 bytes.
 	NextOffset *string `json:"next_offset,omitempty"`
 
-	// Results A JSON-serialized array of results for the inline query
+	// Results A JSON-serialized Array of results for the inline query
 	Results []InlineQueryResult `json:"results"`
 }
 
@@ -3816,7 +3909,7 @@ type AnswerShippingQueryJSONBody struct {
 	// Ok Pass True if delivery to the specified address is possible and False if there are any problems (for example, if delivery to the specified address is not possible)
 	Ok bool `json:"ok"`
 
-	// ShippingOptions Required if ok is True. A JSON-serialized array of available shipping options.
+	// ShippingOptions Required if ok is True. A JSON-serialized Array of available shipping options.
 	ShippingOptions *[]ShippingOption `json:"shipping_options,omitempty"`
 
 	// ShippingQueryId Unique identifier for the query to be answered
@@ -3950,19 +4043,19 @@ type CopyMessageJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -3972,7 +4065,7 @@ type CopyMessageJSONBody struct {
 	// ReplyParameters Description of the message to reply to
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
 
-	// ShowCaptionAboveMedia Pass True, if the caption must be shown above the message media. Ignored if a new caption isn't specified.
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media. Ignored if a new caption isn't specified.
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
 
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
@@ -4119,7 +4212,7 @@ type CreateInvoiceLinkJSONBody struct {
 	// SubscriptionPeriod The number of seconds the subscription will be active for before the next payment. The currency must be set to “XTR” (Telegram Stars) if the parameter is used. Currently, it must always be 2592000 (30 days) if specified. Any number of subscriptions can be active for a given bot at the same time, including multiple concurrent subscriptions from the same user. Subscription price must no exceed 10000 Telegram Stars.
 	SubscriptionPeriod *int `json:"subscription_period,omitempty"`
 
-	// SuggestedTipAmounts A JSON-serialized array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
+	// SuggestedTipAmounts A JSON-serialized Array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
 	SuggestedTipAmounts *[]int `json:"suggested_tip_amounts,omitempty"`
 
 	// Title Product name, 1-32 characters
@@ -4159,7 +4252,7 @@ type CreateNewStickerSetMultipartBody struct {
 	StickerType *string `json:"sticker_type,omitempty"`
 
 	// Stickers A JSON-serialized list of 1-50 initial stickers to be added to the sticker set
-	Stickers []InputSticker `json:"stickers"`
+	Stickers string `json:"stickers"`
 
 	// Title Sticker set title, 1-64 characters
 	Title string `json:"title"`
@@ -4220,6 +4313,18 @@ type DeleteChatPhotoJSONBody struct {
 type DeleteChatStickerSetJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup in the format @username
 	ChatId int64 `json:"chat_id"`
+}
+
+// DeleteEphemeralMessageJSONBody defines parameters for DeleteEphemeralMessage.
+type DeleteEphemeralMessageJSONBody struct {
+	// ChatId Unique identifier for the target chat or username of the target supergroup in the format @username
+	ChatId int64 `json:"chat_id"`
+
+	// EphemeralMessageId Identifier of the ephemeral message to delete
+	EphemeralMessageId int `json:"ephemeral_message_id"`
+
+	// ReceiverUserId Identifier of the user who received the message
+	ReceiverUserId int `json:"receiver_user_id"`
 }
 
 // DeleteForumTopicJSONBody defines parameters for DeleteForumTopic.
@@ -4333,6 +4438,108 @@ type EditChatSubscriptionInviteLinkJSONBody struct {
 	Name *string `json:"name,omitempty"`
 }
 
+// EditEphemeralMessageCaptionJSONBody defines parameters for EditEphemeralMessageCaption.
+type EditEphemeralMessageCaptionJSONBody struct {
+	// Caption New caption of the message, 0-1024 characters after entities parsing
+	Caption *string `json:"caption,omitempty"`
+
+	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
+	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
+
+	// ChatId Unique identifier for the target chat or username of the target supergroup in the format @username
+	ChatId int64 `json:"chat_id"`
+
+	// EphemeralMessageId Identifier of the ephemeral message to edit
+	EphemeralMessageId int `json:"ephemeral_message_id"`
+
+	// ParseMode Mode for parsing entities in the message caption. See formatting options for more details.
+	ParseMode *string `json:"parse_mode,omitempty"`
+
+	// ReceiverUserId Identifier of the user who received the message
+	ReceiverUserId int `json:"receiver_user_id"`
+
+	// ReplyMarkup A JSON-serialized object for an inline keyboard
+	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+}
+
+// EditEphemeralMessageMediaJSONBody defines parameters for EditEphemeralMessageMedia.
+type EditEphemeralMessageMediaJSONBody struct {
+	// ChatId Unique identifier for the target chat or username of the target supergroup in the format @username
+	ChatId int64 `json:"chat_id"`
+
+	// EphemeralMessageId Identifier of the ephemeral message to edit
+	EphemeralMessageId int `json:"ephemeral_message_id"`
+
+	// Media A JSON-serialized object for the new media content of the message. A new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL.
+	Media InputMedia `json:"media"`
+
+	// ReceiverUserId Identifier of the user who received the message
+	ReceiverUserId int `json:"receiver_user_id"`
+
+	// ReplyMarkup A JSON-serialized object for an inline keyboard
+	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+}
+
+// EditEphemeralMessageMediaMultipartBody defines parameters for EditEphemeralMessageMedia.
+type EditEphemeralMessageMediaMultipartBody struct {
+	// ChatId Unique identifier for the target chat or username of the target supergroup in the format @username
+	ChatId int64 `json:"chat_id"`
+
+	// EphemeralMessageId Identifier of the ephemeral message to edit
+	EphemeralMessageId int `json:"ephemeral_message_id"`
+
+	// Media A JSON-serialized object for the new media content of the message. A new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL.
+	Media string `json:"media"`
+
+	// ReceiverUserId Identifier of the user who received the message
+	ReceiverUserId int `json:"receiver_user_id"`
+
+	// ReplyMarkup A JSON-serialized object for an inline keyboard
+	ReplyMarkup *string `json:"reply_markup,omitempty"`
+}
+
+// EditEphemeralMessageReplyMarkupJSONBody defines parameters for EditEphemeralMessageReplyMarkup.
+type EditEphemeralMessageReplyMarkupJSONBody struct {
+	// ChatId Unique identifier for the target chat or username of the target supergroup in the format @username
+	ChatId int64 `json:"chat_id"`
+
+	// EphemeralMessageId Identifier of the ephemeral message to edit
+	EphemeralMessageId int `json:"ephemeral_message_id"`
+
+	// ReceiverUserId Identifier of the user who received the message
+	ReceiverUserId int `json:"receiver_user_id"`
+
+	// ReplyMarkup A JSON-serialized object for an inline keyboard
+	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+}
+
+// EditEphemeralMessageTextJSONBody defines parameters for EditEphemeralMessageText.
+type EditEphemeralMessageTextJSONBody struct {
+	// ChatId Unique identifier for the target chat or username of the target supergroup in the format @username
+	ChatId int64 `json:"chat_id"`
+
+	// Entities A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
+	Entities *[]MessageEntity `json:"entities,omitempty"`
+
+	// EphemeralMessageId Identifier of the ephemeral message to edit
+	EphemeralMessageId int `json:"ephemeral_message_id"`
+
+	// LinkPreviewOptions Link preview generation options for the message
+	LinkPreviewOptions *LinkPreviewOptions `json:"link_preview_options,omitempty"`
+
+	// ParseMode Mode for parsing entities in the message text. See formatting options for more details.
+	ParseMode *string `json:"parse_mode,omitempty"`
+
+	// ReceiverUserId Identifier of the user who received the message
+	ReceiverUserId int `json:"receiver_user_id"`
+
+	// ReplyMarkup A JSON-serialized object for an inline keyboard
+	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+
+	// Text New text of the message, 1-4096 characters after entity parsing
+	Text string `json:"text"`
+}
+
 // EditForumTopicJSONBody defines parameters for EditForumTopic.
 type EditForumTopicJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target supergroup in the format @username
@@ -4383,7 +4590,7 @@ type EditMessageCaptionJSONBody struct {
 	// ReplyMarkup A JSON-serialized object for an inline keyboard
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
-	// ShowCaptionAboveMedia Pass True, if the caption must be shown above the message media. Supported only for animation, photo and video messages.
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media. Supported only for animation, photo and video messages.
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
 }
 
@@ -4452,7 +4659,7 @@ type EditMessageMediaJSONBody struct {
 	// InlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
 	InlineMessageId *string `json:"inline_message_id,omitempty"`
 
-	// Media A JSON-serialized object for a new media content of the message
+	// Media A JSON-serialized object for the new media content of the message
 	Media InputMedia `json:"media"`
 
 	// MessageId Required if inline_message_id is not specified. Identifier of the message to edit.
@@ -4473,14 +4680,14 @@ type EditMessageMediaMultipartBody struct {
 	// InlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
 	InlineMessageId *string `json:"inline_message_id,omitempty"`
 
-	// Media A JSON-serialized object for a new media content of the message
-	Media InputMedia `json:"media"`
+	// Media A JSON-serialized object for the new media content of the message
+	Media string `json:"media"`
 
 	// MessageId Required if inline_message_id is not specified. Identifier of the message to edit.
 	MessageId *int `json:"message_id,omitempty"`
 
 	// ReplyMarkup A JSON-serialized object for a new inline keyboard
-	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	ReplyMarkup *string `json:"reply_markup,omitempty"`
 }
 
 // EditMessageReplyMarkupJSONBody defines parameters for EditMessageReplyMarkup.
@@ -4527,7 +4734,7 @@ type EditMessageTextJSONBody struct {
 	// ReplyMarkup A JSON-serialized object for an inline keyboard
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
-	// RichMessage New rich content of the message; required if text isn't specified
+	// RichMessage New rich content of the message; required if text isn't specified. Direct upload of new files isn't supported when an inline message is edited.
 	RichMessage *InputRichMessage `json:"rich_message,omitempty"`
 
 	// Text New text of the message, 1-4096 characters after entity parsing; required if rich_message isn't specified
@@ -5152,7 +5359,7 @@ type ReplaceStickerInSetMultipartBody struct {
 	OldSticker string `json:"old_sticker"`
 
 	// Sticker A JSON-serialized object with information about the added sticker. If exactly the same sticker had already been added to the set, then the set remains unchanged.
-	Sticker InputSticker `json:"sticker"`
+	Sticker string `json:"sticker"`
 
 	// UserId User identifier of the sticker set owner
 	UserId int `json:"user_id"`
@@ -5247,6 +5454,9 @@ type SendAnimationJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
+
 	// Caption Animation caption (may also be used when resending animation by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
@@ -5283,6 +5493,9 @@ type SendAnimationJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -5294,19 +5507,19 @@ type SendAnimationJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -5316,7 +5529,7 @@ type SendAnimationJSONBody struct {
 	// ReplyParameters Description of the message to reply to
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
 
-	// ShowCaptionAboveMedia Pass True, if the caption must be shown above the message media
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
 
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
@@ -5340,11 +5553,14 @@ type SendAnimationMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
+
 	// Caption Animation caption (may also be used when resending animation by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
-	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
+	CaptionEntities *string `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
@@ -5376,6 +5592,9 @@ type SendAnimationMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -5387,19 +5606,19 @@ type SendAnimationMultipartBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -5409,11 +5628,11 @@ type SendAnimationMultipartBody struct {
 	// ReplyParameters Description of the message to reply to
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
 
-	// ShowCaptionAboveMedia Pass True, if the caption must be shown above the message media
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
 
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
-	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
+	SuggestedPostParameters *string `json:"suggested_post_parameters,omitempty"`
 
 	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
 	Thumbnail *openapi_types.File `json:"thumbnail,omitempty"`
@@ -5432,6 +5651,9 @@ type SendAudioJSONBody struct {
 
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
+
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
 
 	// Caption Audio caption, 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
@@ -5466,6 +5688,9 @@ type SendAudioJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -5477,19 +5702,19 @@ type SendAudioJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -5520,11 +5745,14 @@ type SendAudioMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
+
 	// Caption Audio caption, 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
-	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
+	CaptionEntities *string `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
@@ -5553,6 +5781,9 @@ type SendAudioMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -5564,19 +5795,19 @@ type SendAudioMultipartBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -5587,7 +5818,7 @@ type SendAudioMultipartBody struct {
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
 
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
-	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
+	SuggestedPostParameters *string `json:"suggested_post_parameters,omitempty"`
 
 	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
 	Thumbnail *openapi_types.File `json:"thumbnail,omitempty"`
@@ -5616,7 +5847,7 @@ type SendChatJoinRequestWebAppJSONBody struct {
 	// ChatJoinRequestQueryId Unique identifier of the join request query
 	ChatJoinRequestQueryId string `json:"chat_join_request_query_id"`
 
-	// WebAppUrl The URL of the Mini App to be opened
+	// WebAppUrl An HTTPS URL of a Web App to be opened with additional data as specified in Initializing Web Apps
 	WebAppUrl string `json:"web_app_url"`
 }
 
@@ -5655,6 +5886,9 @@ type SendContactJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
+
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
@@ -5682,6 +5916,9 @@ type SendContactJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -5693,19 +5930,19 @@ type SendContactJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -5762,19 +5999,19 @@ type SendDiceJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -5795,6 +6032,9 @@ type SendDocumentJSONBody struct {
 
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
+
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
 
 	// Caption Document caption (may also be used when resending documents by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
@@ -5829,6 +6069,9 @@ type SendDocumentJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -5840,19 +6083,19 @@ type SendDocumentJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -5877,11 +6120,14 @@ type SendDocumentMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
+
 	// Caption Document caption (may also be used when resending documents by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
-	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
+	CaptionEntities *string `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
@@ -5910,6 +6156,9 @@ type SendDocumentMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -5921,19 +6170,19 @@ type SendDocumentMultipartBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -5944,7 +6193,7 @@ type SendDocumentMultipartBody struct {
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
 
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
-	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
+	SuggestedPostParameters *string `json:"suggested_post_parameters,omitempty"`
 
 	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
 	Thumbnail *openapi_types.File `json:"thumbnail,omitempty"`
@@ -6096,7 +6345,7 @@ type SendInvoiceJSONBody struct {
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
 	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
 
-	// SuggestedTipAmounts A JSON-serialized array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
+	// SuggestedTipAmounts A JSON-serialized Array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
 	SuggestedTipAmounts *[]int `json:"suggested_tip_amounts,omitempty"`
 
 	// Title Product name, 1-32 characters
@@ -6110,6 +6359,9 @@ type SendLivePhotoJSONBody struct {
 
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
+
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
 
 	// Caption Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
@@ -6147,6 +6399,9 @@ type SendLivePhotoJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -6158,19 +6413,19 @@ type SendLivePhotoJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -6180,7 +6435,7 @@ type SendLivePhotoJSONBody struct {
 	// ReplyParameters Description of the message to reply to
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
 
-	// ShowCaptionAboveMedia Pass True, if the caption must be shown above the message media
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
 
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
@@ -6195,11 +6450,14 @@ type SendLivePhotoMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
+
 	// Caption Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
-	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
+	CaptionEntities *string `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 	ChatId int64 `json:"chat_id"`
@@ -6231,6 +6489,9 @@ type SendLivePhotoMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -6242,19 +6503,19 @@ type SendLivePhotoMultipartBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -6264,11 +6525,11 @@ type SendLivePhotoMultipartBody struct {
 	// ReplyParameters Description of the message to reply to
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
 
-	// ShowCaptionAboveMedia Pass True, if the caption must be shown above the message media
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
 
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
-	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
+	SuggestedPostParameters *string `json:"suggested_post_parameters,omitempty"`
 }
 
 // SendLocationJSONBody defines parameters for SendLocation.
@@ -6278,6 +6539,9 @@ type SendLocationJSONBody struct {
 
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
+
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
@@ -6297,7 +6561,7 @@ type SendLocationJSONBody struct {
 	// Latitude Latitude of the location
 	Latitude float32 `json:"latitude"`
 
-	// LivePeriod Period in seconds during which the location will be updated (see Live Locations, should be between 60 and 86400, or 0x7FFFFFFF for live locations that can be edited indefinitely
+	// LivePeriod Period in seconds during which the location will be updated (see Live Locations), must be between 60 and 86400, or 0x7FFFFFFF for live locations that can be edited indefinitely. Must be 0 for ephemeral messages.
 	LivePeriod *int `json:"live_period,omitempty"`
 
 	// Longitude Longitude of the location
@@ -6315,6 +6579,9 @@ type SendLocationJSONBody struct {
 	// ProximityAlertRadius For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified.
 	ProximityAlertRadius *int `json:"proximity_alert_radius,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -6326,19 +6593,19 @@ type SendLocationJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -6369,7 +6636,7 @@ type SendMediaGroupJSONBody struct {
 	// DisableNotification Sends messages silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
 
-	// Media A JSON-serialized array describing messages to be sent, must include 2-10 items
+	// Media A JSON-serialized Array describing messages to be sent, must include 2-10 items
 	Media []InputMedia `json:"media"`
 
 	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
@@ -6402,8 +6669,8 @@ type SendMediaGroupMultipartBody struct {
 	// DisableNotification Sends messages silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
 
-	// Media A JSON-serialized array describing messages to be sent, must include 2-10 items
-	Media []InputMedia `json:"media"`
+	// Media A JSON-serialized Array describing messages to be sent, must include 2-10 items
+	Media string `json:"media"`
 
 	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
 	MessageEffectId *string `json:"message_effect_id,omitempty"`
@@ -6425,6 +6692,9 @@ type SendMessageJSONBody struct {
 
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
+
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
@@ -6453,6 +6723,9 @@ type SendMessageJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -6464,19 +6737,19 @@ type SendMessageJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -6498,7 +6771,7 @@ type SendMessageDraftJSONBody struct {
 	// ChatId Unique identifier for the target private chat
 	ChatId int64 `json:"chat_id"`
 
-	// DraftId Unique identifier of the message draft; must be non-zero. Changes of drafts with the same identifier are animated.
+	// DraftId Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated.
 	DraftId int `json:"draft_id"`
 
 	// Entities A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
@@ -6537,7 +6810,7 @@ type SendPaidMediaJSONBody struct {
 	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
 
-	// Media A JSON-serialized array describing the media to be sent; up to 10 items
+	// Media A JSON-serialized Array describing the media to be sent; up to 10 items
 	Media []InputPaidMedia `json:"media"`
 
 	// MessageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
@@ -6563,19 +6836,19 @@ type SendPaidMediaJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -6585,7 +6858,7 @@ type SendPaidMediaJSONBody struct {
 	// ReplyParameters Description of the message to reply to
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
 
-	// ShowCaptionAboveMedia Pass True, if the caption must be shown above the message media
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
 
 	// StarCount The number of Telegram Stars that must be paid to buy access to the media; 1-25000
@@ -6602,6 +6875,9 @@ type SendPhotoJSONBody struct {
 
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
+
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
 
 	// Caption Photo caption (may also be used when resending photos by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
@@ -6636,6 +6912,9 @@ type SendPhotoJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -6647,19 +6926,19 @@ type SendPhotoJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -6669,7 +6948,7 @@ type SendPhotoJSONBody struct {
 	// ReplyParameters Description of the message to reply to
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
 
-	// ShowCaptionAboveMedia Pass True, if the caption must be shown above the message media
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
 
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
@@ -6684,11 +6963,14 @@ type SendPhotoMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
+
 	// Caption Photo caption (may also be used when resending photos by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
-	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
+	CaptionEntities *string `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
@@ -6717,6 +6999,9 @@ type SendPhotoMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -6728,19 +7013,19 @@ type SendPhotoMultipartBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -6750,25 +7035,25 @@ type SendPhotoMultipartBody struct {
 	// ReplyParameters Description of the message to reply to
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
 
-	// ShowCaptionAboveMedia Pass True, if the caption must be shown above the message media
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
 
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
-	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
+	SuggestedPostParameters *string `json:"suggested_post_parameters,omitempty"`
 }
 
 // SendPollJSONBody defines parameters for SendPoll.
 type SendPollJSONBody struct {
-	// AllowAddingOptions Pass True, if answer options can be added to the poll after creation; not supported for anonymous polls and quizzes
+	// AllowAddingOptions Pass True if answer options can be added to the poll after creation; not supported for anonymous polls and quizzes
 	AllowAddingOptions *bool `json:"allow_adding_options,omitempty"`
 
 	// AllowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
 	AllowPaidBroadcast *bool `json:"allow_paid_broadcast,omitempty"`
 
-	// AllowsMultipleAnswers Pass True, if the poll allows multiple answers, defaults to False
+	// AllowsMultipleAnswers Pass True if the poll allows multiple answers, defaults to False
 	AllowsMultipleAnswers *bool `json:"allows_multiple_answers,omitempty"`
 
-	// AllowsRevoting Pass True, if the poll allows to change chosen answer options, defaults to False for quizzes and to True for regular polls
+	// AllowsRevoting Pass True if the poll allows to change chosen answer options, defaults to False for quizzes and to True for regular polls
 	AllowsRevoting *bool `json:"allows_revoting,omitempty"`
 
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
@@ -6810,7 +7095,7 @@ type SendPollJSONBody struct {
 	// ExplanationParseMode Mode for parsing entities in the explanation. See formatting options for more details.
 	ExplanationParseMode *string `json:"explanation_parse_mode,omitempty"`
 
-	// HideResultsUntilCloses Pass True, if poll results must be shown only after the poll closes
+	// HideResultsUntilCloses Pass True if poll results must be shown only after the poll closes
 	HideResultsUntilCloses *bool `json:"hide_results_until_closes,omitempty"`
 
 	// IsAnonymous True, if the poll needs to be anonymous, defaults to True
@@ -6822,7 +7107,7 @@ type SendPollJSONBody struct {
 	// Media Media added to the poll description
 	Media *InputPollMedia `json:"media,omitempty"`
 
-	// MembersOnly Pass True, if voting is limited to users who have been members of the chat where the poll is being sent for more than 24 hours; for channel chats only
+	// MembersOnly Pass True if voting is limited to users who have been members of the chat where the poll is being sent for more than 24 hours; for channel chats only
 	MembersOnly *bool `json:"members_only,omitempty"`
 
 	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
@@ -6860,19 +7145,19 @@ type SendPollJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -6882,7 +7167,7 @@ type SendPollJSONBody struct {
 	// ReplyParameters Description of the message to reply to
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
 
-	// ShuffleOptions Pass True, if the poll options must be shown in random order
+	// ShuffleOptions Pass True if the poll options must be shown in random order
 	ShuffleOptions *bool `json:"shuffle_options,omitempty"`
 
 	// Type Poll type, “quiz” or “regular”, defaults to “regular”
@@ -6894,7 +7179,7 @@ type SendRichMessageJSONBody struct {
 	// AllowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
 	AllowPaidBroadcast *bool `json:"allow_paid_broadcast,omitempty"`
 
-	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
+	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent. Bot can send rich messages on behalf of a business account only if the corresponding user can send rich messages.
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
@@ -6926,19 +7211,19 @@ type SendRichMessageJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -6966,7 +7251,7 @@ type SendRichMessageDraftJSONBody struct {
 	// MessageThreadId Unique identifier for the target message thread
 	MessageThreadId *int `json:"message_thread_id,omitempty"`
 
-	// RichMessage The partial message to be streamed
+	// RichMessage The partial message to be streamed. Direct upload of new files isn't supported.
 	RichMessage InputRichMessage `json:"rich_message"`
 }
 
@@ -6977,6 +7262,9 @@ type SendStickerJSONBody struct {
 
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
+
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
@@ -6999,6 +7287,9 @@ type SendStickerJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -7010,19 +7301,19 @@ type SendStickerJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -7047,6 +7338,9 @@ type SendStickerMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
+
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
@@ -7068,6 +7362,9 @@ type SendStickerMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -7079,19 +7376,19 @@ type SendStickerMultipartBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -7105,7 +7402,7 @@ type SendStickerMultipartBody struct {
 	Sticker openapi_types.File `json:"sticker"`
 
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
-	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
+	SuggestedPostParameters *string `json:"suggested_post_parameters,omitempty"`
 }
 
 // SendVenueJSONBody defines parameters for SendVenue.
@@ -7118,6 +7415,9 @@ type SendVenueJSONBody struct {
 
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
+
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
@@ -7155,6 +7455,9 @@ type SendVenueJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -7166,19 +7469,19 @@ type SendVenueJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -7202,6 +7505,9 @@ type SendVideoJSONBody struct {
 
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
+
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
 
 	// Caption Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
@@ -7242,6 +7548,9 @@ type SendVideoJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -7253,19 +7562,19 @@ type SendVideoJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -7275,7 +7584,7 @@ type SendVideoJSONBody struct {
 	// ReplyParameters Description of the message to reply to
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
 
-	// ShowCaptionAboveMedia Pass True, if the caption must be shown above the message media
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
 
 	// StartTimestamp Start timestamp for the video in the message
@@ -7305,11 +7614,14 @@ type SendVideoMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
+
 	// Caption Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
-	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
+	CaptionEntities *string `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
@@ -7344,6 +7656,9 @@ type SendVideoMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -7355,19 +7670,19 @@ type SendVideoMultipartBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -7377,14 +7692,14 @@ type SendVideoMultipartBody struct {
 	// ReplyParameters Description of the message to reply to
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
 
-	// ShowCaptionAboveMedia Pass True, if the caption must be shown above the message media
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
 
 	// StartTimestamp Start timestamp for the video in the message
 	StartTimestamp *int `json:"start_timestamp,omitempty"`
 
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
-	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
+	SuggestedPostParameters *string `json:"suggested_post_parameters,omitempty"`
 
 	// SupportsStreaming Pass True if the uploaded video is suitable for streaming
 	SupportsStreaming *bool `json:"supports_streaming,omitempty"`
@@ -7406,6 +7721,9 @@ type SendVideoNoteJSONBody struct {
 
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
+
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
@@ -7431,6 +7749,9 @@ type SendVideoNoteJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -7442,19 +7763,19 @@ type SendVideoNoteJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -7482,6 +7803,9 @@ type SendVideoNoteMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
+
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
@@ -7506,6 +7830,9 @@ type SendVideoNoteMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -7517,19 +7844,19 @@ type SendVideoNoteMultipartBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -7540,7 +7867,7 @@ type SendVideoNoteMultipartBody struct {
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
 
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
-	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
+	SuggestedPostParameters *string `json:"suggested_post_parameters,omitempty"`
 
 	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
 	Thumbnail *openapi_types.File `json:"thumbnail,omitempty"`
@@ -7556,6 +7883,9 @@ type SendVoiceJSONBody struct {
 
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
+
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
 
 	// Caption Voice message caption, 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
@@ -7587,6 +7917,9 @@ type SendVoiceJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -7598,19 +7931,19 @@ type SendVoiceJSONBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -7635,11 +7968,14 @@ type SendVoiceMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
+	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
+
 	// Caption Voice message caption, 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
-	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
+	CaptionEntities *string `json:"caption_entities,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
@@ -7665,6 +8001,9 @@ type SendVoiceMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
+	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
+
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
 		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
@@ -7676,19 +8015,19 @@ type SendVoiceMultipartBody struct {
 		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
 		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 
-		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 		IsPersistent *bool `json:"is_persistent,omitempty"`
 
 		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
 
-		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
 		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
-		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
 
 		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
@@ -7699,7 +8038,7 @@ type SendVoiceMultipartBody struct {
 	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
 
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
-	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
+	SuggestedPostParameters *string `json:"suggested_post_parameters,omitempty"`
 
 	// Voice Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
 	Voice openapi_types.File `json:"voice"`
@@ -7722,7 +8061,7 @@ type SetBusinessAccountGiftSettingsJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection
 	BusinessConnectionId string `json:"business_connection_id"`
 
-	// ShowGiftButton Pass True, if a button for sending a gift to the user or by the business account must always be shown in the input field
+	// ShowGiftButton Pass True if a button for sending a gift to the user or by the business account must always be shown in the input field
 	ShowGiftButton bool `json:"show_gift_button"`
 }
 
@@ -7881,10 +8220,10 @@ type SetGameScoreJSONBody struct {
 
 // SetManagedBotAccessSettingsJSONBody defines parameters for SetManagedBotAccessSettings.
 type SetManagedBotAccessSettingsJSONBody struct {
-	// AddedUserIds A JSON-serialized list of up to 10 identifiers of users who will have access to the bot in addition to its owner. Ignored if is_access_restricted is false.
+	// AddedUserIds A JSON-serialized list of up to 10 identifiers of users who will have access to the bot in addition to its owner. Ignored if is_access_restricted is False.
 	AddedUserIds *[]int `json:"added_user_ids,omitempty"`
 
-	// IsAccessRestricted Pass True, if only selected users can access the bot. The bot's owner can always access it.
+	// IsAccessRestricted Pass True if only selected users can access the bot. The bot's owner can always access it.
 	IsAccessRestricted bool `json:"is_access_restricted"`
 
 	// UserId User identifier of the managed bot whose access settings will be changed
@@ -7962,7 +8301,7 @@ type SetMyShortDescriptionJSONBody struct {
 
 // SetPassportDataErrorsJSONBody defines parameters for SetPassportDataErrors.
 type SetPassportDataErrorsJSONBody struct {
-	// Errors A JSON-serialized array describing the errors
+	// Errors A JSON-serialized Array describing the errors
 	Errors []PassportElementError `json:"errors"`
 
 	// UserId User identifier
@@ -8080,7 +8419,7 @@ type SetWebhookJSONBody struct {
 // SetWebhookMultipartBody defines parameters for SetWebhook.
 type SetWebhookMultipartBody struct {
 	// AllowedUpdates A JSON-serialized list of the update types you want your bot to receive. For example, specify ["message", "edited_channel_post", "callback_query"] to only receive updates of these types. See Update for a complete list of available update types. Specify an empty list to receive all update types except chat_member, message_reaction, and message_reaction_count (default). If not specified, the previous setting will be used.Please note that this parameter doesn't affect updates created before the call to the setWebhook, so unwanted updates may be received for a short period of time.
-	AllowedUpdates *[]string `json:"allowed_updates,omitempty"`
+	AllowedUpdates *string `json:"allowed_updates,omitempty"`
 
 	// Certificate Upload your public key certificate so that the root certificate in use can be checked. See our self-signed guide for details.
 	Certificate *openapi_types.File `json:"certificate,omitempty"`
@@ -8362,6 +8701,9 @@ type DeleteChatPhotoJSONRequestBody DeleteChatPhotoJSONBody
 // DeleteChatStickerSetJSONRequestBody defines body for DeleteChatStickerSet for application/json ContentType.
 type DeleteChatStickerSetJSONRequestBody DeleteChatStickerSetJSONBody
 
+// DeleteEphemeralMessageJSONRequestBody defines body for DeleteEphemeralMessage for application/json ContentType.
+type DeleteEphemeralMessageJSONRequestBody DeleteEphemeralMessageJSONBody
+
 // DeleteForumTopicJSONRequestBody defines body for DeleteForumTopic for application/json ContentType.
 type DeleteForumTopicJSONRequestBody DeleteForumTopicJSONBody
 
@@ -8394,6 +8736,21 @@ type EditChatInviteLinkJSONRequestBody EditChatInviteLinkJSONBody
 
 // EditChatSubscriptionInviteLinkJSONRequestBody defines body for EditChatSubscriptionInviteLink for application/json ContentType.
 type EditChatSubscriptionInviteLinkJSONRequestBody EditChatSubscriptionInviteLinkJSONBody
+
+// EditEphemeralMessageCaptionJSONRequestBody defines body for EditEphemeralMessageCaption for application/json ContentType.
+type EditEphemeralMessageCaptionJSONRequestBody EditEphemeralMessageCaptionJSONBody
+
+// EditEphemeralMessageMediaJSONRequestBody defines body for EditEphemeralMessageMedia for application/json ContentType.
+type EditEphemeralMessageMediaJSONRequestBody EditEphemeralMessageMediaJSONBody
+
+// EditEphemeralMessageMediaMultipartRequestBody defines body for EditEphemeralMessageMedia for multipart/form-data ContentType.
+type EditEphemeralMessageMediaMultipartRequestBody EditEphemeralMessageMediaMultipartBody
+
+// EditEphemeralMessageReplyMarkupJSONRequestBody defines body for EditEphemeralMessageReplyMarkup for application/json ContentType.
+type EditEphemeralMessageReplyMarkupJSONRequestBody EditEphemeralMessageReplyMarkupJSONBody
+
+// EditEphemeralMessageTextJSONRequestBody defines body for EditEphemeralMessageText for application/json ContentType.
+type EditEphemeralMessageTextJSONRequestBody EditEphemeralMessageTextJSONBody
 
 // EditForumTopicJSONRequestBody defines body for EditForumTopic for application/json ContentType.
 type EditForumTopicJSONRequestBody EditForumTopicJSONBody
@@ -9058,6 +9415,11 @@ type ClientInterface interface {
 
 	DeleteChatStickerSet(ctx context.Context, body DeleteChatStickerSetJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteEphemeralMessageWithBody request with any body
+	DeleteEphemeralMessageWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DeleteEphemeralMessage(ctx context.Context, body DeleteEphemeralMessageJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DeleteForumTopicWithBody request with any body
 	DeleteForumTopicWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -9112,6 +9474,26 @@ type ClientInterface interface {
 	EditChatSubscriptionInviteLinkWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	EditChatSubscriptionInviteLink(ctx context.Context, body EditChatSubscriptionInviteLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// EditEphemeralMessageCaptionWithBody request with any body
+	EditEphemeralMessageCaptionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	EditEphemeralMessageCaption(ctx context.Context, body EditEphemeralMessageCaptionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// EditEphemeralMessageMediaWithBody request with any body
+	EditEphemeralMessageMediaWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	EditEphemeralMessageMedia(ctx context.Context, body EditEphemeralMessageMediaJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// EditEphemeralMessageReplyMarkupWithBody request with any body
+	EditEphemeralMessageReplyMarkupWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	EditEphemeralMessageReplyMarkup(ctx context.Context, body EditEphemeralMessageReplyMarkupJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// EditEphemeralMessageTextWithBody request with any body
+	EditEphemeralMessageTextWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	EditEphemeralMessageText(ctx context.Context, body EditEphemeralMessageTextJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// EditForumTopicWithBody request with any body
 	EditForumTopicWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -10484,6 +10866,30 @@ func (c *Client) DeleteChatStickerSet(ctx context.Context, body DeleteChatSticke
 	return c.Client.Do(req)
 }
 
+func (c *Client) DeleteEphemeralMessageWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteEphemeralMessageRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteEphemeralMessage(ctx context.Context, body DeleteEphemeralMessageJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteEphemeralMessageRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) DeleteForumTopicWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteForumTopicRequestWithBody(c.Server, contentType, body)
 	if err != nil {
@@ -10738,6 +11144,102 @@ func (c *Client) EditChatSubscriptionInviteLinkWithBody(ctx context.Context, con
 
 func (c *Client) EditChatSubscriptionInviteLink(ctx context.Context, body EditChatSubscriptionInviteLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewEditChatSubscriptionInviteLinkRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) EditEphemeralMessageCaptionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewEditEphemeralMessageCaptionRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) EditEphemeralMessageCaption(ctx context.Context, body EditEphemeralMessageCaptionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewEditEphemeralMessageCaptionRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) EditEphemeralMessageMediaWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewEditEphemeralMessageMediaRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) EditEphemeralMessageMedia(ctx context.Context, body EditEphemeralMessageMediaJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewEditEphemeralMessageMediaRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) EditEphemeralMessageReplyMarkupWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewEditEphemeralMessageReplyMarkupRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) EditEphemeralMessageReplyMarkup(ctx context.Context, body EditEphemeralMessageReplyMarkupJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewEditEphemeralMessageReplyMarkupRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) EditEphemeralMessageTextWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewEditEphemeralMessageTextRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) EditEphemeralMessageText(ctx context.Context, body EditEphemeralMessageTextJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewEditEphemeralMessageTextRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -15171,6 +15673,46 @@ func NewDeleteChatStickerSetRequestWithBody(server string, contentType string, b
 	return req, nil
 }
 
+// NewDeleteEphemeralMessageRequest calls the generic DeleteEphemeralMessage builder with application/json body
+func NewDeleteEphemeralMessageRequest(server string, body DeleteEphemeralMessageJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDeleteEphemeralMessageRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewDeleteEphemeralMessageRequestWithBody generates requests for DeleteEphemeralMessage with any type of body
+func NewDeleteEphemeralMessageRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/deleteEphemeralMessage")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewDeleteForumTopicRequest calls the generic DeleteForumTopic builder with application/json body
 func NewDeleteForumTopicRequest(server string, body DeleteForumTopicJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -15592,6 +16134,166 @@ func NewEditChatSubscriptionInviteLinkRequestWithBody(server string, contentType
 	}
 
 	operationPath := fmt.Sprintf("/editChatSubscriptionInviteLink")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewEditEphemeralMessageCaptionRequest calls the generic EditEphemeralMessageCaption builder with application/json body
+func NewEditEphemeralMessageCaptionRequest(server string, body EditEphemeralMessageCaptionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewEditEphemeralMessageCaptionRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewEditEphemeralMessageCaptionRequestWithBody generates requests for EditEphemeralMessageCaption with any type of body
+func NewEditEphemeralMessageCaptionRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/editEphemeralMessageCaption")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewEditEphemeralMessageMediaRequest calls the generic EditEphemeralMessageMedia builder with application/json body
+func NewEditEphemeralMessageMediaRequest(server string, body EditEphemeralMessageMediaJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewEditEphemeralMessageMediaRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewEditEphemeralMessageMediaRequestWithBody generates requests for EditEphemeralMessageMedia with any type of body
+func NewEditEphemeralMessageMediaRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/editEphemeralMessageMedia")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewEditEphemeralMessageReplyMarkupRequest calls the generic EditEphemeralMessageReplyMarkup builder with application/json body
+func NewEditEphemeralMessageReplyMarkupRequest(server string, body EditEphemeralMessageReplyMarkupJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewEditEphemeralMessageReplyMarkupRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewEditEphemeralMessageReplyMarkupRequestWithBody generates requests for EditEphemeralMessageReplyMarkup with any type of body
+func NewEditEphemeralMessageReplyMarkupRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/editEphemeralMessageReplyMarkup")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewEditEphemeralMessageTextRequest calls the generic EditEphemeralMessageText builder with application/json body
+func NewEditEphemeralMessageTextRequest(server string, body EditEphemeralMessageTextJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewEditEphemeralMessageTextRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewEditEphemeralMessageTextRequestWithBody generates requests for EditEphemeralMessageText with any type of body
+func NewEditEphemeralMessageTextRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/editEphemeralMessageText")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -21306,6 +22008,11 @@ type ClientWithResponsesInterface interface {
 
 	DeleteChatStickerSetWithResponse(ctx context.Context, body DeleteChatStickerSetJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteChatStickerSetResponse, error)
 
+	// DeleteEphemeralMessageWithBodyWithResponse request with any body
+	DeleteEphemeralMessageWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteEphemeralMessageResponse, error)
+
+	DeleteEphemeralMessageWithResponse(ctx context.Context, body DeleteEphemeralMessageJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteEphemeralMessageResponse, error)
+
 	// DeleteForumTopicWithBodyWithResponse request with any body
 	DeleteForumTopicWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteForumTopicResponse, error)
 
@@ -21360,6 +22067,26 @@ type ClientWithResponsesInterface interface {
 	EditChatSubscriptionInviteLinkWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditChatSubscriptionInviteLinkResponse, error)
 
 	EditChatSubscriptionInviteLinkWithResponse(ctx context.Context, body EditChatSubscriptionInviteLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*EditChatSubscriptionInviteLinkResponse, error)
+
+	// EditEphemeralMessageCaptionWithBodyWithResponse request with any body
+	EditEphemeralMessageCaptionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditEphemeralMessageCaptionResponse, error)
+
+	EditEphemeralMessageCaptionWithResponse(ctx context.Context, body EditEphemeralMessageCaptionJSONRequestBody, reqEditors ...RequestEditorFn) (*EditEphemeralMessageCaptionResponse, error)
+
+	// EditEphemeralMessageMediaWithBodyWithResponse request with any body
+	EditEphemeralMessageMediaWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditEphemeralMessageMediaResponse, error)
+
+	EditEphemeralMessageMediaWithResponse(ctx context.Context, body EditEphemeralMessageMediaJSONRequestBody, reqEditors ...RequestEditorFn) (*EditEphemeralMessageMediaResponse, error)
+
+	// EditEphemeralMessageReplyMarkupWithBodyWithResponse request with any body
+	EditEphemeralMessageReplyMarkupWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditEphemeralMessageReplyMarkupResponse, error)
+
+	EditEphemeralMessageReplyMarkupWithResponse(ctx context.Context, body EditEphemeralMessageReplyMarkupJSONRequestBody, reqEditors ...RequestEditorFn) (*EditEphemeralMessageReplyMarkupResponse, error)
+
+	// EditEphemeralMessageTextWithBodyWithResponse request with any body
+	EditEphemeralMessageTextWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditEphemeralMessageTextResponse, error)
+
+	EditEphemeralMessageTextWithResponse(ctx context.Context, body EditEphemeralMessageTextJSONRequestBody, reqEditors ...RequestEditorFn) (*EditEphemeralMessageTextResponse, error)
 
 	// EditForumTopicWithBodyWithResponse request with any body
 	EditForumTopicWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditForumTopicResponse, error)
@@ -22872,6 +23599,34 @@ func (r DeleteChatStickerSetResponse) StatusCode() int {
 	return 0
 }
 
+type DeleteEphemeralMessageResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     DeleteEphemeralMessage200Ok `json:"ok"`
+		Result bool                        `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type DeleteEphemeralMessage200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r DeleteEphemeralMessageResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteEphemeralMessageResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type DeleteForumTopicResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -23178,6 +23933,118 @@ func (r EditChatSubscriptionInviteLinkResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r EditChatSubscriptionInviteLinkResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type EditEphemeralMessageCaptionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     EditEphemeralMessageCaption200Ok `json:"ok"`
+		Result bool                             `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type EditEphemeralMessageCaption200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r EditEphemeralMessageCaptionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r EditEphemeralMessageCaptionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type EditEphemeralMessageMediaResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     EditEphemeralMessageMedia200Ok `json:"ok"`
+		Result bool                           `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type EditEphemeralMessageMedia200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r EditEphemeralMessageMediaResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r EditEphemeralMessageMediaResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type EditEphemeralMessageReplyMarkupResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     EditEphemeralMessageReplyMarkup200Ok `json:"ok"`
+		Result bool                                 `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type EditEphemeralMessageReplyMarkup200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r EditEphemeralMessageReplyMarkupResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r EditEphemeralMessageReplyMarkupResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type EditEphemeralMessageTextResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     EditEphemeralMessageText200Ok `json:"ok"`
+		Result bool                          `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type EditEphemeralMessageText200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r EditEphemeralMessageTextResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r EditEphemeralMessageTextResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -27733,6 +28600,23 @@ func (c *ClientWithResponses) DeleteChatStickerSetWithResponse(ctx context.Conte
 	return ParseDeleteChatStickerSetResponse(rsp)
 }
 
+// DeleteEphemeralMessageWithBodyWithResponse request with arbitrary body returning *DeleteEphemeralMessageResponse
+func (c *ClientWithResponses) DeleteEphemeralMessageWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteEphemeralMessageResponse, error) {
+	rsp, err := c.DeleteEphemeralMessageWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteEphemeralMessageResponse(rsp)
+}
+
+func (c *ClientWithResponses) DeleteEphemeralMessageWithResponse(ctx context.Context, body DeleteEphemeralMessageJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteEphemeralMessageResponse, error) {
+	rsp, err := c.DeleteEphemeralMessage(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteEphemeralMessageResponse(rsp)
+}
+
 // DeleteForumTopicWithBodyWithResponse request with arbitrary body returning *DeleteForumTopicResponse
 func (c *ClientWithResponses) DeleteForumTopicWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteForumTopicResponse, error) {
 	rsp, err := c.DeleteForumTopicWithBody(ctx, contentType, body, reqEditors...)
@@ -27918,6 +28802,74 @@ func (c *ClientWithResponses) EditChatSubscriptionInviteLinkWithResponse(ctx con
 		return nil, err
 	}
 	return ParseEditChatSubscriptionInviteLinkResponse(rsp)
+}
+
+// EditEphemeralMessageCaptionWithBodyWithResponse request with arbitrary body returning *EditEphemeralMessageCaptionResponse
+func (c *ClientWithResponses) EditEphemeralMessageCaptionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditEphemeralMessageCaptionResponse, error) {
+	rsp, err := c.EditEphemeralMessageCaptionWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseEditEphemeralMessageCaptionResponse(rsp)
+}
+
+func (c *ClientWithResponses) EditEphemeralMessageCaptionWithResponse(ctx context.Context, body EditEphemeralMessageCaptionJSONRequestBody, reqEditors ...RequestEditorFn) (*EditEphemeralMessageCaptionResponse, error) {
+	rsp, err := c.EditEphemeralMessageCaption(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseEditEphemeralMessageCaptionResponse(rsp)
+}
+
+// EditEphemeralMessageMediaWithBodyWithResponse request with arbitrary body returning *EditEphemeralMessageMediaResponse
+func (c *ClientWithResponses) EditEphemeralMessageMediaWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditEphemeralMessageMediaResponse, error) {
+	rsp, err := c.EditEphemeralMessageMediaWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseEditEphemeralMessageMediaResponse(rsp)
+}
+
+func (c *ClientWithResponses) EditEphemeralMessageMediaWithResponse(ctx context.Context, body EditEphemeralMessageMediaJSONRequestBody, reqEditors ...RequestEditorFn) (*EditEphemeralMessageMediaResponse, error) {
+	rsp, err := c.EditEphemeralMessageMedia(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseEditEphemeralMessageMediaResponse(rsp)
+}
+
+// EditEphemeralMessageReplyMarkupWithBodyWithResponse request with arbitrary body returning *EditEphemeralMessageReplyMarkupResponse
+func (c *ClientWithResponses) EditEphemeralMessageReplyMarkupWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditEphemeralMessageReplyMarkupResponse, error) {
+	rsp, err := c.EditEphemeralMessageReplyMarkupWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseEditEphemeralMessageReplyMarkupResponse(rsp)
+}
+
+func (c *ClientWithResponses) EditEphemeralMessageReplyMarkupWithResponse(ctx context.Context, body EditEphemeralMessageReplyMarkupJSONRequestBody, reqEditors ...RequestEditorFn) (*EditEphemeralMessageReplyMarkupResponse, error) {
+	rsp, err := c.EditEphemeralMessageReplyMarkup(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseEditEphemeralMessageReplyMarkupResponse(rsp)
+}
+
+// EditEphemeralMessageTextWithBodyWithResponse request with arbitrary body returning *EditEphemeralMessageTextResponse
+func (c *ClientWithResponses) EditEphemeralMessageTextWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditEphemeralMessageTextResponse, error) {
+	rsp, err := c.EditEphemeralMessageTextWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseEditEphemeralMessageTextResponse(rsp)
+}
+
+func (c *ClientWithResponses) EditEphemeralMessageTextWithResponse(ctx context.Context, body EditEphemeralMessageTextJSONRequestBody, reqEditors ...RequestEditorFn) (*EditEphemeralMessageTextResponse, error) {
+	rsp, err := c.EditEphemeralMessageText(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseEditEphemeralMessageTextResponse(rsp)
 }
 
 // EditForumTopicWithBodyWithResponse request with arbitrary body returning *EditForumTopicResponse
@@ -31503,6 +32455,49 @@ func ParseDeleteChatStickerSetResponse(rsp *http.Response) (*DeleteChatStickerSe
 	return response, nil
 }
 
+// ParseDeleteEphemeralMessageResponse parses an HTTP response from a DeleteEphemeralMessageWithResponse call
+func ParseDeleteEphemeralMessageResponse(rsp *http.Response) (*DeleteEphemeralMessageResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteEphemeralMessageResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     DeleteEphemeralMessage200Ok `json:"ok"`
+			Result bool                        `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseDeleteForumTopicResponse parses an HTTP response from a DeleteForumTopicWithResponse call
 func ParseDeleteForumTopicResponse(rsp *http.Response) (*DeleteForumTopicResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -31955,6 +32950,178 @@ func ParseEditChatSubscriptionInviteLinkResponse(rsp *http.Response) (*EditChatS
 
 			// Result Represents an invite link for a chat.
 			Result ChatInviteLink `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseEditEphemeralMessageCaptionResponse parses an HTTP response from a EditEphemeralMessageCaptionWithResponse call
+func ParseEditEphemeralMessageCaptionResponse(rsp *http.Response) (*EditEphemeralMessageCaptionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &EditEphemeralMessageCaptionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     EditEphemeralMessageCaption200Ok `json:"ok"`
+			Result bool                             `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseEditEphemeralMessageMediaResponse parses an HTTP response from a EditEphemeralMessageMediaWithResponse call
+func ParseEditEphemeralMessageMediaResponse(rsp *http.Response) (*EditEphemeralMessageMediaResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &EditEphemeralMessageMediaResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     EditEphemeralMessageMedia200Ok `json:"ok"`
+			Result bool                           `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseEditEphemeralMessageReplyMarkupResponse parses an HTTP response from a EditEphemeralMessageReplyMarkupWithResponse call
+func ParseEditEphemeralMessageReplyMarkupResponse(rsp *http.Response) (*EditEphemeralMessageReplyMarkupResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &EditEphemeralMessageReplyMarkupResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     EditEphemeralMessageReplyMarkup200Ok `json:"ok"`
+			Result bool                                 `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseEditEphemeralMessageTextResponse parses an HTTP response from a EditEphemeralMessageTextWithResponse call
+func ParseEditEphemeralMessageTextResponse(rsp *http.Response) (*EditEphemeralMessageTextResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &EditEphemeralMessageTextResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     EditEphemeralMessageText200Ok `json:"ok"`
+			Result bool                          `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
