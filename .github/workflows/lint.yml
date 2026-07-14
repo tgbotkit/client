@@ -24,5 +24,7 @@ jobs:
         with:
           go-version-file: go.mod
           cache: false
-      - name: golangci-lint
-        run: go tool golangci-lint run
+      - uses: golangci/golangci-lint-action@v8
+        with:
+          version: latest
+          args: --timeout=5m
