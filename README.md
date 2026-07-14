@@ -14,7 +14,8 @@ Package docs: https://pkg.go.dev/github.com/tgbotkit/client
 
 | Package Version | API Version | API Release Date |
 |-----------------| --- | --- |
-| latest, 0.8.0    | [10.1](https://core.telegram.org/bots/api#june-11-2026) | June 11, 2026 |
+| latest, 0.9.0    | [10.2](https://core.telegram.org/bots/api#july-14-2026) | July 14, 2026 |
+| 0.8.0            | [10.1](https://core.telegram.org/bots/api#june-11-2026) | June 11, 2026 |
 | 0.7.0            | [10.0](https://core.telegram.org/bots/api#may-8-2026) | May 8, 2026 |
 | 0.6.0            | [9.6](https://core.telegram.org/bots/api#april-3-2026) | April 3, 2026 |
 | 0.5.0, 0.5.1    | [9.5](https://core.telegram.org/bots/api#march-1-2026) | March 1, 2026 |
