@@ -69,8 +69,8 @@ github.com/mailru/easyjson v0.7.7 h1:UGYAvKxe3sBsEDzO8ZeWOSlIQfWFlxbzLZe7hwFURr0
 github.com/mailru/easyjson v0.7.7/go.mod h1:xzfreul335JAWq5oZzymOObrkdz5UnU4kGfJJLY9Nlc=
 github.com/metalagman/semverctl v0.0.11 h1:TvLo6nWmNPefitsTb770HQAnoRt40eQ0RPwLXTIJ3NA=
 github.com/metalagman/semverctl v0.0.11/go.mod h1:bIzC6k6ssLyio2DwRMFKTbYu5Nsw73uMRbHr58RN0EM=
-github.com/metalagman/tgbotspec v0.2.7 h1:9eXbw2L19rlkPJsjLytDqr1b7X7jntN/sCV4CSXTZ/Q=
-github.com/metalagman/tgbotspec v0.2.7/go.mod h1:Txxo6IGeXaIJAWJAIHFPnGrDS4O2YEt8vCDJHEbukDs=
+github.com/metalagman/tgbotspec v0.2.8 h1:uB29oJ083DkxBTKoyBBNw+yloeI/LMdqKMI+BQNmaWY=
+github.com/metalagman/tgbotspec v0.2.8/go.mod h1:Txxo6IGeXaIJAWJAIHFPnGrDS4O2YEt8vCDJHEbukDs=
 github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 h1:RWengNIwukTxcDr9M+97sNutRR1RKhG96O6jWumTTnw=
 github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826/go.mod h1:TaXosZuwdSHYgviHp1DAtfrULt5eUgsSMsZf+YrPgl8=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=

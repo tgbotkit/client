@@ -404,7 +404,7 @@ type ChatAdministratorRights struct {
 	// CanManageDirectMessages Optional. True, if the administrator can manage direct messages of the channel and decline suggested posts; for channels only
 	CanManageDirectMessages *bool `json:"can_manage_direct_messages,omitempty"`
 
-	// CanManageTags Optional. True, if the administrator can edit the tags of regular members; for groups and supergroups only. If omitted, defaults to the value of can_pin_messages.
+	// CanManageTags Optional. True, if the administrator can edit the tags of regular members; for groups and supergroups only
 	CanManageTags *bool `json:"can_manage_tags,omitempty"`
 
 	// CanManageTopics Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; for supergroups only
@@ -427,6 +427,9 @@ type ChatAdministratorRights struct {
 
 	// CanRestrictMembers True, if the administrator can restrict, ban or unban chat members, or access supergroup statistics
 	CanRestrictMembers bool `json:"can_restrict_members"`
+
+	// CanSendWelcomeMessages True, if the administrator can manage chat welcome messages or directly send them in the case of bots
+	CanSendWelcomeMessages bool `json:"can_send_welcome_messages"`
 
 	// IsAnonymous True, if the user's presence in the chat is hidden
 	IsAnonymous bool `json:"is_anonymous"`
@@ -939,13 +942,19 @@ type Community struct {
 	Name string `json:"name"`
 }
 
-// CommunityChatAdded Describes a service message about a chat being added to a community.
+// CommunityChatAdded Describes a service message about a chat or a bot being added to a community.
 type CommunityChatAdded struct {
-	// Community The new community to which the chat belongs
+	// Community The new community to which the chat or the bot belongs
 	Community Community `json:"community"`
 }
 
-// CommunityChatRemoved Describes a service message about a chat being removed from a community. Currently holds no information.
+// CommunityChatJoined Describes a service message about a chat being joined by a user from a community.
+type CommunityChatJoined struct {
+	// Community The community from which the chat was joined
+	Community Community `json:"community"`
+}
+
+// CommunityChatRemoved Describes a service message about a chat or a bot being removed from a community. Currently holds no information.
 type CommunityChatRemoved = map[string]interface{}
 
 // Contact This object represents a phone contact.
@@ -998,6 +1007,9 @@ type DirectMessagesTopic struct {
 	// User Optional. Information about the user that created the topic. Currently, it is always present.
 	User *User `json:"user,omitempty"`
 }
+
+// DisabledButton This object represents a disabled button which does nothing. Currently holds no information.
+type DisabledButton = map[string]interface{}
 
 // Document This object represents a general file (as opposed to photos, voice messages and audio files).
 type Document struct {
@@ -1063,6 +1075,18 @@ type EncryptedPassportElement struct {
 
 	// Type Element type. One of “personal_details”, “passport”, “driver_license”, “identity_card”, “internal_passport”, “address”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”, “phone_number”, “email”.
 	Type string `json:"type"`
+}
+
+// EphemeralMessageParameters defines model for EphemeralMessageParameters.
+type EphemeralMessageParameters struct {
+	// CallbackQueryId Optional. Identifier of the callback query which triggered the message, if any
+	CallbackQueryId *string `json:"callback_query_id,omitempty"`
+
+	// ReceiverUserId Identifier of the user who will receive the message. It is not guaranteed that the user will receive the message, especially if they are offline. See here for more details.
+	ReceiverUserId int `json:"receiver_user_id"`
+
+	// ReplaceCallbackQueryMessage Optional. Pass True if the ephemeral message must be shown in place of the original message. Must be False for callback queries from ephemeral messages, which must be edited using regular editEphemeralMessage… methods.
+	ReplaceCallbackQueryMessage *bool `json:"replace_callback_query_message,omitempty"`
 }
 
 // ErrorResponse defines model for ErrorResponse.
@@ -1455,10 +1479,13 @@ type InlineKeyboardButton struct {
 	// CopyText Optional. Description of the button that copies the specified text to the clipboard
 	CopyText *CopyTextButton `json:"copy_text,omitempty"`
 
+	// Disabled Optional. If set, then the button is disabled and does nothing
+	Disabled *DisabledButton `json:"disabled,omitempty"`
+
 	// IconCustomEmojiId Optional. Unique identifier of the custom emoji shown before the text of the button. Can only be used by bots that purchased additional usernames on Fragment or in the messages directly sent by the bot to private, group and supergroup chats if the owner of the bot has a Telegram Premium subscription.
 	IconCustomEmojiId *string `json:"icon_custom_emoji_id,omitempty"`
 
-	// LoginUrl Optional. An HTTPS URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget.
+	// LoginUrl Optional. An HTTPS URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget. Not supported for ephemeral messages.
 	LoginUrl *LoginUrl `json:"login_url,omitempty"`
 
 	// Pay Optional. Specify True, to send a Pay button. Substrings “” and “XTR” in the buttons's text will be replaced with a Telegram Star icon.NOTE: This type of button must always be the first button in the first row and can only be used in invoice messages.
@@ -1488,6 +1515,9 @@ type InlineKeyboardButton struct {
 
 // InlineKeyboardMarkup This object represents an inline keyboard that appears right next to the message it belongs to.
 type InlineKeyboardMarkup struct {
+	// ForceReply Optional. Pass True if the reply interface must be shown to the user, as if they had manually selected the bot's message and tapped 'Reply'. The value of the field can't be changed when the inline keyboard is edited.
+	ForceReply *bool `json:"force_reply,omitempty"`
+
 	// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
 	InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"`
 }
@@ -1652,14 +1682,17 @@ type InputProfilePhoto = map[string]interface{}
 // InputRichBlockAnchor
 // InputRichBlockList
 // InputRichBlockBlockQuotation
+// InputRichBlockExpandableBlockQuotation
 // InputRichBlockPullQuotation
 // InputRichBlockCollage
 // InputRichBlockSlideshow
 // InputRichBlockTable
 // InputRichBlockDetails
 // InputRichBlockMap
+// InputRichBlockButtons
 // InputRichBlockAnimation
 // InputRichBlockAudio
+// InputRichBlockDocument
 // InputRichBlockPhoto
 // InputRichBlockVideo
 // InputRichBlockVoiceNote
@@ -1680,7 +1713,7 @@ type InputRichMessage struct {
 	// Markdown Optional. Content of the rich message to send described using Markdown formatting. See rich message formatting options for more details. Use media field to specify the media used in the message.
 	Markdown *string `json:"markdown,omitempty"`
 
-	// Media Optional. List of media that are specified in the markdown or html fields using tg://photo?id=, tg://video?id=, and tg://audio?id= links
+	// Media Optional. List of media that are specified in the markdown or html fields using tg://photo?id=, tg://video?id=, tg://document?id=, and tg://audio?id= links
 	Media *[]InputRichMessageMedia `json:"media,omitempty"`
 
 	// SkipEntityDetection Optional. Pass True to skip automatic detection of entities (e.g., URLs, email addresses, username mentions, hashtags, cashtags, bot commands, or phone numbers) in the text
@@ -1689,7 +1722,7 @@ type InputRichMessage struct {
 
 // InputRichMessageMedia Describes a media element embedded in an outgoing rich message.
 type InputRichMessageMedia struct {
-	// Id Unique identifier of the media used in a tg://photo?id=, tg://video?id=, or tg://audio?id= link. 1-64 characters, only A-Z, a-z, 0-9, _ and - are allowed.
+	// Id Unique identifier of the media used in a tg://photo?id=, tg://video?id=, tg://document?id=, or tg://audio?id= link. 1-64 characters, only A-Z, a-z, 0-9, _ and - are allowed.
 	Id string `json:"id"`
 
 	// Media The media to be sent. Everything except the media itself and its properties is ignored.
@@ -1929,10 +1962,9 @@ type Location struct {
 	ProximityAlertRadius *int `json:"proximity_alert_radius,omitempty"`
 }
 
-// LoginUrl This object represents a parameter of the inline keyboard button used to automatically authorize a user. Serves as a great replacement for the Telegram Login Widget when the user is coming from Telegram. All the user needs to do is tap/click a button and confirm that they want to log in:
-// Telegram apps support these buttons as of version 5.7.
+// LoginUrl This object represents a parameter of the inline keyboard button used to automatically authorize a user. It serves as a great replacement for the Telegram Login Widget when the user is coming from Telegram. All the user needs to do is tap/click a button and confirm that they want to log in:
 type LoginUrl struct {
-	// BotUsername Optional. Username of a bot, which will be used for user authorization. See Setting up a bot for more details. If not specified, the current bot's username will be assumed. The url's domain must be the same as the domain linked with the bot. See Linking your domain to the bot for more details.
+	// BotUsername Optional. Username of a bot, which will be used for user authorization; not supported in RichMessageButton. See Setting up a bot for more details. If not specified, the current bot's username will be assumed. The url's domain must be the same as the domain linked with the bot. See Linking your domain to the bot for more details.
 	BotUsername *string `json:"bot_username,omitempty"`
 
 	// ForwardText Optional. New text of the button in forwarded messages
@@ -2037,10 +2069,13 @@ type Message struct {
 	// ChecklistTasksDone Optional. Service message: some tasks in a checklist were marked as done or not done
 	ChecklistTasksDone *ChecklistTasksDone `json:"checklist_tasks_done,omitempty"`
 
-	// CommunityChatAdded Optional. Service message: chat added to a Community
+	// CommunityChatAdded Optional. Service message: chat or bot added to a Community
 	CommunityChatAdded *CommunityChatAdded `json:"community_chat_added,omitempty"`
 
-	// CommunityChatRemoved Optional. Service message: chat removed from a Community
+	// CommunityChatJoined Optional. Service message: chat was joined by a user from a Community
+	CommunityChatJoined *CommunityChatJoined `json:"community_chat_joined,omitempty"`
+
+	// CommunityChatRemoved Optional. Service message: chat or bot removed from a Community
 	CommunityChatRemoved *CommunityChatRemoved `json:"community_chat_removed,omitempty"`
 
 	// ConnectedWebsite Optional. The domain name of the website on which the user has logged in. More about Telegram Login »
@@ -2229,7 +2264,7 @@ type Message struct {
 	// PollOptionDeleted Optional. Service message: answer option was deleted from a poll
 	PollOptionDeleted *PollOptionDeleted `json:"poll_option_deleted,omitempty"`
 
-	// ProximityAlertTriggered Optional. Service message. A user in the chat triggered another user's proximity alert while sharing Live Location.
+	// ProximityAlertTriggered Optional. Service message: a user in the chat triggered another user's proximity alert while sharing Live Location
 	ProximityAlertTriggered *ProximityAlertTriggered `json:"proximity_alert_triggered,omitempty"`
 
 	// Quote Optional. For replies that quote part of the original message, the quoted part of the message
@@ -2381,6 +2416,18 @@ type MessageEntity struct {
 
 	// User Optional. For “text_mention” only, the mentioned user
 	User *User `json:"user,omitempty"`
+}
+
+// MessageGenerationStopped This object describes an update about a user stopping message generation.
+type MessageGenerationStopped struct {
+	// Chat Chat in which the message is generated
+	Chat Chat `json:"chat"`
+
+	// DraftId Unique identifier of the message draft which was stopped
+	DraftId int `json:"draft_id"`
+
+	// MessageThreadId Optional. Unique identifier of the message thread in which the message is generated
+	MessageThreadId *int `json:"message_thread_id,omitempty"`
 }
 
 // MessageId This object represents a unique message identifier.
@@ -2870,14 +2917,17 @@ type ResponseParameters struct {
 // RichBlockAnchor
 // RichBlockList
 // RichBlockBlockQuotation
+// RichBlockExpandableBlockQuotation
 // RichBlockPullQuotation
 // RichBlockCollage
 // RichBlockSlideshow
 // RichBlockTable
 // RichBlockDetails
 // RichBlockMap
+// RichBlockButtons
 // RichBlockAnimation
 // RichBlockAudio
+// RichBlockDocument
 // RichBlockPhoto
 // RichBlockVideo
 // RichBlockVoiceNote
@@ -3369,8 +3419,14 @@ type UniqueGiftColors struct {
 
 // UniqueGiftInfo Describes a service message about a unique gift that was sent or received.
 type UniqueGiftInfo struct {
+	// Entities Optional. Special entities that appear in the text
+	Entities *[]MessageEntity `json:"entities,omitempty"`
+
 	// Gift Information about the gift
 	Gift UniqueGift `json:"gift"`
+
+	// IsPrivate Optional. True, if the sender and gift text are shown only to the gift receiver; otherwise, everyone will be able to see them
+	IsPrivate *bool `json:"is_private,omitempty"`
 
 	// LastResaleAmount Optional. For gifts bought from other users, the price paid for the gift in either Telegram Stars or nanograms
 	LastResaleAmount *int `json:"last_resale_amount,omitempty"`
@@ -3386,6 +3442,9 @@ type UniqueGiftInfo struct {
 
 	// OwnedGiftId Optional. Unique identifier of the received gift for the bot; only present for gifts received on behalf of business accounts
 	OwnedGiftId *string `json:"owned_gift_id,omitempty"`
+
+	// Text Optional. Text of the message that was added to the gift
+	Text *string `json:"text,omitempty"`
 
 	// TransferStarCount Optional. Number of Telegram Stars that must be paid to transfer the gift; omitted if the bot cannot transfer the gift
 	TransferStarCount *int `json:"transfer_star_count,omitempty"`
@@ -3494,6 +3553,9 @@ type Update struct {
 
 	// ShippingQuery Optional. New incoming shipping query. Only for invoices with flexible price.
 	ShippingQuery *ShippingQuery `json:"shipping_query,omitempty"`
+
+	// StoppedMessageGeneration Optional. A user asked the bot to stop the generation of a message
+	StoppedMessageGeneration *MessageGenerationStopped `json:"stopped_message_generation,omitempty"`
 
 	// Subscription Optional. User payment subscription has changed
 	Subscription *BotSubscriptionUpdated `json:"subscription,omitempty"`
@@ -3691,7 +3753,7 @@ type VideoChatScheduled struct {
 // VideoChatStarted This object represents a service message about a video chat started in the chat. Currently holds no information.
 type VideoChatStarted = map[string]interface{}
 
-// VideoNote This object represents a video message (available in Telegram apps as of v.4.0).
+// VideoNote This object represents a video message.
 type VideoNote struct {
 	// Duration Duration of the video in seconds as defined by the sender
 	Duration int `json:"duration"`
@@ -3834,7 +3896,7 @@ type AddStickerToSetMultipartBody struct {
 
 // AnswerCallbackQueryJSONBody defines parameters for AnswerCallbackQuery.
 type AnswerCallbackQueryJSONBody struct {
-	// CacheTime The maximum amount of time in seconds that the result of the callback query may be cached client-side. Telegram apps will support caching starting in version 3.14. Defaults to 0.
+	// CacheTime The maximum amount of time in seconds that the result of the callback query may be cached client-side. Defaults to 0.
 	CacheTime *int `json:"cache_time,omitempty"`
 
 	// CallbackQueryId Unique identifier for the query to be answered
@@ -4034,7 +4096,7 @@ type CopyMessageJSONBody struct {
 
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -4460,6 +4522,9 @@ type EditEphemeralMessageCaptionJSONBody struct {
 
 	// ReplyMarkup A JSON-serialized object for an inline keyboard
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media. Supported only for animation, photo and video messages.
+	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
 }
 
 // EditEphemeralMessageMediaJSONBody defines parameters for EditEphemeralMessageMedia.
@@ -4470,7 +4535,7 @@ type EditEphemeralMessageMediaJSONBody struct {
 	// EphemeralMessageId Identifier of the ephemeral message to edit
 	EphemeralMessageId int `json:"ephemeral_message_id"`
 
-	// Media A JSON-serialized object for the new media content of the message. A new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL.
+	// Media A JSON-serialized object for the new media content of the message
 	Media InputMedia `json:"media"`
 
 	// ReceiverUserId Identifier of the user who received the message
@@ -4488,7 +4553,7 @@ type EditEphemeralMessageMediaMultipartBody struct {
 	// EphemeralMessageId Identifier of the ephemeral message to edit
 	EphemeralMessageId int `json:"ephemeral_message_id"`
 
-	// Media A JSON-serialized object for the new media content of the message. A new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL.
+	// Media A JSON-serialized object for the new media content of the message
 	Media string `json:"media"`
 
 	// ReceiverUserId Identifier of the user who received the message
@@ -4536,8 +4601,11 @@ type EditEphemeralMessageTextJSONBody struct {
 	// ReplyMarkup A JSON-serialized object for an inline keyboard
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
-	// Text New text of the message, 1-4096 characters after entity parsing
-	Text string `json:"text"`
+	// RichMessage New rich content of the message; required if text isn't specified
+	RichMessage *InputRichMessage `json:"rich_message,omitempty"`
+
+	// Text New text of the message, 1-4096 characters after entity parsing; required if rich_message isn't specified
+	Text *string `json:"text,omitempty"`
 }
 
 // EditForumTopicJSONBody defines parameters for EditForumTopic.
@@ -4734,7 +4802,7 @@ type EditMessageTextJSONBody struct {
 	// ReplyMarkup A JSON-serialized object for an inline keyboard
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
-	// RichMessage New rich content of the message; required if text isn't specified. Direct upload of new files isn't supported when an inline message is edited.
+	// RichMessage New rich content of the message; required if text isn't specified. Direct upload of new files and explicit upload of files by a URL isn't supported when an inline message is edited.
 	RichMessage *InputRichMessage `json:"rich_message,omitempty"`
 
 	// Text New text of the message, 1-4096 characters after entity parsing; required if rich_message isn't specified
@@ -5262,6 +5330,9 @@ type PromoteChatMemberJSONBody struct {
 	// CanRestrictMembers Pass True if the administrator can restrict, ban or unban chat members, or access supergroup statistics. For backward compatibility, defaults to True for promotions of channel administrators.
 	CanRestrictMembers *bool `json:"can_restrict_members,omitempty"`
 
+	// CanSendWelcomeMessages Pass True if the administrator can manage chat welcome messages or directly send them in the case of bots
+	CanSendWelcomeMessages *bool `json:"can_send_welcome_messages,omitempty"`
+
 	// ChatId Unique identifier for the target chat or username of the target channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
@@ -5454,9 +5525,6 @@ type SendAnimationJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// Caption Animation caption (may also be used when resending animation by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
@@ -5474,6 +5542,9 @@ type SendAnimationJSONBody struct {
 
 	// Duration Duration of sent animation in seconds
 	Duration *int `json:"duration,omitempty"`
+
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty"`
 
 	// HasSpoiler Pass True if the animation needs to be covered with a spoiler animation
 	HasSpoiler *bool `json:"has_spoiler,omitempty"`
@@ -5493,12 +5564,9 @@ type SendAnimationJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -5553,9 +5621,6 @@ type SendAnimationMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// Caption Animation caption (may also be used when resending animation by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
@@ -5573,6 +5638,9 @@ type SendAnimationMultipartBody struct {
 
 	// Duration Duration of sent animation in seconds
 	Duration *int `json:"duration,omitempty"`
+
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *string `json:"ephemeral_message_parameters,omitempty"`
 
 	// HasSpoiler Pass True if the animation needs to be covered with a spoiler animation
 	HasSpoiler *bool `json:"has_spoiler,omitempty"`
@@ -5592,12 +5660,9 @@ type SendAnimationMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -5652,9 +5717,6 @@ type SendAudioJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// Caption Audio caption, 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
@@ -5673,6 +5735,9 @@ type SendAudioJSONBody struct {
 	// Duration Duration of the audio in seconds
 	Duration *int `json:"duration,omitempty"`
 
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty"`
+
 	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
 	MessageEffectId *string `json:"message_effect_id,omitempty"`
 
@@ -5688,12 +5753,9 @@ type SendAudioJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -5745,9 +5807,6 @@ type SendAudioMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// Caption Audio caption, 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
@@ -5766,6 +5825,9 @@ type SendAudioMultipartBody struct {
 	// Duration Duration of the audio in seconds
 	Duration *int `json:"duration,omitempty"`
 
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *string `json:"ephemeral_message_parameters,omitempty"`
+
 	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
 	MessageEffectId *string `json:"message_effect_id,omitempty"`
 
@@ -5781,12 +5843,9 @@ type SendAudioMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -5886,9 +5945,6 @@ type SendContactJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
@@ -5897,6 +5953,9 @@ type SendContactJSONBody struct {
 
 	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
+
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty"`
 
 	// FirstName Contact's first name
 	FirstName string `json:"first_name"`
@@ -5916,12 +5975,9 @@ type SendContactJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -5990,7 +6046,7 @@ type SendDiceJSONBody struct {
 
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -6033,9 +6089,6 @@ type SendDocumentJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// Caption Document caption (may also be used when resending documents by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
@@ -6057,6 +6110,9 @@ type SendDocumentJSONBody struct {
 	// Document File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
 	Document string `json:"document"`
 
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty"`
+
 	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
 	MessageEffectId *string `json:"message_effect_id,omitempty"`
 
@@ -6069,12 +6125,9 @@ type SendDocumentJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -6120,9 +6173,6 @@ type SendDocumentMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// Caption Document caption (may also be used when resending documents by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
@@ -6144,6 +6194,9 @@ type SendDocumentMultipartBody struct {
 	// Document File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
 	Document openapi_types.File `json:"document"`
 
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *string `json:"ephemeral_message_parameters,omitempty"`
+
 	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
 	MessageEffectId *string `json:"message_effect_id,omitempty"`
 
@@ -6156,12 +6209,9 @@ type SendDocumentMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -6360,9 +6410,6 @@ type SendLivePhotoJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// Caption Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
@@ -6377,6 +6424,9 @@ type SendLivePhotoJSONBody struct {
 
 	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
+
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty"`
 
 	// HasSpoiler Pass True if the video needs to be covered with a spoiler animation
 	HasSpoiler *bool `json:"has_spoiler,omitempty"`
@@ -6399,12 +6449,9 @@ type SendLivePhotoJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -6450,9 +6497,6 @@ type SendLivePhotoMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// Caption Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
@@ -6467,6 +6511,9 @@ type SendLivePhotoMultipartBody struct {
 
 	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
+
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *string `json:"ephemeral_message_parameters,omitempty"`
 
 	// HasSpoiler Pass True if the video needs to be covered with a spoiler animation
 	HasSpoiler *bool `json:"has_spoiler,omitempty"`
@@ -6489,12 +6536,9 @@ type SendLivePhotoMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -6540,9 +6584,6 @@ type SendLocationJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
@@ -6551,6 +6592,9 @@ type SendLocationJSONBody struct {
 
 	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
+
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty"`
 
 	// Heading For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.
 	Heading *int `json:"heading,omitempty"`
@@ -6579,12 +6623,9 @@ type SendLocationJSONBody struct {
 	// ProximityAlertRadius For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified.
 	ProximityAlertRadius *int `json:"proximity_alert_radius,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -6693,9 +6734,6 @@ type SendMessageJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
@@ -6707,6 +6745,9 @@ type SendMessageJSONBody struct {
 
 	// Entities A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
 	Entities *[]MessageEntity `json:"entities,omitempty"`
+
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty"`
 
 	// LinkPreviewOptions Link preview generation options for the message
 	LinkPreviewOptions *LinkPreviewOptions `json:"link_preview_options,omitempty"`
@@ -6723,12 +6764,9 @@ type SendMessageJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -6768,14 +6806,20 @@ type SendMessageJSONBody struct {
 
 // SendMessageDraftJSONBody defines parameters for SendMessageDraft.
 type SendMessageDraftJSONBody struct {
+	// CanStop Pass True to show the user a button to stop further drafts. The bot will receive an Update “stopped_message_generation” if the user presses the button.
+	CanStop *bool `json:"can_stop,omitempty"`
+
 	// ChatId Unique identifier for the target private chat
 	ChatId int64 `json:"chat_id"`
 
-	// DraftId Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated.
+	// DraftId Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated. Otherwise, the draft is replaced without animation.
 	DraftId int `json:"draft_id"`
 
 	// Entities A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
 	Entities *[]MessageEntity `json:"entities,omitempty"`
+
+	// KeepOnStop Pass True to keep the draft in the chat when the button is pressed. The draft will still disappear after a short time or if the bot sends a message. To fully preserve the partial draft, the bot should send it as a new message.
+	KeepOnStop *bool `json:"keep_on_stop,omitempty"`
 
 	// MessageThreadId Unique identifier for the target message thread
 	MessageThreadId *int `json:"message_thread_id,omitempty"`
@@ -6827,7 +6871,7 @@ type SendPaidMediaJSONBody struct {
 
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -6876,9 +6920,6 @@ type SendPhotoJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// Caption Photo caption (may also be used when resending photos by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
@@ -6893,6 +6934,9 @@ type SendPhotoJSONBody struct {
 
 	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
+
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty"`
 
 	// HasSpoiler Pass True if the photo needs to be covered with a spoiler animation
 	HasSpoiler *bool `json:"has_spoiler,omitempty"`
@@ -6912,12 +6956,9 @@ type SendPhotoJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -6963,9 +7004,6 @@ type SendPhotoMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// Caption Photo caption (may also be used when resending photos by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
@@ -6980,6 +7018,9 @@ type SendPhotoMultipartBody struct {
 
 	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
+
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *string `json:"ephemeral_message_parameters,omitempty"`
 
 	// HasSpoiler Pass True if the photo needs to be covered with a spoiler animation
 	HasSpoiler *bool `json:"has_spoiler,omitempty"`
@@ -6999,12 +7040,9 @@ type SendPhotoMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -7136,7 +7174,7 @@ type SendPollJSONBody struct {
 
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -7191,6 +7229,9 @@ type SendRichMessageJSONBody struct {
 	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
 
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty"`
+
 	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
 	MessageEffectId *string `json:"message_effect_id,omitempty"`
 
@@ -7202,7 +7243,7 @@ type SendRichMessageJSONBody struct {
 
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -7242,16 +7283,22 @@ type SendRichMessageJSONBody struct {
 
 // SendRichMessageDraftJSONBody defines parameters for SendRichMessageDraft.
 type SendRichMessageDraftJSONBody struct {
+	// CanStop Pass True to show the user a button to stop further drafts. The bot will receive an Update “stopped_message_generation” if the user presses the button.
+	CanStop *bool `json:"can_stop,omitempty"`
+
 	// ChatId Unique identifier for the target private chat
 	ChatId int64 `json:"chat_id"`
 
-	// DraftId Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated.
+	// DraftId Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated. Otherwise, the draft is replaced without animation.
 	DraftId int `json:"draft_id"`
+
+	// KeepOnStop Pass True to keep the draft in the chat when the button is pressed. The draft will still disappear after a short time or if the bot sends a message. To fully preserve the partial draft, the bot should send it as a new message.
+	KeepOnStop *bool `json:"keep_on_stop,omitempty"`
 
 	// MessageThreadId Unique identifier for the target message thread
 	MessageThreadId *int `json:"message_thread_id,omitempty"`
 
-	// RichMessage The partial message to be streamed. Direct upload of new files isn't supported.
+	// RichMessage The partial message to be streamed. Direct upload of new files and explicit upload of files by a URL isn't supported.
 	RichMessage InputRichMessage `json:"rich_message"`
 }
 
@@ -7262,9 +7309,6 @@ type SendStickerJSONBody struct {
 
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
-
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
 
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
@@ -7278,6 +7322,9 @@ type SendStickerJSONBody struct {
 	// Emoji Emoji associated with the sticker; only for just uploaded stickers
 	Emoji *string `json:"emoji,omitempty"`
 
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty"`
+
 	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
 	MessageEffectId *string `json:"message_effect_id,omitempty"`
 
@@ -7287,12 +7334,9 @@ type SendStickerJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -7338,9 +7382,6 @@ type SendStickerMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
@@ -7353,6 +7394,9 @@ type SendStickerMultipartBody struct {
 	// Emoji Emoji associated with the sticker; only for just uploaded stickers
 	Emoji *string `json:"emoji,omitempty"`
 
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *string `json:"ephemeral_message_parameters,omitempty"`
+
 	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
 	MessageEffectId *string `json:"message_effect_id,omitempty"`
 
@@ -7362,12 +7406,9 @@ type SendStickerMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -7416,9 +7457,6 @@ type SendVenueJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
@@ -7427,6 +7465,9 @@ type SendVenueJSONBody struct {
 
 	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
+
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty"`
 
 	// FoursquareId Foursquare identifier of the venue
 	FoursquareId *string `json:"foursquare_id,omitempty"`
@@ -7455,12 +7496,9 @@ type SendVenueJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -7506,9 +7544,6 @@ type SendVideoJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// Caption Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
@@ -7530,6 +7565,9 @@ type SendVideoJSONBody struct {
 	// Duration Duration of sent video in seconds
 	Duration *int `json:"duration,omitempty"`
 
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty"`
+
 	// HasSpoiler Pass True if the video needs to be covered with a spoiler animation
 	HasSpoiler *bool `json:"has_spoiler,omitempty"`
 
@@ -7548,12 +7586,9 @@ type SendVideoJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -7614,9 +7649,6 @@ type SendVideoMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// Caption Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
@@ -7638,6 +7670,9 @@ type SendVideoMultipartBody struct {
 	// Duration Duration of sent video in seconds
 	Duration *int `json:"duration,omitempty"`
 
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *string `json:"ephemeral_message_parameters,omitempty"`
+
 	// HasSpoiler Pass True if the video needs to be covered with a spoiler animation
 	HasSpoiler *bool `json:"has_spoiler,omitempty"`
 
@@ -7656,12 +7691,9 @@ type SendVideoMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -7722,9 +7754,6 @@ type SendVideoNoteJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
@@ -7736,6 +7765,9 @@ type SendVideoNoteJSONBody struct {
 
 	// Duration Duration of sent video in seconds
 	Duration *int `json:"duration,omitempty"`
+
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty"`
 
 	// Length Video width and height, i.e. diameter of the video message
 	Length *int `json:"length,omitempty"`
@@ -7749,12 +7781,9 @@ type SendVideoNoteJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -7803,9 +7832,6 @@ type SendVideoNoteMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
@@ -7817,6 +7843,9 @@ type SendVideoNoteMultipartBody struct {
 
 	// Duration Duration of sent video in seconds
 	Duration *int `json:"duration,omitempty"`
+
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *string `json:"ephemeral_message_parameters,omitempty"`
 
 	// Length Video width and height, i.e. diameter of the video message
 	Length *int `json:"length,omitempty"`
@@ -7830,12 +7859,9 @@ type SendVideoNoteMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -7884,9 +7910,6 @@ type SendVoiceJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// Caption Voice message caption, 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
@@ -7905,6 +7928,9 @@ type SendVoiceJSONBody struct {
 	// Duration Duration of the voice message in seconds
 	Duration *int `json:"duration,omitempty"`
 
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty"`
+
 	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
 	MessageEffectId *string `json:"message_effect_id,omitempty"`
 
@@ -7917,12 +7943,9 @@ type SendVoiceJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
@@ -7968,9 +7991,6 @@ type SendVoiceMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// CallbackQueryId For outgoing ephemeral messages, identifier of the callback query which triggerred the message if any
-	CallbackQueryId *string `json:"callback_query_id,omitempty"`
-
 	// Caption Voice message caption, 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
@@ -7989,6 +8009,9 @@ type SendVoiceMultipartBody struct {
 	// Duration Duration of the voice message in seconds
 	Duration *int `json:"duration,omitempty"`
 
+	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *string `json:"ephemeral_message_parameters,omitempty"`
+
 	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
 	MessageEffectId *string `json:"message_effect_id,omitempty"`
 
@@ -8001,12 +8024,9 @@ type SendVoiceMultipartBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ReceiverUserId For outgoing ephemeral messages, unique identifier of the user who will receive the message; for group and supergroup chats only. It is not guaranteed that the user will receive the message, especially if they are offline. See ephemeral message sending for more details.
-	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
-
 	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
 	ReplyMarkup *struct {
-		// ForceReply Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
 		ForceReply *bool `json:"force_reply,omitempty"`
 
 		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
