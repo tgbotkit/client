@@ -78,7 +78,7 @@ type Animation struct {
 	// FileName Optional. Original animation filename as defined by the sender
 	FileName *string `json:"file_name,omitempty"`
 
-	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
+	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
 	FileSize *int64 `json:"file_size,omitempty"`
 
 	// FileUniqueId Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
@@ -97,6 +97,27 @@ type Animation struct {
 	Width int `json:"width"`
 }
 
+// AreaPosition Describes the position of a rectangle area on a story media or a TON wallet card.
+type AreaPosition struct {
+	// CornerRadiusPercentage The radius of the rectangle corner rounding, as a percentage of the media or the card width
+	CornerRadiusPercentage float32 `json:"corner_radius_percentage"`
+
+	// HeightPercentage The height of the area's rectangle, as a percentage of the media or the card height
+	HeightPercentage float32 `json:"height_percentage"`
+
+	// RotationAngle The clockwise rotation angle of the rectangle, in degrees; 0-360
+	RotationAngle float32 `json:"rotation_angle"`
+
+	// WidthPercentage The width of the area's rectangle, as a percentage of the media or the card width
+	WidthPercentage float32 `json:"width_percentage"`
+
+	// XPercentage The abscissa of the area's center, as a percentage of the media or the card width
+	XPercentage float32 `json:"x_percentage"`
+
+	// YPercentage The ordinate of the area's center, as a percentage of the media or the card height
+	YPercentage float32 `json:"y_percentage"`
+}
+
 // Audio This object represents an audio file to be treated as music by the Telegram clients.
 type Audio struct {
 	// Duration Duration of the audio in seconds as defined by the sender
@@ -108,7 +129,7 @@ type Audio struct {
 	// FileName Optional. Original filename as defined by the sender
 	FileName *string `json:"file_name,omitempty"`
 
-	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
+	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
 	FileSize *int64 `json:"file_size,omitempty"`
 
 	// FileUniqueId Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
@@ -181,6 +202,63 @@ type BotCommandScope = map[string]interface{}
 type BotDescription struct {
 	// Description The bot's description
 	Description string `json:"description"`
+}
+
+// BotFullInfo This object contains full information about the bot itself.
+type BotFullInfo struct {
+	// ActiveUsernames Optional. If non-empty, the list of all active usernames of the bot
+	ActiveUsernames *[]string `json:"active_usernames,omitempty"`
+
+	// AllowsUsersToCreateTopics True, if the bot allows users to create and delete topics in private chats
+	AllowsUsersToCreateTopics bool `json:"allows_users_to_create_topics"`
+
+	// CanConnectToBusiness True, if the bot can be connected to a user account to manage it
+	CanConnectToBusiness bool `json:"can_connect_to_business"`
+
+	// CanJoinGroups True, if the bot can be added to groups
+	CanJoinGroups bool `json:"can_join_groups"`
+
+	// CanManageBots True, if other bots can be created to be controlled by the bot
+	CanManageBots bool `json:"can_manage_bots"`
+
+	// CanReadAllGroupMessages True, if privacy mode is disabled for the bot
+	CanReadAllGroupMessages bool `json:"can_read_all_group_messages"`
+
+	// FirstName Bot's first name
+	FirstName string `json:"first_name"`
+
+	// HasMainWebApp True, if the bot has a main Web App
+	HasMainWebApp bool `json:"has_main_web_app"`
+
+	// HasTopicSidebar True, if topics in private chats with the bot are shown in a sidebar
+	HasTopicSidebar bool `json:"has_topic_sidebar"`
+
+	// HasTopicsEnabled True, if the bot has forum topic mode enabled in private chats
+	HasTopicsEnabled bool `json:"has_topics_enabled"`
+
+	// Id Unique identifier for this bot. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type is safe for storing this identifier.
+	Id int64 `json:"id"`
+
+	// InlineQueryPlaceholder Optional. Placeholder for inline queries, which is shown in the input field after the bot's username; omitted if the default placeholder is used
+	InlineQueryPlaceholder *string `json:"inline_query_placeholder,omitempty"`
+
+	// IsBot Always True
+	IsBot bool `json:"is_bot"`
+
+	// NeedsInlineQueryLocation True, if the bot requests the location of the user with every inline query
+	NeedsInlineQueryLocation bool `json:"needs_inline_query_location"`
+
+	// SupportsGuestQueries True, if the bot supports guest queries from chats it is not a member of
+	SupportsGuestQueries bool `json:"supports_guest_queries"`
+
+	// SupportsInlineQueries True, if the bot supports inline queries
+	SupportsInlineQueries bool `json:"supports_inline_queries"`
+
+	// SupportsJoinRequestQueries True, if the bot supports join request queries and can be assigned to process them
+	SupportsJoinRequestQueries bool `json:"supports_join_request_queries"`
+
+	// Username Optional. Bot's username
+	Username *string `json:"username,omitempty"`
 }
 
 // BotName This object represents the bot's name.
@@ -269,7 +347,7 @@ type BusinessConnection struct {
 	// User Business account user that created the business connection
 	User User `json:"user"`
 
-	// UserChatId Identifier of a private chat with the user who created the business connection. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
+	// UserChatId Identifier of a private chat with the user who created the business connection. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type is safe for storing this identifier.
 	UserChatId int64 `json:"user_chat_id"`
 }
 
@@ -327,12 +405,12 @@ type BusinessOpeningHoursInterval struct {
 // CallbackGame A placeholder, currently holds no information. Use BotFather to set up your game.
 type CallbackGame = map[string]interface{}
 
-// CallbackQuery This object represents an incoming callback query from a callback button in an inline keyboard. If the button that originated the query was attached to a message sent by the bot, the field message will be present. If the button was attached to a message sent via the bot (in inline mode), the field inline_message_id will be present. Exactly one of the fields data or game_short_name will be present.
+// CallbackQuery This object represents an incoming callback query from a callback button in an inline keyboard or in a rich message. If the button that originated the query belongs to a message sent by the bot, the field message will be present, unless the field inline_message_id is used instead as specified by the parameter callback_query_mode of the method setMySettings. If the button belongs to a message sent via the bot (in inline mode), the field inline_message_id will be present. Exactly one of the fields data or game_short_name will be present.
 type CallbackQuery struct {
 	// ChatInstance Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent. Useful for high scores in games.
 	ChatInstance string `json:"chat_instance"`
 
-	// Data Optional. Data associated with the callback button. Be aware that the message originated the query can contain no callback buttons with this data.
+	// Data Optional. Data associated with the callback button. Be aware that the message that originated the query can contain no callback buttons with this data.
 	Data *string `json:"data,omitempty"`
 
 	// From Sender
@@ -344,7 +422,7 @@ type CallbackQuery struct {
 	// Id Unique identifier for this query
 	Id string `json:"id"`
 
-	// InlineMessageId Optional. Identifier of the message sent via the bot in inline mode, that originated the query
+	// InlineMessageId Optional. Identifier of the message sent via the bot in inline mode, that originated the query. Can also be present for messages sent by the bot, depending on the parameter callback_query_mode of the method setMySettings.
 	InlineMessageId *string `json:"inline_message_id,omitempty"`
 
 	// Message Optional. Message sent by the bot with the callback button that originated the query
@@ -356,7 +434,7 @@ type Chat struct {
 	// FirstName Optional. First name of the other party in a private chat
 	FirstName *string `json:"first_name,omitempty"`
 
-	// Id Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
+	// Id Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this identifier.
 	Id int64 `json:"id"`
 
 	// IsDirectMessages Optional. True, if the chat is the direct messages chat of a channel
@@ -560,7 +638,7 @@ type ChatFullInfo struct {
 	// HasHiddenMembers Optional. True, if non-administrators can only get the list of bots and administrators in the chat
 	HasHiddenMembers *bool `json:"has_hidden_members,omitempty"`
 
-	// HasPrivateForwards Optional. True, if privacy settings of the other party in the private chat allows to use tg://user?id=<user_id> links only in chats with the user
+	// HasPrivateForwards Optional. True, if the privacy settings of the other party in the private chat allow using tg://user?id=<user_id> links only in chats with the user
 	HasPrivateForwards *bool `json:"has_private_forwards,omitempty"`
 
 	// HasProtectedContent Optional. True, if messages from the chat can't be forwarded to other chats
@@ -572,7 +650,7 @@ type ChatFullInfo struct {
 	// HasVisibleHistory Optional. True, if new chat members will have access to old messages; available only to chat administrators
 	HasVisibleHistory *bool `json:"has_visible_history,omitempty"`
 
-	// Id Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
+	// Id Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this identifier.
 	Id int64 `json:"id"`
 
 	// InviteLink Optional. Primary invite link, for groups, supergroups and channel chats
@@ -593,7 +671,7 @@ type ChatFullInfo struct {
 	// LastName Optional. Last name of the other party in a private chat
 	LastName *string `json:"last_name,omitempty"`
 
-	// LinkedChatId Optional. Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
+	// LinkedChatId Optional. Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64-bit integer or double-precision float type is safe for storing this identifier.
 	LinkedChatId *int64 `json:"linked_chat_id,omitempty"`
 
 	// Location Optional. For supergroups, the location to which the supergroup is connected
@@ -632,6 +710,9 @@ type ChatFullInfo struct {
 	// Rating Optional. For private chats, the rating of the user if any
 	Rating *UserRating `json:"rating,omitempty"`
 
+	// ShareTheme Optional. For private chats, supergroups and channels, the theme of the screen for sharing a link to the user or the chat; omitted if the default theme is used
+	ShareTheme *ChatShareTheme `json:"share_theme,omitempty"`
+
 	// SlowModeDelay Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unprivileged user; in seconds
 	SlowModeDelay *int `json:"slow_mode_delay,omitempty"`
 
@@ -640,6 +721,9 @@ type ChatFullInfo struct {
 
 	// Title Optional. Title, for supergroups, channels and group chats
 	Title *string `json:"title,omitempty"`
+
+	// TonWalletCard Optional. For private chats, the TON wallet card of the user, which is shown on their profile page
+	TonWalletCard *TonWalletCard `json:"ton_wallet_card,omitempty"`
 
 	// Type Type of the chat, can be either “private”, “group”, “supergroup” or “channel”
 	Type string `json:"type"`
@@ -662,7 +746,7 @@ type ChatInviteLink struct {
 	// Creator Creator of the link
 	Creator User `json:"creator"`
 
-	// ExpireDate Optional. Point in time (Unix timestamp) when the link will expire or has been expired
+	// ExpireDate Optional. Point in time (Unix timestamp) when the link will expire or has expired
 	ExpireDate *int `json:"expire_date,omitempty"`
 
 	// InviteLink The invite link. If the link was created by another chat administrator, then the second part of the link will be replaced with “…”.
@@ -710,7 +794,7 @@ type ChatJoinRequest struct {
 	// QueryId Optional. Identifier of the join request query; for bots assigned to process join requests only. If present, then the bot must call sendChatJoinRequestWebApp or directly call answerChatJoinRequestQuery within 10 seconds.
 	QueryId *string `json:"query_id,omitempty"`
 
-	// UserChatId Identifier of a private chat with the user who sent the join request. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. The bot can use this identifier for 5 minutes to send messages until the join request is processed, assuming no other administrator contacted the user.
+	// UserChatId Identifier of a private chat with the user who sent the join request. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type is safe for storing this identifier. The bot can use this identifier for 5 minutes to send messages until the join request is processed, assuming no other administrator contacted the user.
 	UserChatId int64 `json:"user_chat_id"`
 }
 
@@ -803,7 +887,7 @@ type ChatPermissions struct {
 	// CanSendMessages Optional. True, if the user is allowed to send text messages, rich messages, contacts, giveaways, giveaway winners, invoices, locations and venues
 	CanSendMessages *bool `json:"can_send_messages,omitempty"`
 
-	// CanSendOtherMessages Optional. True, if the user is allowed to send animations, games, stickers and use inline bots
+	// CanSendOtherMessages Optional. True, if the user is allowed to send animations, games, stickers, widgets and use inline bots
 	CanSendOtherMessages *bool `json:"can_send_other_messages,omitempty"`
 
 	// CanSendPhotos Optional. True, if the user is allowed to send photos
@@ -837,9 +921,32 @@ type ChatPhoto struct {
 	SmallFileUniqueId string `json:"small_file_unique_id"`
 }
 
+// ChatShareTheme This object describes the theme of the screen for sharing a link to a user or a chat. Currently, it can be one of
+// ChatShareThemeEmoji
+// ChatShareThemeUniqueGift
+type ChatShareTheme = map[string]interface{}
+
+// ChatShareThemeBackdrop This object describes a backdrop, which can be used as the background of a theme of the screen for sharing a link to a user or a chat.
+type ChatShareThemeBackdrop struct {
+	// Colors Colors of the backdrop
+	Colors UniqueGiftBackdropColors `json:"colors"`
+
+	// Id Unique identifier of the backdrop
+	Id int `json:"id"`
+
+	// Name Name of the backdrop
+	Name string `json:"name"`
+}
+
+// ChatShareThemeBackdrops This object contains a list of backdrops, which can be used as the background of a theme of the screen for sharing a link to a user or a chat.
+type ChatShareThemeBackdrops struct {
+	// Backdrops The list of backdrops
+	Backdrops []ChatShareThemeBackdrop `json:"backdrops"`
+}
+
 // ChatShared This object contains information about a chat that was shared with the bot using a KeyboardButtonRequestChat button.
 type ChatShared struct {
-	// ChatId Identifier of the shared chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. The bot may not have access to the chat and could be unable to use this identifier, unless the chat is already known to the bot by some other means.
+	// ChatId Identifier of the shared chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type is safe for storing this identifier. The bot may not have access to the chat and could be unable to use this identifier, unless the chat is already known to the bot by some other means.
 	ChatId int64 `json:"chat_id"`
 
 	// Photo Optional. Available sizes of the chat photo, if the photo was requested by the bot
@@ -920,10 +1027,10 @@ type ChosenInlineResult struct {
 	// From The user that chose the result
 	From User `json:"from"`
 
-	// InlineMessageId Optional. Identifier of the sent inline message. Available only if there is an inline keyboard attached to the message. Will be also received in callback queries and can be used to edit the message.
+	// InlineMessageId Optional. Identifier of the sent inline message. Available only if there is an inline keyboard attached to the message. Will also be received in callback queries and can be used to edit the message.
 	InlineMessageId *string `json:"inline_message_id,omitempty"`
 
-	// Location Optional. Sender location, only for bots that require user location
+	// Location Optional. Sender location, only for bots that enabled user location requests via @BotFather or using the parameter needs_inline_query_location of the method setMySettings
 	Location *Location `json:"location,omitempty"`
 
 	// Query The query that was used to obtain the result
@@ -935,7 +1042,7 @@ type ChosenInlineResult struct {
 
 // Community Represents a community (a group of chats).
 type Community struct {
-	// Id Unique identifier for this community. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
+	// Id Unique identifier for this community. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this identifier.
 	Id int64 `json:"id"`
 
 	// Name Name of the community
@@ -968,7 +1075,7 @@ type Contact struct {
 	// PhoneNumber Contact's phone number
 	PhoneNumber string `json:"phone_number"`
 
-	// UserId Optional. Contact's user identifier in Telegram. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
+	// UserId Optional. Contact's user identifier in Telegram. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type is safe for storing this identifier.
 	UserId *int64 `json:"user_id,omitempty"`
 
 	// Vcard Optional. Additional data about the contact in the form of a vCard
@@ -1001,7 +1108,7 @@ type DirectMessagePriceChanged struct {
 
 // DirectMessagesTopic Describes a topic of a direct messages chat.
 type DirectMessagesTopic struct {
-	// TopicId Unique identifier of the topic. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
+	// TopicId Unique identifier of the topic. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type is safe for storing this identifier.
 	TopicId int64 `json:"topic_id"`
 
 	// User Optional. Information about the user that created the topic. Currently, it is always present.
@@ -1019,7 +1126,7 @@ type Document struct {
 	// FileName Optional. Original filename as defined by the sender
 	FileName *string `json:"file_name,omitempty"`
 
-	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
+	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
 	FileSize *int64 `json:"file_size,omitempty"`
 
 	// FileUniqueId Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
@@ -1077,13 +1184,13 @@ type EncryptedPassportElement struct {
 	Type string `json:"type"`
 }
 
-// EphemeralMessageParameters defines model for EphemeralMessageParameters.
+// EphemeralMessageParameters Describes the parameters of an ephemeral message to be sent.
 type EphemeralMessageParameters struct {
-	// CallbackQueryId Optional. Identifier of the callback query which triggered the message, if any
+	// CallbackQueryId Optional. Identifier of the callback query which triggered the message, if any. If specified and receiver_user_id is omitted, then the message is sent as an ephemeral reply to the callback query and will be shown only to the user who pressed the button. Ephemeral replies can't be sent to callback queries from messages in channel direct messages chats. The bot must still answer the callback query using answerCallbackQuery.
 	CallbackQueryId *string `json:"callback_query_id,omitempty"`
 
-	// ReceiverUserId Identifier of the user who will receive the message. It is not guaranteed that the user will receive the message, especially if they are offline. See here for more details.
-	ReceiverUserId int `json:"receiver_user_id"`
+	// ReceiverUserId Optional. Identifier of the user who will receive the message; required unless the message is sent as an ephemeral reply to a callback query. If omitted, then the parameter chat_id of the method is ignored. If specified together with callback_query_id, then it must be the identifier of the user who pressed the button. Must be omitted for messages sent in chats where the bot isn't a member, unless the message is a reply to an ephemeral message. It is not guaranteed that the user will receive the message, especially if they are offline. See here for more details.
+	ReceiverUserId *int `json:"receiver_user_id,omitempty"`
 
 	// ReplaceCallbackQueryMessage Optional. Pass True if the ephemeral message must be shown in place of the original message. Must be False for callback queries from ephemeral messages, which must be edited using regular editEphemeralMessage… methods.
 	ReplaceCallbackQueryMessage *bool `json:"replace_callback_query_message,omitempty"`
@@ -1181,6 +1288,9 @@ type ExternalReplyInfo struct {
 
 	// Voice Optional. Message is a voice message, information about the file
 	Voice *Voice `json:"voice,omitempty"`
+
+	// Widget Optional. Message is an HTML widget, information about the widget
+	Widget *Widget `json:"widget,omitempty"`
 }
 
 // File This object represents a file ready to be downloaded. The file can be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile.
@@ -1191,7 +1301,7 @@ type File struct {
 	// FilePath Optional. File path. Use https://api.telegram.org/file/bot<token>/<file_path> to get the file.
 	FilePath *string `json:"file_path,omitempty"`
 
-	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
+	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
 	FileSize *int64 `json:"file_size,omitempty"`
 
 	// FileUniqueId Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
@@ -1246,7 +1356,7 @@ type ForumTopicEdited struct {
 // ForumTopicReopened This object represents a service message about a forum topic reopened in the chat. Currently holds no information.
 type ForumTopicReopened = map[string]interface{}
 
-// Game This object represents a game. Use BotFather to create and edit games, their short names will act as unique identifiers.
+// Game This object represents a game. Use BotFather to create and edit games; their short names will act as unique identifiers.
 type Game struct {
 	// Animation Optional. Animation that will be displayed in the game message in chats. Upload via BotFather.
 	Animation *Animation `json:"animation,omitempty"`
@@ -1279,10 +1389,10 @@ type GameHighScore struct {
 	User User `json:"user"`
 }
 
-// GeneralForumTopicHidden This object represents a service message about General forum topic hidden in the chat. Currently holds no information.
+// GeneralForumTopicHidden This object represents a service message about the General forum topic hidden in the chat. Currently holds no information.
 type GeneralForumTopicHidden = map[string]interface{}
 
-// GeneralForumTopicUnhidden This object represents a service message about General forum topic unhidden in the chat. Currently holds no information.
+// GeneralForumTopicUnhidden This object represents a service message about the General forum topic unhidden in the chat. Currently holds no information.
 type GeneralForumTopicUnhidden = map[string]interface{}
 
 // Gift This object represents a gift that can be sent by the bot.
@@ -1372,7 +1482,7 @@ type GiftInfo struct {
 	UniqueGiftNumber *int `json:"unique_gift_number,omitempty"`
 }
 
-// Gifts This object represent a list of gifts.
+// Gifts This object represents a list of gifts.
 type Gifts struct {
 	// Gifts The list of gifts
 	Gifts []Gift `json:"gifts"`
@@ -1395,13 +1505,13 @@ type Giveaway struct {
 	// PremiumSubscriptionMonthCount Optional. The number of months the Telegram Premium subscription won from the giveaway will be active for; for Telegram Premium giveaways only
 	PremiumSubscriptionMonthCount *int `json:"premium_subscription_month_count,omitempty"`
 
-	// PrizeDescription Optional. Description of additional giveaway prize
+	// PrizeDescription Optional. Description of an additional giveaway prize
 	PrizeDescription *string `json:"prize_description,omitempty"`
 
 	// PrizeStarCount Optional. The number of Telegram Stars to be split between giveaway winners; for Telegram Star giveaways only
 	PrizeStarCount *int `json:"prize_star_count,omitempty"`
 
-	// WinnerCount The number of users which are supposed to be selected as winners of the giveaway
+	// WinnerCount The number of users who are supposed to be selected as winners of the giveaway
 	WinnerCount int `json:"winner_count"`
 
 	// WinnersSelectionDate Point in time (Unix timestamp) when winners of the giveaway will be selected
@@ -1446,7 +1556,7 @@ type GiveawayWinners struct {
 	// PremiumSubscriptionMonthCount Optional. The number of months the Telegram Premium subscription won from the giveaway will be active for; for Telegram Premium giveaways only
 	PremiumSubscriptionMonthCount *int `json:"premium_subscription_month_count,omitempty"`
 
-	// PrizeDescription Optional. Description of additional giveaway prize
+	// PrizeDescription Optional. Description of an additional giveaway prize
 	PrizeDescription *string `json:"prize_description,omitempty"`
 
 	// PrizeStarCount Optional. The number of Telegram Stars that were split between giveaway winners; for Telegram Star giveaways only
@@ -1488,7 +1598,7 @@ type InlineKeyboardButton struct {
 	// LoginUrl Optional. An HTTPS URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget. Not supported for ephemeral messages.
 	LoginUrl *LoginUrl `json:"login_url,omitempty"`
 
-	// Pay Optional. Specify True, to send a Pay button. Substrings “” and “XTR” in the buttons's text will be replaced with a Telegram Star icon.NOTE: This type of button must always be the first button in the first row and can only be used in invoice messages.
+	// Pay Optional. Specify True to send a Pay button. Substrings “” and “XTR” in the button's text will be replaced with a Telegram Star icon.NOTE: This type of button must always be the first button in the first row and can only be used in invoice messages.
 	Pay *bool `json:"pay,omitempty"`
 
 	// Style Optional. Style of the button. Must be one of “danger” (red), “success” (green) or “primary” (blue). If omitted, then an app-specific style is used.
@@ -1509,7 +1619,7 @@ type InlineKeyboardButton struct {
 	// Url Optional. HTTP or tg:// URL to be opened when the button is pressed. Links tg://user?id=<user_id> can be used to mention a user by their identifier without using a username, if this is allowed by their privacy settings.
 	Url *string `json:"url,omitempty"`
 
-	// WebApp Optional. Description of the Web App that will be launched when the user presses the button. The Web App will be able to send an arbitrary message on behalf of the user using the method answerWebAppQuery. Available only in private chats between a user and the bot. Not supported for messages sent on behalf of a business account.
+	// WebApp Optional. Description of the Web App that will be launched when the user presses the button. The Web App will be able to send an arbitrary message on behalf of the user using the method answerWebAppQuery. Available only in private chats between a user and the bot. Not supported for messages sent on behalf of a business account and ephemeral messages.
 	WebApp *WebAppInfo `json:"web_app,omitempty"`
 }
 
@@ -1524,7 +1634,7 @@ type InlineKeyboardMarkup struct {
 
 // InlineQuery This object represents an incoming inline query. When the user sends an empty query, your bot could return some default or trending results.
 type InlineQuery struct {
-	// ChatType Optional. Type of the chat from which the inline query was sent. Can be either “sender” for a private chat with the inline query sender, “private”, “group”, “supergroup”, or “channel”. The chat type should be always known for requests sent from official clients and most third-party clients, unless the request was sent from a secret chat.
+	// ChatType Optional. Type of the chat from which the inline query was sent. Can be either “sender” for a private chat with the inline query sender, “private”, “group”, “supergroup”, or “channel”. The chat type should always be known for requests sent from official clients and most third-party clients, unless the request was sent from a secret chat.
 	ChatType *string `json:"chat_type,omitempty"`
 
 	// From Sender
@@ -1533,7 +1643,7 @@ type InlineQuery struct {
 	// Id Unique identifier for this query
 	Id string `json:"id"`
 
-	// Location Optional. Sender location, only for bots that request user location
+	// Location Optional. Sender location, only for bots that enabled user location requests via @BotFather or using the parameter needs_inline_query_location of the method setMySettings
 	Location *Location `json:"location,omitempty"`
 
 	// Offset Offset of the results to be returned, can be controlled by the bot
@@ -1704,13 +1814,13 @@ type InputRichMessage struct {
 	// Blocks Optional. Content of the rich message to send described as a list of blocks
 	Blocks *[]InputRichBlock `json:"blocks,omitempty"`
 
-	// Html Optional. Content of the rich message to send described using HTML formatting. See rich message formatting options for more details. Use media field to specify the media used in the message.
+	// Html Optional. Content of the rich message to send described using HTML formatting. See rich message formatting options for more details. Use the media field to specify the media used in the message.
 	Html *string `json:"html,omitempty"`
 
 	// IsRtl Optional. Pass True if the rich message must be shown right-to-left
 	IsRtl *bool `json:"is_rtl,omitempty"`
 
-	// Markdown Optional. Content of the rich message to send described using Markdown formatting. See rich message formatting options for more details. Use media field to specify the media used in the message.
+	// Markdown Optional. Content of the rich message to send described using Markdown formatting. See rich message formatting options for more details. Use the media field to specify the media used in the message.
 	Markdown *string `json:"markdown,omitempty"`
 
 	// Media Optional. List of media that are specified in the markdown or html fields using tg://photo?id=, tg://video?id=, tg://document?id=, and tg://audio?id= links
@@ -1737,7 +1847,7 @@ type InputSticker struct {
 	// Format Format of the added sticker, must be one of “static” for a .WEBP or .PNG image, “animated” for a .TGS animation, “video” for a .WEBM video
 	Format string `json:"format"`
 
-	// Keywords Optional. List of 0-20 search keywords for the sticker with total length of up to 64 characters. For “regular” and “custom_emoji” stickers only.
+	// Keywords Optional. List of 0-20 search keywords for the sticker with a total length of up to 64 characters. For “regular” and “custom_emoji” stickers only.
 	Keywords *[]string `json:"keywords,omitempty"`
 
 	// MaskPosition Optional. Position where the mask should be placed on faces. For “mask” stickers only.
@@ -1766,7 +1876,7 @@ type Invoice struct {
 	// Title Product name
 	Title string `json:"title"`
 
-	// TotalAmount Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
+	// TotalAmount Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45, total_amount = 145. See the exp parameter in currencies.json; it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
 	TotalAmount int `json:"total_amount"`
 }
 
@@ -1784,7 +1894,7 @@ type KeyboardButton struct {
 	// RequestLocation Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only.
 	RequestLocation *bool `json:"request_location,omitempty"`
 
-	// RequestManagedBot Optional. If specified, pressing the button will ask the user to create and share a bot that will be managed by the current bot. Available for bots that enabled management of other bots in the @BotFather Mini App. Available in private chats only.
+	// RequestManagedBot Optional. If specified, pressing the button will ask the user to create and share a bot that will be managed by the current bot. Available for bots that enabled management of other bots in the @BotFather Mini App or using the parameter can_manage_bots of the method setMySettings. Available in private chats only.
 	RequestManagedBot *KeyboardButtonRequestManagedBot `json:"request_managed_bot,omitempty"`
 
 	// RequestPoll Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only.
@@ -1803,13 +1913,13 @@ type KeyboardButton struct {
 	WebApp *WebAppInfo `json:"web_app,omitempty"`
 }
 
-// KeyboardButtonPollType This object represents type of a poll, which is allowed to be created and sent when the corresponding button is pressed.
+// KeyboardButtonPollType This object represents the type of a poll, which is allowed to be created and sent when the corresponding button is pressed.
 type KeyboardButtonPollType struct {
 	// Type Optional. If quiz is passed, the user will be allowed to create only polls in the quiz mode. If regular is passed, only regular polls will be allowed. Otherwise, the user will be allowed to create a poll of any type.
 	Type *string `json:"type,omitempty"`
 }
 
-// KeyboardButtonRequestChat This object defines the criteria used to request a suitable chat. Information about the selected chat will be shared with the bot when the corresponding button is pressed. The bot will be granted requested rights in the chat if appropriate. More about requesting chats ».
+// KeyboardButtonRequestChat This object defines the criteria used to request a suitable chat. Information about the selected chat will be shared with the bot when the corresponding button is pressed. The bot will be granted the requested rights in the chat if appropriate. More about requesting chats ».
 type KeyboardButtonRequestChat struct {
 	// BotAdministratorRights Optional. A JSON-serialized object listing the required administrator rights of the bot in the chat. The rights must be a subset of user_administrator_rights. If not specified, no additional restrictions are applied.
 	BotAdministratorRights *ChatAdministratorRights `json:"bot_administrator_rights,omitempty"`
@@ -1853,7 +1963,7 @@ type KeyboardButtonRequestManagedBot struct {
 	// SuggestedName Optional. Suggested name for the bot
 	SuggestedName *string `json:"suggested_name,omitempty"`
 
-	// SuggestedUsername Optional. Suggested username for the bot
+	// SuggestedUsername Optional. Suggested username for the bot. The username must end with “bot”. If the user creating the bot has a Telegram Premium subscription, then the username can also end with “agent”, “ai”, “app”, “game”, or “gay”; in this case, the username will be assigned to the bot as a secondary username, and a regular username ending with “bot” will be assigned to the bot automatically.
 	SuggestedUsername *string `json:"suggested_username,omitempty"`
 }
 
@@ -1883,7 +1993,7 @@ type KeyboardButtonRequestUsers struct {
 
 // LabeledPrice This object represents a portion of the price for goods or services.
 type LabeledPrice struct {
-	// Amount Price of the product in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
+	// Amount Price of the product in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json; it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
 	Amount int `json:"amount"`
 
 	// Label Portion label
@@ -1919,13 +2029,13 @@ type LivePhoto struct {
 	// Duration Duration of the video in seconds as defined by the sender
 	Duration int `json:"duration"`
 
-	// FileId Identifier for the video file which can be used to download or reuse the file
+	// FileId Identifier for the video file, which can be used to download or reuse the file
 	FileId string `json:"file_id"`
 
-	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
+	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
 	FileSize *int64 `json:"file_size,omitempty"`
 
-	// FileUniqueId Unique identifier for the video file which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+	// FileUniqueId Unique identifier for the video file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
 	FileUniqueId string `json:"file_unique_id"`
 
 	// Height Video height as defined by the sender
@@ -1943,7 +2053,7 @@ type LivePhoto struct {
 
 // Location This object represents a point on the map.
 type Location struct {
-	// Heading Optional. The direction in which user is moving, in degrees; 1-360. For active live locations only.
+	// Heading Optional. The direction in which the user is moving, in degrees; 1-360. For active live locations only.
 	Heading *int `json:"heading,omitempty"`
 
 	// HorizontalAccuracy Optional. The radius of uncertainty for the location, measured in meters; 0-1500
@@ -1985,7 +2095,7 @@ type ManagedBotCreated struct {
 
 // ManagedBotUpdated This object contains information about the creation, token update, or owner update of a bot that is managed by the current bot.
 type ManagedBotUpdated struct {
-	// Bot Information about the bot. Token of the bot can be fetched using the method getManagedBotToken.
+	// Bot Information about the bot. The token of the bot can be fetched using the method getManagedBotToken.
 	Bot User `json:"bot"`
 
 	// User User that created the bot
@@ -2000,7 +2110,7 @@ type MaskPosition struct {
 	// Scale Mask scaling coefficient. For example, 2.0 means double size.
 	Scale float32 `json:"scale"`
 
-	// XShift Shift by X-axis measured in widths of the mask scaled to the face size, from left to right. For example, choosing -1.0 will place mask just to the left of the default mask position.
+	// XShift Shift by X-axis measured in widths of the mask scaled to the face size, from left to right. For example, choosing -1.0 will place the mask just to the left of the default mask position.
 	XShift float32 `json:"x_shift"`
 
 	// YShift Shift by Y-axis measured in heights of the mask scaled to the face size, from top to bottom. For example, 1.0 will place the mask just below the default mask position.
@@ -2036,13 +2146,13 @@ type Message struct {
 	// BusinessConnectionId Optional. Unique identifier of the business connection from which the message was received. If non-empty, the message belongs to a chat of the corresponding business account that is independent from any potential bot chat which might share the same identifier.
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// Caption Optional. Caption for the animation, audio, document, paid media, photo, video or voice
+	// Caption Optional. Caption for the animation, audio, document, live photo, paid media, photo, video, voice, or widget
 	Caption *string `json:"caption,omitempty"`
 
 	// CaptionEntities Optional. For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
-	// ChannelChatCreated Optional. Service message: the channel has been created. This field can't be received in a message coming through updates, because bot can't be a member of a channel when it is created. It can only be found in reply_to_message if someone replies to a very first message in a channel.
+	// ChannelChatCreated Optional. Service message: the channel has been created. This field can't be received in a message coming through updates, because a bot can't be a member of a channel when it is created. It can only be found in reply_to_message if someone replies to the very first message in a channel.
 	ChannelChatCreated *bool `json:"channel_chat_created,omitempty"`
 
 	// Chat Chat the message belongs to
@@ -2222,16 +2332,16 @@ type Message struct {
 	// MessageThreadId Optional. Unique identifier of a message thread or forum topic to which the message belongs; for supergroups and private chats only
 	MessageThreadId *int `json:"message_thread_id,omitempty"`
 
-	// MigrateFromChatId Optional. The supergroup has been migrated from a group with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
+	// MigrateFromChatId Optional. The supergroup has been migrated from a group with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this identifier.
 	MigrateFromChatId *int64 `json:"migrate_from_chat_id,omitempty"`
 
-	// MigrateToChatId Optional. The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
+	// MigrateToChatId Optional. The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this identifier.
 	MigrateToChatId *int64 `json:"migrate_to_chat_id,omitempty"`
 
 	// NewChatMembers Optional. New members that were added to the group or supergroup and information about them (the bot itself may be one of these members)
 	NewChatMembers *[]User `json:"new_chat_members,omitempty"`
 
-	// NewChatPhoto Optional. A chat photo was change to this value
+	// NewChatPhoto Optional. A chat photo was changed to this value
 	NewChatPhoto *[]PhotoSize `json:"new_chat_photo,omitempty"`
 
 	// NewChatTitle Optional. A chat title was changed to this value
@@ -2242,6 +2352,9 @@ type Message struct {
 
 	// PaidMessagePriceChanged Optional. Service message: the price for paid messages has changed in the chat
 	PaidMessagePriceChanged *PaidMessagePriceChanged `json:"paid_message_price_changed,omitempty"`
+
+	// PaidMessagesWaived Optional. Service message: the sender of the message used a link of the other user, which allows sending messages to the user without paying Telegram Stars
+	PaidMessagesWaived *PaidMessagesWaived `json:"paid_messages_waived,omitempty"`
 
 	// PaidStarCount Optional. The number of Telegram Stars that were paid by the sender of the message to send it
 	PaidStarCount *int `json:"paid_star_count,omitempty"`
@@ -2306,7 +2419,7 @@ type Message struct {
 	// SenderTag Optional. Tag or custom title of the sender of the message; for supergroups only
 	SenderTag *string `json:"sender_tag,omitempty"`
 
-	// ShowCaptionAboveMedia Optional. True, if the caption must be shown above the message media
+	// ShowCaptionAboveMedia Optional. True, if the caption must be shown above the message media or the widget
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
 
 	// Sticker Optional. Message is a sticker, information about the sticker
@@ -2336,11 +2449,14 @@ type Message struct {
 	// SuggestedPostRefunded Optional. Service message: payment for a suggested post was refunded
 	SuggestedPostRefunded *SuggestedPostRefunded `json:"suggested_post_refunded,omitempty"`
 
-	// SupergroupChatCreated Optional. Service message: the supergroup has been created. This field can't be received in a message coming through updates, because bot can't be a member of a supergroup when it is created. It can only be found in reply_to_message if someone replies to a very first message in a directly created supergroup.
+	// SupergroupChatCreated Optional. Service message: the supergroup has been created. This field can't be received in a message coming through updates, because a bot can't be a member of a supergroup when it is created. It can only be found in reply_to_message if someone replies to the very first message in a directly created supergroup.
 	SupergroupChatCreated *bool `json:"supergroup_chat_created,omitempty"`
 
 	// Text Optional. For text messages, the actual UTF-8 text of the message
 	Text *string `json:"text,omitempty"`
+
+	// TonWalletTransfer Optional. Service message: a transfer with a TON wallet
+	TonWalletTransfer *TonWalletTransfer `json:"ton_wallet_transfer,omitempty"`
 
 	// UniqueGift Optional. Service message: a unique gift was sent or received
 	UniqueGift *UniqueGiftInfo `json:"unique_gift,omitempty"`
@@ -2378,7 +2494,10 @@ type Message struct {
 	// WebAppData Optional. Service message: data sent by a Web App
 	WebAppData *WebAppData `json:"web_app_data,omitempty"`
 
-	// WriteAccessAllowed Optional. Service message: the user allowed the bot to write messages after adding it to the attachment or side menu, launching a Web App from a link, or accepting an explicit request from a Web App sent by the method requestWriteAccess
+	// Widget Optional. Message is an HTML widget, information about the widget
+	Widget *Widget `json:"widget,omitempty"`
+
+	// WriteAccessAllowed Optional. Service message: the user allowed the bot to write messages after adding it to the attachment or side menu, launching a Web App from a link, or accepting an explicit request from a Web App sent by the method requestWriteAccess, or the user was invited to the private chat with the bot by the owner of the bot
 	WriteAccessAllowed *WriteAccessAllowed `json:"write_access_allowed,omitempty"`
 }
 
@@ -2405,13 +2524,13 @@ type MessageEntity struct {
 	// Offset Offset in UTF-16 code units to the start of the entity
 	Offset int `json:"offset"`
 
-	// Type Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag or #hashtag@chatusername), “cashtag” ($USD or $USD@chatusername), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “blockquote” (block quotation), “expandable_blockquote” (collapsed-by-default block quotation), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames), “custom_emoji” (for inline custom emoji stickers), or “date_time” (for formatted date and time).
+	// Type Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag or #hashtag@chatusername), “cashtag” ($USD or $USD@chatusername), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bank_card_number” (bank card number), “ton_address” (address in the TON blockchain), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “blockquote” (block quotation), “expandable_blockquote” (collapsed-by-default block quotation), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames), “custom_emoji” (for inline custom emoji stickers), or “date_time” (for formatted date and time).
 	Type string `json:"type"`
 
 	// UnixTime Optional. For “date_time” only, the Unix time associated with the entity
 	UnixTime *int `json:"unix_time,omitempty"`
 
-	// Url Optional. For “text_link” only, URL that will be opened after user taps on the text
+	// Url Optional. For “text_link” only, URL that will be opened after the user taps on the text
 	Url *string `json:"url,omitempty"`
 
 	// User Optional. For “text_mention” only, the mentioned user
@@ -2432,7 +2551,7 @@ type MessageGenerationStopped struct {
 
 // MessageId This object represents a unique message identifier.
 type MessageId struct {
-	// MessageId Unique message identifier. In specific instances (e.g., message containing a video sent to a big chat), the server might automatically schedule a message instead of sending it immediately. In such cases, this field will be 0 and the relevant message will be unusable until it is actually sent.
+	// MessageId Unique message identifier. In specific instances (e.g., a message containing a video sent to a big chat), the server might automatically schedule a message instead of sending it immediately. In such cases, this field will be 0 and the relevant message will be unusable until it is actually sent.
 	MessageId int `json:"message_id"`
 }
 
@@ -2553,12 +2672,15 @@ type PaidMessagePriceChanged struct {
 	PaidMessageStarCount int `json:"paid_message_star_count"`
 }
 
+// PaidMessagesWaived Describes a service message about the sender of the message using a link of the other user, which allows sending messages to the user without paying Telegram Stars. Currently holds no information.
+type PaidMessagesWaived = map[string]interface{}
+
 // PassportData Describes Telegram Passport data shared with the bot by the user.
 type PassportData struct {
 	// Credentials Encrypted credentials required to decrypt the data
 	Credentials EncryptedCredentials `json:"credentials"`
 
-	// Data Array with information about documents and other Telegram Passport elements that was shared with the bot
+	// Data Array with information shared with the bot about documents and other Telegram Passport elements
 	Data []EncryptedPassportElement `json:"data"`
 }
 
@@ -2612,7 +2734,7 @@ type Poll struct {
 	// AllowsMultipleAnswers True, if the poll allows multiple answers
 	AllowsMultipleAnswers bool `json:"allows_multiple_answers"`
 
-	// AllowsRevoting True, if the poll allows to change the chosen answer options
+	// AllowsRevoting True, if the poll allows changing the chosen answer options
 	AllowsRevoting bool `json:"allows_revoting"`
 
 	// CloseDate Optional. Point in time (Unix timestamp) when the poll will be automatically closed
@@ -2651,7 +2773,7 @@ type Poll struct {
 	// Media Optional. Media added to the poll description; for polls inside the Message object only
 	Media *PollMedia `json:"media,omitempty"`
 
-	// MembersOnly True if voting is limited to users who have been members of the chat where the poll was originally sent for more than 24 hours
+	// MembersOnly True, if voting is limited to users who have been members of the chat where the poll was originally sent for more than 24 hours
 	MembersOnly bool `json:"members_only"`
 
 	// OpenPeriod Optional. Amount of time in seconds the poll will be active after creation
@@ -2801,7 +2923,7 @@ type PreCheckoutQuery struct {
 	// ShippingOptionId Optional. Identifier of the shipping option chosen by the user
 	ShippingOptionId *string `json:"shipping_option_id,omitempty"`
 
-	// TotalAmount Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
+	// TotalAmount Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45, total_amount = 145. See the exp parameter in currencies.json; it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
 	TotalAmount int `json:"total_amount"`
 }
 
@@ -2861,7 +2983,7 @@ type RefundedPayment struct {
 	// TelegramPaymentChargeId Telegram payment identifier
 	TelegramPaymentChargeId string `json:"telegram_payment_charge_id"`
 
-	// TotalAmount Total refunded price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45, total_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
+	// TotalAmount Total refunded price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45, total_amount = 145. See the exp parameter in currencies.json; it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
 	TotalAmount int `json:"total_amount"`
 }
 
@@ -2870,7 +2992,7 @@ type ReplyParameters struct {
 	// AllowSendingWithoutReply Optional. Pass True if the message should be sent even if the specified message to be replied to is not found. Always False for replies in another chat or forum topic, and sent ephemeral messages. Always True for messages sent on behalf of a business account.
 	AllowSendingWithoutReply *bool `json:"allow_sending_without_reply,omitempty"`
 
-	// ChatId Optional. If the message to be replied to is from a different chat, unique identifier for the chat or username of the bot, supergroup or channel in the format @username. Not supported for messages sent on behalf of a business account, messages from channel direct messages chats and ephemeral messages.
+	// ChatId Optional. If the message to be replied to is from a different chat, unique identifier for the chat or username of the bot, supergroup, or channel in the format @username. Not supported for messages sent on behalf of a business account, messages from channel direct messages chats and ephemeral messages.
 	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// ChecklistTaskId Optional. Identifier of the specific checklist task to be replied to
@@ -2894,13 +3016,16 @@ type ReplyParameters struct {
 	// QuoteParseMode Optional. Mode for parsing entities in the quote. See formatting options for more details.
 	QuoteParseMode *string `json:"quote_parse_mode,omitempty"`
 
-	// QuotePosition Optional. Position of the quote in the original message in UTF-16 code units
+	// QuotePosition Optional. Position of the quote in the original message in UTF-16 code units. For quotes from rich messages, it is the position in the text formed by joining plain texts of all quotable texts of the message, separated by line feeds.
 	QuotePosition *int `json:"quote_position,omitempty"`
+
+	// QuoteRichTexts Optional. A JSON-serialized list of quoted parts of the rich message to be replied to. Must contain one element for each quoted text of the message in the order of their appearance. Each of the following is a separate quoted text: the text of a paragraph, a heading, a preformatted block, a footer, or a mathematical expression; the text and the credit of a block quotation or a pull quotation; the summary of a details block; the caption and each cell of a table; the text and the credit of a caption of a media block, a collage, a slideshow, or a map. Texts of blocks nested in lists, block quotations, details, collages, and slideshows are separate quoted texts too. The first and the last elements can contain only a part of the corresponding text; all other elements must contain the whole text. Formatting of the quoted parts must be kept, and rich texts must be nested in the same way as in the message received from the server. Mathematical expressions must be quoted entirely. Buttons in RichBlockButtons, anchors and dividers can't be quoted. Up to 32 quoted texts with a total length of up to 1024 characters can be specified. Only plain text, RichTextBold, RichTextItalic, RichTextUnderline, RichTextStrikethrough, RichTextSpoiler, RichTextSubscript, RichTextSuperscript, RichTextDateTime, RichTextCustomEmoji, RichTextMathematicalExpression, and arrays of them are kept in the quote; other rich text types are replaced with their text. If non-empty, then quote, quote_parse_mode and quote_entities are ignored.
+	QuoteRichTexts *[]RichText `json:"quote_rich_texts,omitempty"`
 }
 
 // ResponseParameters Describes why a request was unsuccessful.
 type ResponseParameters struct {
-	// MigrateToChatId Optional. The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
+	// MigrateToChatId Optional. The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this identifier.
 	MigrateToChatId *int64 `json:"migrate_to_chat_id,omitempty"`
 
 	// RetryAfter Optional. In case of exceeding flood control, the number of seconds left to wait before the request can be repeated
@@ -2943,6 +3068,36 @@ type RichMessage struct {
 	IsRtl *bool `json:"is_rtl,omitempty"`
 }
 
+// RichText This object represents a rich formatted text. Currently, it can be either a String for plain text, an Array of RichText, or any of the following types:
+// RichTextBold
+// RichTextItalic
+// RichTextUnderline
+// RichTextStrikethrough
+// RichTextSpoiler
+// RichTextDateTime
+// RichTextTextMention
+// RichTextSubscript
+// RichTextSuperscript
+// RichTextMarked
+// RichTextCode
+// RichTextCustomEmoji
+// RichTextMathematicalExpression
+// RichTextUrl
+// RichTextEmailAddress
+// RichTextPhoneNumber
+// RichTextBankCardNumber
+// RichTextTonAddress
+// RichTextMention
+// RichTextHashtag
+// RichTextCashtag
+// RichTextBotCommand
+// RichTextButton
+// RichTextAnchor
+// RichTextAnchorLink
+// RichTextReference
+// RichTextReferenceLink
+type RichText = map[string]interface{}
+
 // SentGuestMessage Describes an inline message sent by a guest bot.
 type SentGuestMessage struct {
 	// InlineMessageId Identifier of the sent inline message
@@ -2971,6 +3126,24 @@ type SharedUser struct {
 
 	// Username Optional. Username of the user, if the username was requested by the bot
 	Username *string `json:"username,omitempty"`
+}
+
+// SharedWidgetQuery This object represents an incoming query from a forwarded message with a shared widget created by the bot. Use answerWidgetQuery to answer the query. Each user can send at most 5 queries per 5 seconds to the bot from all its widgets.
+type SharedWidgetQuery struct {
+	// Data Data of the query, 1-64 bytes
+	Data string `json:"data"`
+
+	// From Sender
+	From User `json:"from"`
+
+	// Id Unique identifier for this query
+	Id string `json:"id"`
+
+	// Type Type of the query
+	Type WidgetQueryType `json:"type"`
+
+	// WidgetId Unique identifier of the shared widget, which sent the query
+	WidgetId string `json:"widget_id"`
 }
 
 // ShippingAddress This object represents a shipping address.
@@ -3017,7 +3190,7 @@ type ShippingQuery struct {
 	// InvoicePayload Bot-specified invoice payload
 	InvoicePayload string `json:"invoice_payload"`
 
-	// ShippingAddress User specified shipping address
+	// ShippingAddress User-specified shipping address
 	ShippingAddress ShippingAddress `json:"shipping_address"`
 }
 
@@ -3135,31 +3308,10 @@ type Story struct {
 // StoryArea Describes a clickable area on a story media.
 type StoryArea struct {
 	// Position Position of the area
-	Position StoryAreaPosition `json:"position"`
+	Position AreaPosition `json:"position"`
 
 	// Type Type of the area
 	Type StoryAreaType `json:"type"`
-}
-
-// StoryAreaPosition Describes the position of a clickable area within a story.
-type StoryAreaPosition struct {
-	// CornerRadiusPercentage The radius of the rectangle corner rounding, as a percentage of the media width
-	CornerRadiusPercentage float32 `json:"corner_radius_percentage"`
-
-	// HeightPercentage The height of the area's rectangle, as a percentage of the media height
-	HeightPercentage float32 `json:"height_percentage"`
-
-	// RotationAngle The clockwise rotation angle of the rectangle, in degrees; 0-360
-	RotationAngle float32 `json:"rotation_angle"`
-
-	// WidthPercentage The width of the area's rectangle, as a percentage of the media width
-	WidthPercentage float32 `json:"width_percentage"`
-
-	// XPercentage The abscissa of the area's center, as a percentage of the media width
-	XPercentage float32 `json:"x_percentage"`
-
-	// YPercentage The ordinate of the area's center, as a percentage of the media height
-	YPercentage float32 `json:"y_percentage"`
 }
 
 // StoryAreaType Describes the type of a clickable area on a story. Currently, it can be one of
@@ -3199,7 +3351,7 @@ type SuccessfulPayment struct {
 	// TelegramPaymentChargeId Telegram payment identifier
 	TelegramPaymentChargeId string `json:"telegram_payment_charge_id"`
 
-	// TotalAmount Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
+	// TotalAmount Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45, total_amount = 145. See the exp parameter in currencies.json; it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
 	TotalAmount int `json:"total_amount"`
 }
 
@@ -3265,7 +3417,7 @@ type SuggestedPostParameters struct {
 	// Price Optional. Proposed price for the post. If the field is omitted, then the post is unpaid.
 	Price *SuggestedPostPrice `json:"price,omitempty"`
 
-	// SendDate Optional. Proposed send date of the post. If specified, then the date must be between 300 second and 2678400 seconds (30 days) in the future. If the field is omitted, then the post can be published at any time within 30 days at the sole discretion of the user who approves it.
+	// SendDate Optional. Proposed send date of the post. If specified, then the date must be between 300 seconds and 2678400 seconds (30 days) in the future. If the field is omitted, then the post can be published at any time within 30 days at the sole discretion of the user who approves it.
 	SendDate *int `json:"send_date,omitempty"`
 }
 
@@ -3313,11 +3465,86 @@ type TextQuote struct {
 	// IsManual Optional. True, if the quote was chosen manually by the message sender. Otherwise, the quote was added automatically by the server.
 	IsManual *bool `json:"is_manual,omitempty"`
 
-	// Position Approximate quote position in the original message in UTF-16 code units as specified by the sender
+	// Position Approximate quote position in the original message in UTF-16 code units as specified by the sender. For quotes from rich messages, it is the position in the text formed by joining plain texts of all quotable texts of the message, separated by line feeds.
 	Position int `json:"position"`
 
-	// Text Text of the quoted part of a message that is replied to by the given message
+	// RichTexts Optional. Rich text of the quote if it was chosen from a rich message. May contain only plain text, RichTextBold, RichTextItalic, RichTextUnderline, RichTextStrikethrough, RichTextSpoiler, RichTextSubscript, RichTextSuperscript, RichTextDateTime, RichTextCustomEmoji, RichTextMathematicalExpression, and arrays of them.
+	RichTexts *[]RichText `json:"rich_texts,omitempty"`
+
+	// Text Text of the quoted part of a message that is replied to by the given message; may be empty if the quote was chosen from a rich message
 	Text string `json:"text"`
+}
+
+// TonNft This object represents an NFT in the TON blockchain.
+type TonNft struct {
+	// Address Address of the NFT
+	Address string `json:"address"`
+
+	// Attributes Optional. Attributes of the NFT
+	Attributes *[]TonNftAttribute `json:"attributes,omitempty"`
+
+	// CollectionAddress Optional. Address of the collection to which the NFT belongs; omitted if unknown
+	CollectionAddress *string `json:"collection_address,omitempty"`
+
+	// Description Description of the NFT
+	Description string `json:"description"`
+
+	// Gift Optional. The unique gift corresponding to the NFT
+	Gift *UniqueGift `json:"gift,omitempty"`
+
+	// Index Index of the NFT among all NFTs from the collection as a decimal number
+	Index string `json:"index"`
+
+	// Name Name of the NFT
+	Name string `json:"name"`
+}
+
+// TonNftAttribute This object represents an attribute of an NFT in the TON blockchain.
+type TonNftAttribute struct {
+	// TraitType Trait type of the attribute
+	TraitType string `json:"trait_type"`
+
+	// Value Value of the attribute
+	Value string `json:"value"`
+}
+
+// TonWalletCard This object describes a TON wallet card, which is shown on the profile page of a user to everyone.
+type TonWalletCard struct {
+	// Address Address of the wallet
+	Address string `json:"address"`
+
+	// Amount Balance of the wallet, in the smallest units of the cryptocurrency, as a decimal number
+	Amount string `json:"amount"`
+
+	// BackgroundNftAddress Optional. Address of the NFT of one of the stickers, whose colors must be used for the card background; omitted if the default background must be used
+	BackgroundNftAddress *string `json:"background_nft_address,omitempty"`
+
+	// Stickers Stickers placed on the card
+	Stickers []TonWalletCardSticker `json:"stickers"`
+}
+
+// TonWalletCardSticker This object describes a sticker on a TON wallet card.
+type TonWalletCardSticker struct {
+	// Nft The NFT shown as the sticker
+	Nft TonNft `json:"nft"`
+
+	// Position Position of the sticker on the card
+	Position AreaPosition `json:"position"`
+}
+
+// TonWalletTransfer Describes a service message about a transfer with a TON wallet.
+type TonWalletTransfer struct {
+	// Amount The amount of transferred cryptocurrency, in the smallest units of the cryptocurrency, as a decimal number; negative for outgoing transfers
+	Amount string `json:"amount"`
+
+	// Comment Optional. Comment added to the transfer; omitted if the comment is encrypted
+	Comment *string `json:"comment,omitempty"`
+
+	// PeerAddress Address of the transfer peer in the TON blockchain
+	PeerAddress string `json:"peer_address"`
+
+	// TransactionId Unique identifier of the transaction; may be empty if the transfer hasn't been sent yet
+	TransactionId string `json:"transaction_id"`
 }
 
 // TransactionPartner This object describes the source of a transaction, or its recipient for outgoing transactions. Currently, it can be one of
@@ -3350,7 +3577,7 @@ type UniqueGift struct {
 	// IsFromBlockchain Optional. True, if the gift is assigned from the TON blockchain and can't be resold or transferred in Telegram
 	IsFromBlockchain *bool `json:"is_from_blockchain,omitempty"`
 
-	// IsPremium Optional. True, if the original regular gift was exclusively purchaseable by Telegram Premium subscribers
+	// IsPremium Optional. True, if the original regular gift was exclusively purchasable by Telegram Premium subscribers
 	IsPremium *bool `json:"is_premium,omitempty"`
 
 	// Model Model of the gift
@@ -3470,7 +3697,7 @@ type UniqueGiftSymbol struct {
 	// Name Name of the symbol
 	Name string `json:"name"`
 
-	// RarityPerMille The number of unique gifts that receive this model for every 1000 gifts upgraded
+	// RarityPerMille The number of unique gifts that receive this symbol for every 1000 gifts upgraded
 	RarityPerMille int `json:"rarity_per_mille"`
 
 	// Sticker The sticker that represents the unique gift
@@ -3500,7 +3727,7 @@ type Update struct {
 	// ChatMember Optional. A chat member's status was updated in a chat. The bot must be an administrator in the chat and must explicitly specify "chat_member" in the list of allowed_updates to receive these updates.
 	ChatMember *ChatMemberUpdated `json:"chat_member,omitempty"`
 
-	// ChosenInlineResult Optional. The result of an inline query that was chosen by a user and sent to their chat partner. Please see our documentation on the feedback collecting for details on how to enable these updates for your bot.
+	// ChosenInlineResult Optional. The result of an inline query that was chosen by a user and sent to their chat partner. Please see our documentation on the feedback collecting for details on how to enable these updates for your bot. The updates can also be enabled using the parameter inline_feedback_share_denominator of the method setMySettings.
 	ChosenInlineResult *ChosenInlineResult `json:"chosen_inline_result,omitempty"`
 
 	// DeletedBusinessMessages Optional. Messages were deleted from a connected business account
@@ -3521,7 +3748,7 @@ type Update struct {
 	// InlineQuery Optional. New incoming inline query
 	InlineQuery *InlineQuery `json:"inline_query,omitempty"`
 
-	// ManagedBot Optional. A new bot was created to be managed by the bot, or token or owner of a managed bot was changed
+	// ManagedBot Optional. A new bot was created to be managed by the bot, or the token or owner of a managed bot was changed
 	ManagedBot *ManagedBotUpdated `json:"managed_bot,omitempty"`
 
 	// Message Optional. New incoming message of any kind - text, photo, sticker, etc.
@@ -3530,13 +3757,13 @@ type Update struct {
 	// MessageReaction Optional. A reaction to a message was changed by a user. The bot must be an administrator in the chat and must explicitly specify "message_reaction" in the list of allowed_updates to receive these updates. The update isn't received for reactions set by bots.
 	MessageReaction *MessageReactionUpdated `json:"message_reaction,omitempty"`
 
-	// MessageReactionCount Optional. Reactions to a message with anonymous reactions were changed. The bot must be an administrator in the chat and must explicitly specify "message_reaction_count" in the list of allowed_updates to receive these updates. The updates are grouped and can be sent with delay up to a few minutes.
+	// MessageReactionCount Optional. Reactions to a message with anonymous reactions were changed. The bot must be an administrator in the chat and must explicitly specify "message_reaction_count" in the list of allowed_updates to receive these updates. The updates are grouped and can be sent with a delay of up to a few minutes.
 	MessageReactionCount *MessageReactionCountUpdated `json:"message_reaction_count,omitempty"`
 
 	// MyChatMember Optional. The bot's chat member status was updated in a chat. For private chats, this update is received only when the bot is blocked or unblocked by the user.
 	MyChatMember *ChatMemberUpdated `json:"my_chat_member,omitempty"`
 
-	// Poll Optional. New poll state. Bots receive only updates about manually stopped polls and polls, which are sent by the bot.
+	// Poll Optional. New poll state. Bots receive only updates about manually stopped polls and polls which are sent by the bot.
 	Poll *Poll `json:"poll,omitempty"`
 
 	// PollAnswer Optional. A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.
@@ -3551,6 +3778,9 @@ type Update struct {
 	// RemovedChatBoost Optional. A boost was removed from a chat. The bot must be an administrator in the chat to receive these updates.
 	RemovedChatBoost *ChatBoostRemoved `json:"removed_chat_boost,omitempty"`
 
+	// SharedWidgetQuery Optional. New incoming query from a forwarded message with a shared widget
+	SharedWidgetQuery *SharedWidgetQuery `json:"shared_widget_query,omitempty"`
+
 	// ShippingQuery Optional. New incoming shipping query. Only for invoices with flexible price.
 	ShippingQuery *ShippingQuery `json:"shipping_query,omitempty"`
 
@@ -3560,8 +3790,11 @@ type Update struct {
 	// Subscription Optional. User payment subscription has changed
 	Subscription *BotSubscriptionUpdated `json:"subscription,omitempty"`
 
-	// UpdateId The update's unique identifier. Update identifiers start from a certain positive number and increase sequentially. This identifier becomes especially handy if you're using webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then identifier of the next update will be chosen randomly instead of sequentially.
+	// UpdateId The update's unique identifier. Update identifiers start from a certain positive number and increase sequentially. This identifier becomes especially handy if you're using webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then the identifier of the next update will be chosen randomly instead of sequentially.
 	UpdateId int `json:"update_id"`
+
+	// WidgetQuery Optional. New incoming query from a widget in a message sent by the bot or via the bot
+	WidgetQuery *WidgetQuery `json:"widget_query,omitempty"`
 }
 
 // User This object represents a Telegram user or bot.
@@ -3569,31 +3802,10 @@ type User struct {
 	// AddedToAttachmentMenu Optional. True, if this user added the bot to the attachment menu
 	AddedToAttachmentMenu *bool `json:"added_to_attachment_menu,omitempty"`
 
-	// AllowsUsersToCreateTopics Optional. True, if the bot allows users to create and delete topics in private chats. Returned only in getMe.
-	AllowsUsersToCreateTopics *bool `json:"allows_users_to_create_topics,omitempty"`
-
-	// CanConnectToBusiness Optional. True, if the bot can be connected to a user account to manage it. Returned only in getMe.
-	CanConnectToBusiness *bool `json:"can_connect_to_business,omitempty"`
-
-	// CanJoinGroups Optional. True, if the bot can be invited to groups. Returned only in getMe.
-	CanJoinGroups *bool `json:"can_join_groups,omitempty"`
-
-	// CanManageBots Optional. True, if other bots can be created to be controlled by the bot. Returned only in getMe.
-	CanManageBots *bool `json:"can_manage_bots,omitempty"`
-
-	// CanReadAllGroupMessages Optional. True, if privacy mode is disabled for the bot. Returned only in getMe.
-	CanReadAllGroupMessages *bool `json:"can_read_all_group_messages,omitempty"`
-
 	// FirstName User's or bot's first name
 	FirstName string `json:"first_name"`
 
-	// HasMainWebApp Optional. True, if the bot has a main Web App. Returned only in getMe.
-	HasMainWebApp *bool `json:"has_main_web_app,omitempty"`
-
-	// HasTopicsEnabled Optional. True, if the bot has forum topic mode enabled in private chats. Returned only in getMe.
-	HasTopicsEnabled *bool `json:"has_topics_enabled,omitempty"`
-
-	// Id Unique identifier for this user or bot. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
+	// Id Unique identifier for this user or bot. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type is safe for storing this identifier.
 	Id int64 `json:"id"`
 
 	// IsBot True, if this user is a bot
@@ -3607,15 +3819,6 @@ type User struct {
 
 	// LastName Optional. User's or bot's last name
 	LastName *string `json:"last_name,omitempty"`
-
-	// SupportsGuestQueries Optional. True, if the bot supports guest queries from chats it is not a member of. Returned only in getMe.
-	SupportsGuestQueries *bool `json:"supports_guest_queries,omitempty"`
-
-	// SupportsInlineQueries Optional. True, if the bot supports inline queries. Returned only in getMe.
-	SupportsInlineQueries *bool `json:"supports_inline_queries,omitempty"`
-
-	// SupportsJoinRequestQueries Optional. True, if the bot supports join request queries and can be assigned to process them. Returned only in getMe.
-	SupportsJoinRequestQueries *bool `json:"supports_join_request_queries,omitempty"`
 
 	// Username Optional. User's or bot's username
 	Username *string `json:"username,omitempty"`
@@ -3636,7 +3839,7 @@ type UserProfileAudios struct {
 	TotalCount int `json:"total_count"`
 }
 
-// UserProfilePhotos This object represent a user's profile pictures.
+// UserProfilePhotos This object represents a user's profile pictures.
 type UserProfilePhotos struct {
 	// Photos Requested profile pictures (in up to 4 sizes each)
 	Photos [][]PhotoSize `json:"photos"`
@@ -3645,12 +3848,12 @@ type UserProfilePhotos struct {
 	TotalCount int `json:"total_count"`
 }
 
-// UserRating This object describes the rating of a user based on their Telegram Star spendings.
+// UserRating This object describes the rating of a user based on their Telegram Star spending.
 type UserRating struct {
 	// CurrentLevelRating The rating value required to get the current level
 	CurrentLevelRating int `json:"current_level_rating"`
 
-	// Level Current level of the user, indicating their reliability when purchasing digital goods and services. A higher level suggests a more trustworthy customer; a negative level is likely reason for concern.
+	// Level Current level of the user, indicating their reliability when purchasing digital goods and services. A higher level suggests a more trustworthy customer; a negative level is likely a reason for concern.
 	Level int `json:"level"`
 
 	// NextLevelRating Optional. The rating value required to get to the next level; omitted if the maximum level was reached
@@ -3707,7 +3910,7 @@ type Video struct {
 	// FileName Optional. Original filename as defined by the sender
 	FileName *string `json:"file_name,omitempty"`
 
-	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
+	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
 	FileSize *int64 `json:"file_size,omitempty"`
 
 	// FileUniqueId Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
@@ -3782,7 +3985,7 @@ type VideoQuality struct {
 	// FileId Identifier for this file, which can be used to download or reuse the file
 	FileId string `json:"file_id"`
 
-	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
+	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
 	FileSize *int64 `json:"file_size,omitempty"`
 
 	// FileUniqueId Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
@@ -3803,7 +4006,7 @@ type Voice struct {
 	// FileId Identifier for this file, which can be used to download or reuse the file
 	FileId string `json:"file_id"`
 
-	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
+	// FileSize Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
 	FileSize *int64 `json:"file_size,omitempty"`
 
 	// FileUniqueId Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
@@ -3858,13 +4061,76 @@ type WebhookInfo struct {
 	Url string `json:"url"`
 }
 
-// WriteAccessAllowed This object represents a service message about a user allowing a bot to write messages after adding it to the attachment menu, launching a Web App from a link, or accepting an explicit request from a Web App sent by the method requestWriteAccess.
+// Widget This object describes an HTML widget.
+type Widget struct {
+	// ChatData Optional. Data of the widget, which is specific to the message
+	ChatData *string `json:"chat_data,omitempty"`
+
+	// Height Optional. Height of the widget in logical pixels; omitted if the height of the widget isn't fixed
+	Height *int `json:"height,omitempty"`
+
+	// Html HTML code of the widget
+	Html string `json:"html"`
+
+	// Id Optional. Unique identifier of the shared widget, which can be used to send the widget again using the method sendSharedWidget; omitted if the widget isn't shared
+	Id *string `json:"id,omitempty"`
+
+	// PublicData Optional. Public data of the widget, which is available wherever the widget is shown. All messages with a shared widget have the same public data.
+	PublicData *string `json:"public_data,omitempty"`
+
+	// Width Optional. Width of the widget in logical pixels; omitted if the widget must occupy the whole width of the message bubble
+	Width *int `json:"width,omitempty"`
+}
+
+// WidgetQuery This object represents an incoming query from a widget in a message sent by the bot or via the bot. Use answerWidgetQuery to answer the query. Each user can send at most 5 queries per 5 seconds to the bot from all its widgets.
+type WidgetQuery struct {
+	// Chat Optional. Chat with the message containing the widget; omitted if the widget is in an inline message
+	Chat *Chat `json:"chat,omitempty"`
+
+	// ChatInstance Global identifier, uniquely corresponding to the chat to which the message with the widget was sent
+	ChatInstance string `json:"chat_instance"`
+
+	// ChatType Optional. For widgets in inline messages, type of the chat to which the message was sent. Can be either “sender” for a private chat with the inline query sender, “private”, “group”, “supergroup”, or “channel”.
+	ChatType *string `json:"chat_type,omitempty"`
+
+	// Data Data of the query, 1-64 bytes
+	Data string `json:"data"`
+
+	// From Sender
+	From User `json:"from"`
+
+	// Id Unique identifier for this query
+	Id string `json:"id"`
+
+	// InlineMessageId Optional. Identifier of the inline message containing the widget
+	InlineMessageId *string `json:"inline_message_id,omitempty"`
+
+	// MessageId Optional. Identifier of the message containing the widget; omitted if the widget is in an inline message
+	MessageId *int `json:"message_id,omitempty"`
+
+	// Type Type of the query
+	Type WidgetQueryType `json:"type"`
+
+	// WidgetId Optional. Unique identifier of the shared widget, which sent the query; omitted if the widget isn't shared
+	WidgetId *string `json:"widget_id,omitempty"`
+}
+
+// WidgetQueryType This object describes the type of a query from a widget. Currently, it can be one of
+// WidgetQueryTypeData
+// WidgetQueryTypeSignData
+// WidgetQueryTypeSentTransaction
+type WidgetQueryType = map[string]interface{}
+
+// WriteAccessAllowed This object represents a service message about a user allowing a bot to write messages after adding it to the attachment menu, launching a Web App from a link, or accepting an explicit request from a Web App sent by the method requestWriteAccess, or about a user being invited to the private chat with the bot by the owner of the bot.
 type WriteAccessAllowed struct {
 	// FromAttachmentMenu Optional. True, if the access was granted when the bot was added to the attachment or side menu
 	FromAttachmentMenu *bool `json:"from_attachment_menu,omitempty"`
 
 	// FromRequest Optional. True, if the access was granted after the user accepted an explicit request from a Web App sent by the method requestWriteAccess
 	FromRequest *bool `json:"from_request,omitempty"`
+
+	// Inviter Optional. The owner of the bot, if the access was granted when the owner invited the user to the private chat with the bot. Bot owners can invite up to 10 users at once by pressing the link https://t.me/botinvite/<bot_username>.
+	Inviter *User `json:"inviter,omitempty"`
 
 	// WebAppName Optional. Name of the Web App, if the access was granted when the Web App was launched from a link
 	WebAppName *string `json:"web_app_name,omitempty"`
@@ -3953,7 +4219,7 @@ type AnswerInlineQueryJSONBody struct {
 
 // AnswerPreCheckoutQueryJSONBody defines parameters for AnswerPreCheckoutQuery.
 type AnswerPreCheckoutQueryJSONBody struct {
-	// ErrorMessage Required if ok is False. Error message in human readable form that explains the reason for failure to proceed with the checkout (e.g. "Sorry, somebody just bought the last of our amazing black T-shirts while you were busy filling out your payment details. Please choose a different color or garment!"). Telegram will display this message to the user.
+	// ErrorMessage Required if ok is False. Error message in human-readable form that explains the reason for failure to proceed with the checkout (e.g. "Sorry, somebody just bought the last of our amazing black T-shirts while you were busy filling out your payment details. Please choose a different color or garment!"). Telegram will display this message to the user.
 	ErrorMessage *string `json:"error_message,omitempty"`
 
 	// Ok Specify True if everything is alright (goods are available, etc.) and the bot is ready to proceed with the order. Use False if there are any problems.
@@ -3965,7 +4231,7 @@ type AnswerPreCheckoutQueryJSONBody struct {
 
 // AnswerShippingQueryJSONBody defines parameters for AnswerShippingQuery.
 type AnswerShippingQueryJSONBody struct {
-	// ErrorMessage Required if ok is False. Error message in human readable form that explains why it is impossible to complete the order (e.g. “Sorry, delivery to your desired address is unavailable”). Telegram will display this message to the user.
+	// ErrorMessage Required if ok is False. Error message in human-readable form that explains why it is impossible to complete the order (e.g. “Sorry, delivery to your desired address is unavailable”). Telegram will display this message to the user.
 	ErrorMessage *string `json:"error_message,omitempty"`
 
 	// Ok Pass True if delivery to the specified address is possible and False if there are any problems (for example, if delivery to the specified address is not possible)
@@ -3987,6 +4253,15 @@ type AnswerWebAppQueryJSONBody struct {
 	WebAppQueryId string `json:"web_app_query_id"`
 }
 
+// AnswerWidgetQueryJSONBody defines parameters for AnswerWidgetQuery.
+type AnswerWidgetQueryJSONBody struct {
+	// Data Data to be returned to the widget, 0-1024 bytes
+	Data *string `json:"data,omitempty"`
+
+	// WidgetQueryId Unique identifier for the query to be answered
+	WidgetQueryId string `json:"widget_query_id"`
+}
+
 // ApproveChatJoinRequestJSONBody defines parameters for ApproveChatJoinRequest.
 type ApproveChatJoinRequestJSONBody struct {
 	// ChatId Unique identifier for the target chat or username of the target channel in the format @username
@@ -4004,7 +4279,7 @@ type ApproveSuggestedPostJSONBody struct {
 	// MessageId Identifier of a suggested post message to approve
 	MessageId int `json:"message_id"`
 
-	// SendDate Point in time (Unix timestamp) when the post is expected to be published; omit if the date has already been specified when the suggested post was created. If specified, then the date must be not more than 2678400 seconds (30 days) in the future.
+	// SendDate Point in time (Unix timestamp) when the post is expected to be published; omit if the date has already been specified when the suggested post was created. If specified, then the date must not be more than 2678400 seconds (30 days) in the future.
 	SendDate *int `json:"send_date,omitempty"`
 }
 
@@ -4016,7 +4291,7 @@ type BanChatMemberJSONBody struct {
 	// RevokeMessages Pass True to delete all messages from the chat for the user that is being removed. If False, the user will be able to see messages in the group that were sent before the user was removed. Always True for supergroups and channels.
 	RevokeMessages *bool `json:"revoke_messages,omitempty"`
 
-	// UntilDate Date when the user will be unbanned; Unix time. If user is banned for more than 366 days or less than 30 seconds from the current time they are considered to be banned forever. Applied for supergroups and channels only.
+	// UntilDate Date when the user will be unbanned; Unix time. If the user is banned for more than 366 days or less than 30 seconds from the current time, they are considered to be banned forever. Applied for supergroups and channels only.
 	UntilDate *int `json:"until_date,omitempty"`
 
 	// UserId Unique identifier of the target user
@@ -4067,7 +4342,7 @@ type CopyMessageJSONBody struct {
 	// CaptionEntities A JSON-serialized list of special entities that appear in the new caption, which can be specified instead of parse_mode
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
@@ -4076,7 +4351,7 @@ type CopyMessageJSONBody struct {
 	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
 
-	// FromChatId Unique identifier for the chat where the original message was sent (or username of the target bot, supergroup or channel in the format @username)
+	// FromChatId Unique identifier for the chat where the original message was sent (or username of the target bot, supergroup, or channel in the format @username)
 	FromChatId int64 `json:"from_chat_id"`
 
 	// MessageEffectId Unique identifier of the message effect to be added to the message; only available when copying to private chats
@@ -4114,7 +4389,7 @@ type CopyMessageJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -4139,7 +4414,7 @@ type CopyMessageJSONBody struct {
 
 // CopyMessagesJSONBody defines parameters for CopyMessages.
 type CopyMessagesJSONBody struct {
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the messages will be sent; required if the messages are sent to a direct messages chat
@@ -4148,7 +4423,7 @@ type CopyMessagesJSONBody struct {
 	// DisableNotification Sends the messages silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
 
-	// FromChatId Unique identifier for the chat where the original messages were sent (or username of the target bot, supergroup or channel in the format @username)
+	// FromChatId Unique identifier for the chat where the original messages were sent (or username of the target bot, supergroup, or channel in the format @username)
 	FromChatId int64 `json:"from_chat_id"`
 
 	// MessageIds A JSON-serialized list of 1-100 identifiers of messages in the chat from_chat_id to copy. The identifiers must be specified in a strictly increasing order.
@@ -4226,7 +4501,7 @@ type CreateInvoiceLinkJSONBody struct {
 	// IsFlexible Pass True if the final price depends on the shipping method. Ignored for payments in Telegram Stars.
 	IsFlexible *bool `json:"is_flexible,omitempty"`
 
-	// MaxTipAmount The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0. Not supported for payments in Telegram Stars.
+	// MaxTipAmount The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json; it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0. Not supported for payments in Telegram Stars.
 	MaxTipAmount *int `json:"max_tip_amount,omitempty"`
 
 	// NeedEmail Pass True if you require the user's email address to complete the order. Ignored for payments in Telegram Stars.
@@ -4241,7 +4516,7 @@ type CreateInvoiceLinkJSONBody struct {
 	// NeedShippingAddress Pass True if you require the user's shipping address to complete the order. Ignored for payments in Telegram Stars.
 	NeedShippingAddress *bool `json:"need_shipping_address,omitempty"`
 
-	// Payload Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use it for your internal processes.
+	// Payload Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user; use it for your internal processes.
 	Payload string `json:"payload"`
 
 	// PhotoHeight Photo height
@@ -4259,7 +4534,7 @@ type CreateInvoiceLinkJSONBody struct {
 	// Prices Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.). Must contain exactly one item for payments in Telegram Stars.
 	Prices []LabeledPrice `json:"prices"`
 
-	// ProviderData JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider.
+	// ProviderData JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed description of the required fields should be provided by the payment provider.
 	ProviderData *string `json:"provider_data,omitempty"`
 
 	// ProviderToken Payment provider token, obtained via @BotFather. Pass an empty string for payments in Telegram Stars.
@@ -4271,10 +4546,10 @@ type CreateInvoiceLinkJSONBody struct {
 	// SendPhoneNumberToProvider Pass True if the user's phone number should be sent to the provider. Ignored for payments in Telegram Stars.
 	SendPhoneNumberToProvider *bool `json:"send_phone_number_to_provider,omitempty"`
 
-	// SubscriptionPeriod The number of seconds the subscription will be active for before the next payment. The currency must be set to “XTR” (Telegram Stars) if the parameter is used. Currently, it must always be 2592000 (30 days) if specified. Any number of subscriptions can be active for a given bot at the same time, including multiple concurrent subscriptions from the same user. Subscription price must no exceed 10000 Telegram Stars.
+	// SubscriptionPeriod The number of seconds the subscription will be active for before the next payment. The currency must be set to “XTR” (Telegram Stars) if the parameter is used. Currently, it must always be 2592000 (30 days) if specified. Any number of subscriptions can be active for a given bot at the same time, including multiple concurrent subscriptions from the same user. Subscription price must not exceed 10000 Telegram Stars.
 	SubscriptionPeriod *int `json:"subscription_period,omitempty"`
 
-	// SuggestedTipAmounts A JSON-serialized Array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
+	// SuggestedTipAmounts A JSON-serialized Array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increasing order and must not exceed max_tip_amount.
 	SuggestedTipAmounts *[]int `json:"suggested_tip_amounts,omitempty"`
 
 	// Title Product name, 1-32 characters
@@ -4356,6 +4631,15 @@ type DeleteAllMessageReactionsJSONBody struct {
 	UserId *int `json:"user_id,omitempty"`
 }
 
+// DeleteBusinessAccountGiftJSONBody defines parameters for DeleteBusinessAccountGift.
+type DeleteBusinessAccountGiftJSONBody struct {
+	// BusinessConnectionId Unique identifier of the business connection
+	BusinessConnectionId string `json:"business_connection_id"`
+
+	// OwnedGiftId Unique identifier of the regular gift that should be deleted
+	OwnedGiftId string `json:"owned_gift_id"`
+}
+
 // DeleteBusinessMessagesJSONBody defines parameters for DeleteBusinessMessages.
 type DeleteBusinessMessagesJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which to delete the messages
@@ -4400,7 +4684,7 @@ type DeleteForumTopicJSONBody struct {
 
 // DeleteMessageJSONBody defines parameters for DeleteMessage.
 type DeleteMessageJSONBody struct {
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
 	// MessageId Identifier of the message to delete
@@ -4424,7 +4708,7 @@ type DeleteMessageReactionJSONBody struct {
 
 // DeleteMessagesJSONBody defines parameters for DeleteMessages.
 type DeleteMessagesJSONBody struct {
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
 	// MessageIds A JSON-serialized list of 1-100 identifiers of messages to delete. See deleteMessage for limitations on which messages can be deleted.
@@ -4523,7 +4807,7 @@ type EditEphemeralMessageCaptionJSONBody struct {
 	// ReplyMarkup A JSON-serialized object for an inline keyboard
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
-	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media. Supported only for animation, photo and video messages.
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media. Supported only for animation, live photo, photo and video messages.
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
 }
 
@@ -4643,7 +4927,7 @@ type EditMessageCaptionJSONBody struct {
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
-	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
+	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username.
 	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// InlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
@@ -4658,13 +4942,13 @@ type EditMessageCaptionJSONBody struct {
 	// ReplyMarkup A JSON-serialized object for an inline keyboard
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
-	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media. Supported only for animation, photo and video messages.
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the message media. Supported only for animation, live photo, paid media, photo, video and widget messages.
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
 }
 
 // EditMessageChecklistJSONBody defines parameters for EditMessageChecklist.
 type EditMessageChecklistJSONBody struct {
-	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
+	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
 	BusinessConnectionId string `json:"business_connection_id"`
 
 	// ChatId Unique identifier for the target chat or username of the target bot in the format @username
@@ -4685,7 +4969,7 @@ type EditMessageLiveLocationJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
+	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username.
 	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// Heading Direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.
@@ -4721,7 +5005,7 @@ type EditMessageMediaJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
+	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username.
 	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// InlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
@@ -4742,7 +5026,7 @@ type EditMessageMediaMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
+	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username.
 	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// InlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
@@ -4763,7 +5047,7 @@ type EditMessageReplyMarkupJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
+	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username.
 	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// InlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
@@ -4781,7 +5065,7 @@ type EditMessageTextJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
+	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username.
 	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// Entities A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
@@ -4802,11 +5086,41 @@ type EditMessageTextJSONBody struct {
 	// ReplyMarkup A JSON-serialized object for an inline keyboard
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
-	// RichMessage New rich content of the message; required if text isn't specified. Direct upload of new files and explicit upload of files by a URL isn't supported when an inline message is edited.
+	// RichMessage New rich content of the message; required if text isn't specified. Direct upload of new files and explicit upload of files by a URL aren't supported when an inline message is edited.
 	RichMessage *InputRichMessage `json:"rich_message,omitempty"`
 
 	// Text New text of the message, 1-4096 characters after entity parsing; required if rich_message isn't specified
 	Text *string `json:"text,omitempty"`
+}
+
+// EditMessageWidgetDataJSONBody defines parameters for EditMessageWidgetData.
+type EditMessageWidgetDataJSONBody struct {
+	// ChatData New data of the widget, which is specific to the message, 0-1024 bytes; pass an empty string to remove the data. If omitted, then the data isn't changed.
+	ChatData *string `json:"chat_data,omitempty"`
+
+	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target supergroup in the format @username.
+	ChatId *int64 `json:"chat_id,omitempty"`
+
+	// InlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
+	InlineMessageId *string `json:"inline_message_id,omitempty"`
+
+	// MessageId Required if inline_message_id is not specified. Identifier of the message with the widget.
+	MessageId *int `json:"message_id,omitempty"`
+
+	// PublicData New public data of the widget, 0-1024 bytes; pass an empty string to remove the public data. If omitted, then the public data isn't changed.
+	PublicData *string `json:"public_data,omitempty"`
+}
+
+// EditSharedWidgetDataJSONBody defines parameters for EditSharedWidgetData.
+type EditSharedWidgetDataJSONBody struct {
+	// CacheTime The maximum amount of time in seconds that the public data of the widget may be cached client-side; 5-3600. If omitted, then the current value is kept, which is 30 by default.
+	CacheTime *int `json:"cache_time,omitempty"`
+
+	// PublicData New public data of the widget, 0-1024 bytes; pass an empty string to remove the public data
+	PublicData string `json:"public_data"`
+
+	// WidgetId Unique identifier of the shared widget
+	WidgetId string `json:"widget_id"`
 }
 
 // EditStoryJSONBody defines parameters for EditStory.
@@ -4853,7 +5167,7 @@ type ExportChatInviteLinkJSONBody struct {
 
 // ForwardMessageJSONBody defines parameters for ForwardMessage.
 type ForwardMessageJSONBody struct {
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be forwarded; required if the message is forwarded to a direct messages chat
@@ -4862,7 +5176,7 @@ type ForwardMessageJSONBody struct {
 	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
 
-	// FromChatId Unique identifier for the chat where the original message was sent (or username of the target bot, supergroup or channel in the format @username)
+	// FromChatId Unique identifier for the chat where the original message was sent (or username of the target bot, supergroup, or channel in the format @username)
 	FromChatId int64 `json:"from_chat_id"`
 
 	// MessageEffectId Unique identifier of the message effect to be added to the message; only available when forwarding to private chats
@@ -4886,7 +5200,7 @@ type ForwardMessageJSONBody struct {
 
 // ForwardMessagesJSONBody defines parameters for ForwardMessages.
 type ForwardMessagesJSONBody struct {
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the messages will be forwarded; required if the messages are forwarded to a direct messages chat
@@ -4895,7 +5209,7 @@ type ForwardMessagesJSONBody struct {
 	// DisableNotification Sends the messages silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty"`
 
-	// FromChatId Unique identifier for the chat where the original messages were sent (or username of the target bot, supergroup or channel in the format @username)
+	// FromChatId Unique identifier for the chat where the original messages were sent (or username of the target bot, supergroup, or channel in the format @username)
 	FromChatId int64 `json:"from_chat_id"`
 
 	// MessageIds A JSON-serialized list of 1-100 identifiers of messages in the chat from_chat_id to forward. The identifiers must be specified in a strictly increasing order.
@@ -4937,7 +5251,7 @@ type GetBusinessAccountGiftsJSONBody struct {
 	// Limit The maximum number of gifts to be returned; 1-100. Defaults to 100.
 	Limit *int `json:"limit,omitempty"`
 
-	// Offset Offset of the first entry to return as received from the previous request; use empty string to get the first chunk of results
+	// Offset Offset of the first entry to return as received from the previous request; use an empty string to get the first chunk of results
 	Offset *string `json:"offset,omitempty"`
 
 	// SortByPrice Pass True to sort results by gift price instead of send date. Sorting is applied before pagination.
@@ -5078,7 +5392,7 @@ type GetMyCommandsJSONBody struct {
 
 // GetMyDefaultAdministratorRightsJSONBody defines parameters for GetMyDefaultAdministratorRights.
 type GetMyDefaultAdministratorRightsJSONBody struct {
-	// ForChannels Pass True to get default administrator rights of the bot in channels. Otherwise, default administrator rights of the bot for groups and supergroups will be returned.
+	// ForChannels Pass True to get the default administrator rights of the bot in channels. Otherwise, the default administrator rights of the bot for groups and supergroups will be returned.
 	ForChannels *bool `json:"for_channels,omitempty"`
 }
 
@@ -5115,6 +5429,12 @@ type GetStickerSetJSONBody struct {
 	Name string `json:"name"`
 }
 
+// GetUniqueGiftJSONBody defines parameters for GetUniqueGift.
+type GetUniqueGiftJSONBody struct {
+	// Name Unique name of the gift
+	Name string `json:"name"`
+}
+
 // GetUpdatesJSONBody defines parameters for GetUpdates.
 type GetUpdatesJSONBody struct {
 	// AllowedUpdates A JSON-serialized list of the update types you want your bot to receive. For example, specify ["message", "edited_channel_post", "callback_query"] to only receive updates of these types. See Update for a complete list of available update types. Specify an empty list to receive all update types except chat_member, message_reaction, and message_reaction_count (default). If not specified, the previous setting will be used.Please note that this parameter doesn't affect updates created before the call to getUpdates, so unwanted updates may be received for a short period of time.
@@ -5126,7 +5446,7 @@ type GetUpdatesJSONBody struct {
 	// Offset Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an offset higher than its update_id. The negative offset can be specified to retrieve updates starting from -offset update from the end of the updates queue. All previous updates will be forgotten.
 	Offset *int `json:"offset,omitempty"`
 
-	// Timeout Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling. Should be positive, short polling should be used for testing purposes only.
+	// Timeout Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling. Should be positive; short polling should be used for testing purposes only.
 	Timeout *int `json:"timeout,omitempty"`
 }
 
@@ -5282,7 +5602,7 @@ type PostStoryJSONBody struct {
 
 // PromoteChatMemberJSONBody defines parameters for PromoteChatMember.
 type PromoteChatMemberJSONBody struct {
-	// CanChangeInfo Pass True if the administrator can change chat title, photo and other settings
+	// CanChangeInfo Pass True if the administrator can change the chat title, photo and other settings
 	CanChangeInfo *bool `json:"can_change_info,omitempty"`
 
 	// CanDeleteMessages Pass True if the administrator can delete messages of other users
@@ -5375,7 +5695,7 @@ type RemoveBusinessAccountProfilePhotoJSONBody struct {
 
 // RemoveChatVerificationJSONBody defines parameters for RemoveChatVerification.
 type RemoveChatVerificationJSONBody struct {
-	// ChatId Unique identifier for the target chat or username of the target bot or channel in the format @username
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 }
 
@@ -5465,7 +5785,7 @@ type RestrictChatMemberJSONBody struct {
 	// Permissions A JSON-serialized object for new user permissions
 	Permissions ChatPermissions `json:"permissions"`
 
-	// UntilDate Date when restrictions will be lifted for the user; Unix time. If user is restricted for more than 366 days or less than 30 seconds from the current time, they are considered to be restricted forever.
+	// UntilDate Date when restrictions will be lifted for the user; Unix time. If the user is restricted for more than 366 days or less than 30 seconds from the current time, they are considered to be restricted forever.
 	UntilDate *int `json:"until_date,omitempty"`
 
 	// UseIndependentChatPermissions Pass True if chat permissions are set independently. Otherwise, the can_send_other_messages and can_add_web_page_previews permissions will imply the can_send_messages, can_send_audios, can_send_documents, can_send_photos, can_send_videos, can_send_video_notes, and can_send_voice_notes permissions; the can_send_polls permission will imply the can_send_messages permission.
@@ -5525,14 +5845,14 @@ type SendAnimationJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// Caption Animation caption (may also be used when resending animation by file_id), 0-1024 characters after entities parsing
+	// Caption Animation caption (may also be used when resending animations by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5584,7 +5904,7 @@ type SendAnimationJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -5603,7 +5923,7 @@ type SendAnimationJSONBody struct {
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
 	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
 
-	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
+	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can only be uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
 	Thumbnail *string `json:"thumbnail,omitempty"`
 
 	// Width Animation width
@@ -5621,14 +5941,14 @@ type SendAnimationMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// Caption Animation caption (may also be used when resending animation by file_id), 0-1024 characters after entities parsing
+	// Caption Animation caption (may also be used when resending animations by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *string `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5680,7 +6000,7 @@ type SendAnimationMultipartBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -5699,7 +6019,7 @@ type SendAnimationMultipartBody struct {
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
 	SuggestedPostParameters *string `json:"suggested_post_parameters,omitempty"`
 
-	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
+	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can only be uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
 	Thumbnail *openapi_types.File `json:"thumbnail,omitempty"`
 
 	// Width Animation width
@@ -5723,8 +6043,8 @@ type SendAudioJSONBody struct {
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5773,7 +6093,7 @@ type SendAudioJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -5789,7 +6109,7 @@ type SendAudioJSONBody struct {
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
 	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
 
-	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
+	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can only be uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
 	Thumbnail *string `json:"thumbnail,omitempty"`
 
 	// Title Track name
@@ -5813,8 +6133,8 @@ type SendAudioMultipartBody struct {
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *string `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5863,7 +6183,7 @@ type SendAudioMultipartBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -5879,7 +6199,7 @@ type SendAudioMultipartBody struct {
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
 	SuggestedPostParameters *string `json:"suggested_post_parameters,omitempty"`
 
-	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
+	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can only be uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
 	Thumbnail *openapi_types.File `json:"thumbnail,omitempty"`
 
 	// Title Track name
@@ -5945,8 +6265,8 @@ type SendContactJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -5995,7 +6315,7 @@ type SendContactJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -6023,7 +6343,7 @@ type SendDiceJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
@@ -6064,7 +6384,7 @@ type SendDiceJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -6095,8 +6415,8 @@ type SendDocumentJSONBody struct {
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6145,7 +6465,7 @@ type SendDocumentJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -6161,7 +6481,7 @@ type SendDocumentJSONBody struct {
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
 	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
 
-	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
+	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can only be uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
 	Thumbnail *string `json:"thumbnail,omitempty"`
 }
 
@@ -6179,8 +6499,8 @@ type SendDocumentMultipartBody struct {
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *string `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6229,7 +6549,7 @@ type SendDocumentMultipartBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -6245,7 +6565,7 @@ type SendDocumentMultipartBody struct {
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
 	SuggestedPostParameters *string `json:"suggested_post_parameters,omitempty"`
 
-	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
+	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can only be uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
 	Thumbnail *openapi_types.File `json:"thumbnail,omitempty"`
 }
 
@@ -6284,7 +6604,7 @@ type SendGameJSONBody struct {
 
 // SendGiftJSONBody defines parameters for SendGift.
 type SendGiftJSONBody struct {
-	// ChatId Required if user_id is not specified. Unique identifier for the chat or username of the channel (in the format @username) that will receive the gift.
+	// ChatId Required if user_id is not specified. Unique identifier for the chat that will receive the gift or username of the channel in the format @username.
 	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// GiftId Identifier of the gift; limited gifts can't be sent to channel chats
@@ -6311,7 +6631,7 @@ type SendInvoiceJSONBody struct {
 	// AllowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
 	AllowPaidBroadcast *bool `json:"allow_paid_broadcast,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
 	// Currency Three-letter ISO 4217 currency code, see more on currencies. Pass “XTR” for payments in Telegram Stars.
@@ -6329,7 +6649,7 @@ type SendInvoiceJSONBody struct {
 	// IsFlexible Pass True if the final price depends on the shipping method. Ignored for payments in Telegram Stars.
 	IsFlexible *bool `json:"is_flexible,omitempty"`
 
-	// MaxTipAmount The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0. Not supported for payments in Telegram Stars.
+	// MaxTipAmount The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json; it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0. Not supported for payments in Telegram Stars.
 	MaxTipAmount *int `json:"max_tip_amount,omitempty"`
 
 	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
@@ -6350,7 +6670,7 @@ type SendInvoiceJSONBody struct {
 	// NeedShippingAddress Pass True if you require the user's shipping address to complete the order. Ignored for payments in Telegram Stars.
 	NeedShippingAddress *bool `json:"need_shipping_address,omitempty"`
 
-	// Payload Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use it for your internal processes.
+	// Payload Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user; use it for your internal processes.
 	Payload string `json:"payload"`
 
 	// PhotoHeight Photo height
@@ -6371,7 +6691,7 @@ type SendInvoiceJSONBody struct {
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
 	ProtectContent *bool `json:"protect_content,omitempty"`
 
-	// ProviderData JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider.
+	// ProviderData JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed description of the required fields should be provided by the payment provider.
 	ProviderData *string `json:"provider_data,omitempty"`
 
 	// ProviderToken Payment provider token, obtained via @BotFather. Pass an empty string for payments in Telegram Stars.
@@ -6395,7 +6715,7 @@ type SendInvoiceJSONBody struct {
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
 	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
 
-	// SuggestedTipAmounts A JSON-serialized Array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
+	// SuggestedTipAmounts A JSON-serialized Array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increasing order and must not exceed max_tip_amount.
 	SuggestedTipAmounts *[]int `json:"suggested_tip_amounts,omitempty"`
 
 	// Title Product name, 1-32 characters
@@ -6410,14 +6730,14 @@ type SendLivePhotoJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// Caption Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
+	// Caption Live photo caption (may also be used when resending live photos by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6428,7 +6748,7 @@ type SendLivePhotoJSONBody struct {
 	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
 	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty"`
 
-	// HasSpoiler Pass True if the video needs to be covered with a spoiler animation
+	// HasSpoiler Pass True if the live photo needs to be covered with a spoiler animation
 	HasSpoiler *bool `json:"has_spoiler,omitempty"`
 
 	// LivePhoto Live photo video to send. The video must be no longer than 10 seconds and must not exceed 10 MB in size. Pass a file_id as String to send a video that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending live photos by a URL is currently unsupported.
@@ -6440,10 +6760,10 @@ type SendLivePhotoJSONBody struct {
 	// MessageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
 	MessageThreadId *int `json:"message_thread_id,omitempty"`
 
-	// ParseMode Mode for parsing entities in the video caption. See formatting options for more details.
+	// ParseMode Mode for parsing entities in the live photo caption. See formatting options for more details.
 	ParseMode *string `json:"parse_mode,omitempty"`
 
-	// Photo The static photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending live photos by a URL is currently unsupported.
+	// Photo The static photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended) or upload a new photo using multipart/form-data. More information on Sending Files ». Sending live photos by a URL is currently unsupported.
 	Photo string `json:"photo"`
 
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
@@ -6469,7 +6789,7 @@ type SendLivePhotoJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -6497,14 +6817,14 @@ type SendLivePhotoMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// Caption Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
+	// Caption Live photo caption (may also be used when resending live photos by file_id), 0-1024 characters after entities parsing
 	Caption *string `json:"caption,omitempty"`
 
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *string `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6515,7 +6835,7 @@ type SendLivePhotoMultipartBody struct {
 	// EphemeralMessageParameters A JSON-serialized object containing the parameters of the ephemeral message to send
 	EphemeralMessageParameters *string `json:"ephemeral_message_parameters,omitempty"`
 
-	// HasSpoiler Pass True if the video needs to be covered with a spoiler animation
+	// HasSpoiler Pass True if the live photo needs to be covered with a spoiler animation
 	HasSpoiler *bool `json:"has_spoiler,omitempty"`
 
 	// LivePhoto Live photo video to send. The video must be no longer than 10 seconds and must not exceed 10 MB in size. Pass a file_id as String to send a video that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending live photos by a URL is currently unsupported.
@@ -6527,10 +6847,10 @@ type SendLivePhotoMultipartBody struct {
 	// MessageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
 	MessageThreadId *int `json:"message_thread_id,omitempty"`
 
-	// ParseMode Mode for parsing entities in the video caption. See formatting options for more details.
+	// ParseMode Mode for parsing entities in the live photo caption. See formatting options for more details.
 	ParseMode *string `json:"parse_mode,omitempty"`
 
-	// Photo The static photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending live photos by a URL is currently unsupported.
+	// Photo The static photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended) or upload a new photo using multipart/form-data. More information on Sending Files ». Sending live photos by a URL is currently unsupported.
 	Photo openapi_types.File `json:"photo"`
 
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
@@ -6556,7 +6876,7 @@ type SendLivePhotoMultipartBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -6584,8 +6904,8 @@ type SendLocationJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6643,7 +6963,7 @@ type SendLocationJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -6668,7 +6988,7 @@ type SendMediaGroupJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the messages will be sent; required if the messages are sent to a direct messages chat
@@ -6701,7 +7021,7 @@ type SendMediaGroupMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the messages will be sent; required if the messages are sent to a direct messages chat
@@ -6734,8 +7054,8 @@ type SendMessageJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6784,7 +7104,7 @@ type SendMessageJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -6845,7 +7165,7 @@ type SendPaidMediaJSONBody struct {
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username. If the chat is a channel, all Telegram Star proceeds from this media will be credited to the chat's balance. Otherwise, they will be credited to the bot's balance.
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username. If the chat is a channel, all Telegram Star proceeds from this media will be credited to the chat's balance. Otherwise, they will be credited to the bot's balance.
 	ChatId int64 `json:"chat_id"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
@@ -6863,7 +7183,7 @@ type SendPaidMediaJSONBody struct {
 	// ParseMode Mode for parsing entities in the media caption. See formatting options for more details.
 	ParseMode *string `json:"parse_mode,omitempty"`
 
-	// Payload Bot-defined paid media payload, 0-128 bytes. This will not be displayed to the user, use it for your internal processes.
+	// Payload Bot-defined paid media payload, 0-128 bytes. This will not be displayed to the user; use it for your internal processes.
 	Payload *string `json:"payload,omitempty"`
 
 	// ProtectContent Protects the contents of the sent message from forwarding and saving
@@ -6889,7 +7209,7 @@ type SendPaidMediaJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -6926,8 +7246,8 @@ type SendPhotoJSONBody struct {
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -6976,7 +7296,7 @@ type SendPhotoJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -7010,8 +7330,8 @@ type SendPhotoMultipartBody struct {
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *string `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -7060,7 +7380,7 @@ type SendPhotoMultipartBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -7091,13 +7411,13 @@ type SendPollJSONBody struct {
 	// AllowsMultipleAnswers Pass True if the poll allows multiple answers, defaults to False
 	AllowsMultipleAnswers *bool `json:"allows_multiple_answers,omitempty"`
 
-	// AllowsRevoting Pass True if the poll allows to change chosen answer options, defaults to False for quizzes and to True for regular polls
+	// AllowsRevoting Pass True if the poll allows changing the chosen answer options, defaults to False for quizzes and to True for regular polls
 	AllowsRevoting *bool `json:"allows_revoting,omitempty"`
 
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username. Polls can't be sent to channel direct messages chats.
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username. Polls can't be sent to channel direct messages chats.
 	ChatId int64 `json:"chat_id"`
 
 	// CloseDate Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 2628000 seconds in the future. Can't be used together with open_period.
@@ -7192,7 +7512,7 @@ type SendPollJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -7217,11 +7537,11 @@ type SendRichMessageJSONBody struct {
 	// AllowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
 	AllowPaidBroadcast *bool `json:"allow_paid_broadcast,omitempty"`
 
-	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent. Bot can send rich messages on behalf of a business account only if the corresponding user can send rich messages.
+	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent. The bot can send rich messages on behalf of a business account only if the corresponding user can send rich messages.
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -7261,7 +7581,7 @@ type SendRichMessageJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -7298,8 +7618,80 @@ type SendRichMessageDraftJSONBody struct {
 	// MessageThreadId Unique identifier for the target message thread
 	MessageThreadId *int `json:"message_thread_id,omitempty"`
 
-	// RichMessage The partial message to be streamed. Direct upload of new files and explicit upload of files by a URL isn't supported.
+	// RichMessage The partial message to be streamed. Direct upload of new files and explicit upload of files by a URL aren't supported.
 	RichMessage InputRichMessage `json:"rich_message"`
+}
+
+// SendSharedWidgetJSONBody defines parameters for SendSharedWidget.
+type SendSharedWidgetJSONBody struct {
+	// AllowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
+	AllowPaidBroadcast *bool `json:"allow_paid_broadcast,omitempty"`
+
+	// Caption Widget caption, 0-1024 characters after entities parsing
+	Caption *string `json:"caption,omitempty"`
+
+	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
+	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
+
+	// ChatData Data of the widget, which is specific to the message, 0-1024 bytes
+	ChatData *string `json:"chat_data,omitempty"`
+
+	// ChatId Unique identifier for the target chat or username of the target supergroup in the format @username
+	ChatId int64 `json:"chat_id"`
+
+	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
+	DisableNotification *bool `json:"disable_notification,omitempty"`
+
+	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
+	MessageEffectId *string `json:"message_effect_id,omitempty"`
+
+	// MessageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
+	MessageThreadId *int `json:"message_thread_id,omitempty"`
+
+	// ParseMode Mode for parsing entities in the widget caption. See formatting options for more details.
+	ParseMode *string `json:"parse_mode,omitempty"`
+
+	// ProtectContent Protects the contents of the sent message from forwarding and saving
+	ProtectContent *bool `json:"protect_content,omitempty"`
+
+	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
+	ReplyMarkup *struct {
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
+		ForceReply *bool `json:"force_reply,omitempty"`
+
+		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
+		InlineKeyboard *[][]InlineKeyboardButton `json:"inline_keyboard,omitempty"`
+
+		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
+		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
+
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		IsPersistent *bool `json:"is_persistent,omitempty"`
+
+		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
+		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
+
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
+		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
+
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
+
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
+
+		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
+		Selective *bool `json:"selective,omitempty"`
+	} `json:"reply_markup,omitempty"`
+
+	// ReplyParameters Description of the message to reply to
+	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
+
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the widget
+	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
+
+	// WidgetId Unique identifier of the shared widget
+	WidgetId string `json:"widget_id"`
 }
 
 // SendStickerJSONBody defines parameters for SendSticker.
@@ -7310,8 +7702,8 @@ type SendStickerJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -7354,7 +7746,7 @@ type SendStickerJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -7382,8 +7774,8 @@ type SendStickerMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -7426,7 +7818,7 @@ type SendStickerMultipartBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -7457,8 +7849,8 @@ type SendVenueJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -7516,7 +7908,7 @@ type SendVenueJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -7550,8 +7942,8 @@ type SendVideoJSONBody struct {
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// Cover Cover for the video in the message. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More information on Sending Files »
 	Cover *string `json:"cover,omitempty"`
@@ -7606,7 +7998,7 @@ type SendVideoJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -7631,7 +8023,7 @@ type SendVideoJSONBody struct {
 	// SupportsStreaming Pass True if the uploaded video is suitable for streaming
 	SupportsStreaming *bool `json:"supports_streaming,omitempty"`
 
-	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
+	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can only be uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
 	Thumbnail *string `json:"thumbnail,omitempty"`
 
 	// Video Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data. More information on Sending Files »
@@ -7655,8 +8047,8 @@ type SendVideoMultipartBody struct {
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *string `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// Cover Cover for the video in the message. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More information on Sending Files »
 	Cover *openapi_types.File `json:"cover,omitempty"`
@@ -7711,7 +8103,7 @@ type SendVideoMultipartBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -7736,7 +8128,7 @@ type SendVideoMultipartBody struct {
 	// SupportsStreaming Pass True if the uploaded video is suitable for streaming
 	SupportsStreaming *bool `json:"supports_streaming,omitempty"`
 
-	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
+	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can only be uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
 	Thumbnail *openapi_types.File `json:"thumbnail,omitempty"`
 
 	// Video Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data. More information on Sending Files »
@@ -7754,8 +8146,8 @@ type SendVideoNoteJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -7801,7 +8193,7 @@ type SendVideoNoteJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -7817,7 +8209,7 @@ type SendVideoNoteJSONBody struct {
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
 	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty"`
 
-	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
+	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can only be uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
 	Thumbnail *string `json:"thumbnail,omitempty"`
 
 	// VideoNote Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending video notes by a URL is currently unsupported.
@@ -7832,8 +8224,8 @@ type SendVideoNoteMultipartBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -7879,7 +8271,7 @@ type SendVideoNoteMultipartBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -7895,7 +8287,7 @@ type SendVideoNoteMultipartBody struct {
 	// SuggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
 	SuggestedPostParameters *string `json:"suggested_post_parameters,omitempty"`
 
-	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
+	// Thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can only be uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
 	Thumbnail *openapi_types.File `json:"thumbnail,omitempty"`
 
 	// VideoNote Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending video notes by a URL is currently unsupported.
@@ -7916,8 +8308,8 @@ type SendVoiceJSONBody struct {
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -7963,7 +8355,7 @@ type SendVoiceJSONBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -7997,8 +8389,8 @@ type SendVoiceMultipartBody struct {
 	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities *string `json:"caption_entities,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
-	ChatId int64 `json:"chat_id"`
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
+	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// DirectMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int `json:"direct_messages_topic_id,omitempty"`
@@ -8044,7 +8436,7 @@ type SendVoiceMultipartBody struct {
 		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
 		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
 
-		// RemoveKeyboard Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
 
 		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
@@ -8062,6 +8454,93 @@ type SendVoiceMultipartBody struct {
 
 	// Voice Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
 	Voice openapi_types.File `json:"voice"`
+}
+
+// SendWidgetJSONBody defines parameters for SendWidget.
+type SendWidgetJSONBody struct {
+	// AllowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
+	AllowPaidBroadcast *bool `json:"allow_paid_broadcast,omitempty"`
+
+	// AllowQueries Pass True to allow the widget to send queries to the bot
+	AllowQueries *bool `json:"allow_queries,omitempty"`
+
+	// Caption Widget caption, 0-1024 characters after entities parsing
+	Caption *string `json:"caption,omitempty"`
+
+	// CaptionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
+	CaptionEntities *[]MessageEntity `json:"caption_entities,omitempty"`
+
+	// ChatData Data of the widget, which is specific to the message, 0-1024 bytes
+	ChatData *string `json:"chat_data,omitempty"`
+
+	// ChatId Unique identifier for the target chat or username of the target supergroup in the format @username
+	ChatId int64 `json:"chat_id"`
+
+	// DisableNotification Sends the message silently. Users will receive a notification with no sound.
+	DisableNotification *bool `json:"disable_notification,omitempty"`
+
+	// Height Height of the widget in logical pixels; omit if the height of the widget isn't fixed. The height is clamped by the app to the range 50-600.
+	Height *int `json:"height,omitempty"`
+
+	// Html HTML code of the widget, 1-32768 bytes. The code must not exceed 4096 bytes when compressed by zlib with the maximum compression level.
+	Html string `json:"html"`
+
+	// IsShared Pass True to create a shared widget, which can be sent again using the method sendSharedWidget
+	IsShared *bool `json:"is_shared,omitempty"`
+
+	// MessageEffectId Unique identifier of the message effect to be added to the message; for private chats only
+	MessageEffectId *string `json:"message_effect_id,omitempty"`
+
+	// MessageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
+	MessageThreadId *int `json:"message_thread_id,omitempty"`
+
+	// ParseMode Mode for parsing entities in the widget caption. See formatting options for more details.
+	ParseMode *string `json:"parse_mode,omitempty"`
+
+	// ProtectContent Protects the contents of the sent message from forwarding and saving
+	ProtectContent *bool `json:"protect_content,omitempty"`
+
+	// PublicData Public data of the widget, 0-1024 bytes, which will be available wherever the widget is shown. If the widget is shared, then all messages with it will have the same public data.
+	PublicData *string `json:"public_data,omitempty"`
+
+	// ReplyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
+	ReplyMarkup *struct {
+		// ForceReply Shows reply interface to the user, as if they had manually selected the bot's message and tapped 'Reply'
+		ForceReply *bool `json:"force_reply,omitempty"`
+
+		// InlineKeyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
+		InlineKeyboard *[][]InlineKeyboardButton `json:"inline_keyboard,omitempty"`
+
+		// InputFieldPlaceholder Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
+		InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
+
+		// IsPersistent Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to False, in which case the custom keyboard can be hidden and opened with a keyboard icon.
+		IsPersistent *bool `json:"is_persistent,omitempty"`
+
+		// Keyboard Array of button rows, each represented by an Array of KeyboardButton objects
+		Keyboard *[][]KeyboardButton `json:"keyboard,omitempty"`
+
+		// OneTimeKeyboard Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to False.
+		OneTimeKeyboard *bool `json:"one_time_keyboard,omitempty"`
+
+		// RemoveKeyboard Requests clients to remove the custom keyboard (the user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		RemoveKeyboard *bool `json:"remove_keyboard,omitempty"`
+
+		// ResizeKeyboard Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to False, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+		ResizeKeyboard *bool `json:"resize_keyboard,omitempty"`
+
+		// Selective Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.
+		Selective *bool `json:"selective,omitempty"`
+	} `json:"reply_markup,omitempty"`
+
+	// ReplyParameters Description of the message to reply to
+	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty"`
+
+	// ShowCaptionAboveMedia Pass True if the caption must be shown above the widget
+	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty"`
+
+	// Width Width of the widget in logical pixels; omit if the widget must occupy the whole width of the message bubble. The width is clamped by the app to the range from 200 to the maximum width of the message bubble.
+	Width *int `json:"width,omitempty"`
 }
 
 // SetBusinessAccountBioJSONBody defines parameters for SetBusinessAccountBio.
@@ -8252,7 +8731,7 @@ type SetManagedBotAccessSettingsJSONBody struct {
 
 // SetMessageReactionJSONBody defines parameters for SetMessageReaction.
 type SetMessageReactionJSONBody struct {
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
 	// IsBig Pass True to set the reaction with a big animation
@@ -8310,6 +8789,54 @@ type SetMyProfilePhotoJSONBody struct {
 	Photo InputProfilePhoto `json:"photo"`
 }
 
+// SetMySettingsJSONBody defines parameters for SetMySettings.
+type SetMySettingsJSONBody struct {
+	// AllowsUsersToCreateTopics Pass True to allow users to create and delete topics in private chats with the bot or False to disallow it
+	AllowsUsersToCreateTopics *bool `json:"allows_users_to_create_topics,omitempty"`
+
+	// CallbackQueryMode Mode in which the bot receives callback queries from buttons in messages sent by the bot. Must be one of “default” (the field message is always used and contains an InaccessibleMessage if the message is inaccessible to the bot), “auto” (the field inline_message_id is used instead of the field message if the message is inaccessible to the bot; the field message can still contain an inaccessible message if the message has just been deleted), or “inline” (the field inline_message_id is always used instead of the field message).
+	CallbackQueryMode *string `json:"callback_query_mode,omitempty"`
+
+	// CanCommunicateWithBots Pass True to allow the bot to communicate with other bots in groups, private chats, and through business accounts or False to disallow it
+	CanCommunicateWithBots *bool `json:"can_communicate_with_bots,omitempty"`
+
+	// CanConnectToBusiness Pass True to allow connecting the bot to user accounts to manage them or False to disallow it
+	CanConnectToBusiness *bool `json:"can_connect_to_business,omitempty"`
+
+	// CanJoinGroups Pass True to allow adding the bot to groups or False to disallow it
+	CanJoinGroups *bool `json:"can_join_groups,omitempty"`
+
+	// CanManageBots Pass True to allow creating other bots that will be controlled by the bot or False to disallow it
+	CanManageBots *bool `json:"can_manage_bots,omitempty"`
+
+	// CanReadAllGroupMessages Pass True to disable privacy mode for the bot or False to enable it
+	CanReadAllGroupMessages *bool `json:"can_read_all_group_messages,omitempty"`
+
+	// HasTopicSidebar Pass True to show topics in private chats with the bot in a sidebar or False to stop showing them in a sidebar
+	HasTopicSidebar *bool `json:"has_topic_sidebar,omitempty"`
+
+	// HasTopicsEnabled Pass True to enable forum topic mode in private chats with the bot or False to disable it
+	HasTopicsEnabled *bool `json:"has_topics_enabled,omitempty"`
+
+	// InlineFeedbackShareDenominator Denominator of the share of chosen inline results received by the bot; the bot receives 1 out of inline_feedback_share_denominator chosen results. Must be one of 1, 10, 100, or 1000. Pass 0 to stop receiving chosen inline results.
+	InlineFeedbackShareDenominator *int `json:"inline_feedback_share_denominator,omitempty"`
+
+	// InlineQueryPlaceholder New placeholder for inline queries, which is shown in the input field after the bot's username. Pass an empty string to use the default placeholder.
+	InlineQueryPlaceholder *string `json:"inline_query_placeholder,omitempty"`
+
+	// NeedsInlineQueryLocation Pass True to request the location of the user with every inline query to the bot or False to stop requesting it
+	NeedsInlineQueryLocation *bool `json:"needs_inline_query_location,omitempty"`
+
+	// SupportsGuestQueries Pass True to allow guest queries to the bot from chats it isn't a member of or False to disallow them
+	SupportsGuestQueries *bool `json:"supports_guest_queries,omitempty"`
+
+	// SupportsInlineQueries Pass True to enable inline mode for the bot or False to disable it
+	SupportsInlineQueries *bool `json:"supports_inline_queries,omitempty"`
+
+	// SupportsJoinRequestQueries Pass True to allow assigning the bot to process join request queries or False to disallow it
+	SupportsJoinRequestQueries *bool `json:"supports_join_request_queries,omitempty"`
+}
+
 // SetMyShortDescriptionJSONBody defines parameters for SetMyShortDescription.
 type SetMyShortDescriptionJSONBody struct {
 	// LanguageCode A two-letter ISO 639-1 language code. If empty, the short description will be applied to all users for whose language there is no dedicated short description.
@@ -8339,7 +8866,7 @@ type SetStickerEmojiListJSONBody struct {
 
 // SetStickerKeywordsJSONBody defines parameters for SetStickerKeywords.
 type SetStickerKeywordsJSONBody struct {
-	// Keywords A JSON-serialized list of 0-20 search keywords for the sticker with total length of up to 64 characters
+	// Keywords A JSON-serialized list of 0-20 search keywords for the sticker with a total length of up to 64 characters
 	Keywords *[]string `json:"keywords,omitempty"`
 
 	// Sticker File identifier of the sticker
@@ -8417,7 +8944,7 @@ type SetUserEmojiStatusJSONBody struct {
 
 // SetWebhookJSONBody defines parameters for SetWebhook.
 type SetWebhookJSONBody struct {
-	// AllowedUpdates A JSON-serialized list of the update types you want your bot to receive. For example, specify ["message", "edited_channel_post", "callback_query"] to only receive updates of these types. See Update for a complete list of available update types. Specify an empty list to receive all update types except chat_member, message_reaction, and message_reaction_count (default). If not specified, the previous setting will be used.Please note that this parameter doesn't affect updates created before the call to the setWebhook, so unwanted updates may be received for a short period of time.
+	// AllowedUpdates A JSON-serialized list of the update types you want your bot to receive. For example, specify ["message", "edited_channel_post", "callback_query"] to only receive updates of these types. See Update for a complete list of available update types. Specify an empty list to receive all update types except chat_member, message_reaction, and message_reaction_count (default). If not specified, the previous setting will be used.Please note that this parameter doesn't affect updates created before the call to setWebhook, so unwanted updates may be received for a short period of time.
 	AllowedUpdates *[]string `json:"allowed_updates,omitempty"`
 
 	// DropPendingUpdates Pass True to drop all pending updates
@@ -8438,7 +8965,7 @@ type SetWebhookJSONBody struct {
 
 // SetWebhookMultipartBody defines parameters for SetWebhook.
 type SetWebhookMultipartBody struct {
-	// AllowedUpdates A JSON-serialized list of the update types you want your bot to receive. For example, specify ["message", "edited_channel_post", "callback_query"] to only receive updates of these types. See Update for a complete list of available update types. Specify an empty list to receive all update types except chat_member, message_reaction, and message_reaction_count (default). If not specified, the previous setting will be used.Please note that this parameter doesn't affect updates created before the call to the setWebhook, so unwanted updates may be received for a short period of time.
+	// AllowedUpdates A JSON-serialized list of the update types you want your bot to receive. For example, specify ["message", "edited_channel_post", "callback_query"] to only receive updates of these types. See Update for a complete list of available update types. Specify an empty list to receive all update types except chat_member, message_reaction, and message_reaction_count (default). If not specified, the previous setting will be used.Please note that this parameter doesn't affect updates created before the call to setWebhook, so unwanted updates may be received for a short period of time.
 	AllowedUpdates *string `json:"allowed_updates,omitempty"`
 
 	// Certificate Upload your public key certificate so that the root certificate in use can be checked. See our self-signed guide for details.
@@ -8465,7 +8992,7 @@ type StopMessageLiveLocationJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
+	// ChatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username.
 	ChatId *int64 `json:"chat_id,omitempty"`
 
 	// InlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
@@ -8483,7 +9010,7 @@ type StopPollJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty"`
 
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username
 	ChatId int64 `json:"chat_id"`
 
 	// MessageId Identifier of the original message with the poll
@@ -8507,10 +9034,10 @@ type TransferGiftJSONBody struct {
 	// BusinessConnectionId Unique identifier of the business connection
 	BusinessConnectionId string `json:"business_connection_id"`
 
-	// NewOwnerChatId Unique identifier of the chat which will own the gift. The chat must be active in the last 24 hours.
+	// NewOwnerChatId Unique identifier of the chat which will own the gift. The chat must have been active in the last 24 hours.
 	NewOwnerChatId int64 `json:"new_owner_chat_id"`
 
-	// OwnedGiftId Unique identifier of the regular gift that should be transferred
+	// OwnedGiftId Unique identifier of the unique gift that should be transferred
 	OwnedGiftId string `json:"owned_gift_id"`
 
 	// StarCount The amount of Telegram Stars that will be paid for the transfer from the business account balance. If positive, then the can_transfer_stars business bot right is required.
@@ -8588,7 +9115,7 @@ type UpgradeGiftJSONBody struct {
 	// OwnedGiftId Unique identifier of the regular gift that should be upgraded to a unique one
 	OwnedGiftId string `json:"owned_gift_id"`
 
-	// StarCount The amount of Telegram Stars that will be paid for the upgrade from the business account balance. If gift.prepaid_upgrade_star_count > 0, then pass 0, otherwise, the can_transfer_stars business bot right is required and gift.upgrade_star_count must be passed.
+	// StarCount The amount of Telegram Stars that will be paid for the upgrade from the business account balance. If gift.prepaid_upgrade_star_count > 0, then pass 0; otherwise, the can_transfer_stars business bot right is required and gift.upgrade_star_count must be passed.
 	StarCount *int `json:"star_count,omitempty"`
 }
 
@@ -8615,17 +9142,29 @@ type UploadStickerFileMultipartBody struct {
 
 // VerifyChatJSONBody defines parameters for VerifyChat.
 type VerifyChatJSONBody struct {
-	// ChatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username. Channel direct messages chats can't be verified.
+	// ChatId Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username. Channel direct messages chats can't be verified.
 	ChatId int64 `json:"chat_id"`
 
 	// CustomDescription Custom description for the verification; 0-70 characters. Must be empty if the organization isn't allowed to provide a custom verification description.
 	CustomDescription *string `json:"custom_description,omitempty"`
+
+	// CustomDescriptionEntities A JSON-serialized list of special entities that appear in the custom description, which can be specified instead of custom_description_parse_mode. Only “text_link” entities are supported.
+	CustomDescriptionEntities *[]MessageEntity `json:"custom_description_entities,omitempty"`
+
+	// CustomDescriptionParseMode Mode for parsing entities in the custom description. See formatting options for more details. Only “text_link” entities are supported.
+	CustomDescriptionParseMode *string `json:"custom_description_parse_mode,omitempty"`
 }
 
 // VerifyUserJSONBody defines parameters for VerifyUser.
 type VerifyUserJSONBody struct {
 	// CustomDescription Custom description for the verification; 0-70 characters. Must be empty if the organization isn't allowed to provide a custom verification description.
 	CustomDescription *string `json:"custom_description,omitempty"`
+
+	// CustomDescriptionEntities A JSON-serialized list of special entities that appear in the custom description, which can be specified instead of custom_description_parse_mode. Only “text_link” entities are supported.
+	CustomDescriptionEntities *[]MessageEntity `json:"custom_description_entities,omitempty"`
+
+	// CustomDescriptionParseMode Mode for parsing entities in the custom description. See formatting options for more details. Only “text_link” entities are supported.
+	CustomDescriptionParseMode *string `json:"custom_description_parse_mode,omitempty"`
 
 	// UserId Unique identifier of the target user
 	UserId int `json:"user_id"`
@@ -8657,6 +9196,9 @@ type AnswerShippingQueryJSONRequestBody AnswerShippingQueryJSONBody
 
 // AnswerWebAppQueryJSONRequestBody defines body for AnswerWebAppQuery for application/json ContentType.
 type AnswerWebAppQueryJSONRequestBody AnswerWebAppQueryJSONBody
+
+// AnswerWidgetQueryJSONRequestBody defines body for AnswerWidgetQuery for application/json ContentType.
+type AnswerWidgetQueryJSONRequestBody AnswerWidgetQueryJSONBody
 
 // ApproveChatJoinRequestJSONRequestBody defines body for ApproveChatJoinRequest for application/json ContentType.
 type ApproveChatJoinRequestJSONRequestBody ApproveChatJoinRequestJSONBody
@@ -8711,6 +9253,9 @@ type DeclineSuggestedPostJSONRequestBody DeclineSuggestedPostJSONBody
 
 // DeleteAllMessageReactionsJSONRequestBody defines body for DeleteAllMessageReactions for application/json ContentType.
 type DeleteAllMessageReactionsJSONRequestBody DeleteAllMessageReactionsJSONBody
+
+// DeleteBusinessAccountGiftJSONRequestBody defines body for DeleteBusinessAccountGift for application/json ContentType.
+type DeleteBusinessAccountGiftJSONRequestBody DeleteBusinessAccountGiftJSONBody
 
 // DeleteBusinessMessagesJSONRequestBody defines body for DeleteBusinessMessages for application/json ContentType.
 type DeleteBusinessMessagesJSONRequestBody DeleteBusinessMessagesJSONBody
@@ -8799,6 +9344,12 @@ type EditMessageReplyMarkupJSONRequestBody EditMessageReplyMarkupJSONBody
 // EditMessageTextJSONRequestBody defines body for EditMessageText for application/json ContentType.
 type EditMessageTextJSONRequestBody EditMessageTextJSONBody
 
+// EditMessageWidgetDataJSONRequestBody defines body for EditMessageWidgetData for application/json ContentType.
+type EditMessageWidgetDataJSONRequestBody EditMessageWidgetDataJSONBody
+
+// EditSharedWidgetDataJSONRequestBody defines body for EditSharedWidgetData for application/json ContentType.
+type EditSharedWidgetDataJSONRequestBody EditSharedWidgetDataJSONBody
+
 // EditStoryJSONRequestBody defines body for EditStory for application/json ContentType.
 type EditStoryJSONRequestBody EditStoryJSONBody
 
@@ -8876,6 +9427,9 @@ type GetStarTransactionsJSONRequestBody GetStarTransactionsJSONBody
 
 // GetStickerSetJSONRequestBody defines body for GetStickerSet for application/json ContentType.
 type GetStickerSetJSONRequestBody GetStickerSetJSONBody
+
+// GetUniqueGiftJSONRequestBody defines body for GetUniqueGift for application/json ContentType.
+type GetUniqueGiftJSONRequestBody GetUniqueGiftJSONBody
 
 // GetUpdatesJSONRequestBody defines body for GetUpdates for application/json ContentType.
 type GetUpdatesJSONRequestBody GetUpdatesJSONBody
@@ -9039,6 +9593,9 @@ type SendRichMessageJSONRequestBody SendRichMessageJSONBody
 // SendRichMessageDraftJSONRequestBody defines body for SendRichMessageDraft for application/json ContentType.
 type SendRichMessageDraftJSONRequestBody SendRichMessageDraftJSONBody
 
+// SendSharedWidgetJSONRequestBody defines body for SendSharedWidget for application/json ContentType.
+type SendSharedWidgetJSONRequestBody SendSharedWidgetJSONBody
+
 // SendStickerJSONRequestBody defines body for SendSticker for application/json ContentType.
 type SendStickerJSONRequestBody SendStickerJSONBody
 
@@ -9065,6 +9622,9 @@ type SendVoiceJSONRequestBody SendVoiceJSONBody
 
 // SendVoiceMultipartRequestBody defines body for SendVoice for multipart/form-data ContentType.
 type SendVoiceMultipartRequestBody SendVoiceMultipartBody
+
+// SendWidgetJSONRequestBody defines body for SendWidget for application/json ContentType.
+type SendWidgetJSONRequestBody SendWidgetJSONBody
 
 // SetBusinessAccountBioJSONRequestBody defines body for SetBusinessAccountBio for application/json ContentType.
 type SetBusinessAccountBioJSONRequestBody SetBusinessAccountBioJSONBody
@@ -9134,6 +9694,9 @@ type SetMyNameJSONRequestBody SetMyNameJSONBody
 
 // SetMyProfilePhotoJSONRequestBody defines body for SetMyProfilePhoto for application/json ContentType.
 type SetMyProfilePhotoJSONRequestBody SetMyProfilePhotoJSONBody
+
+// SetMySettingsJSONRequestBody defines body for SetMySettings for application/json ContentType.
+type SetMySettingsJSONRequestBody SetMySettingsJSONBody
 
 // SetMyShortDescriptionJSONRequestBody defines body for SetMyShortDescription for application/json ContentType.
 type SetMyShortDescriptionJSONRequestBody SetMyShortDescriptionJSONBody
@@ -9332,6 +9895,11 @@ type ClientInterface interface {
 
 	AnswerWebAppQuery(ctx context.Context, body AnswerWebAppQueryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// AnswerWidgetQueryWithBody request with any body
+	AnswerWidgetQueryWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AnswerWidgetQuery(ctx context.Context, body AnswerWidgetQueryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ApproveChatJoinRequestWithBody request with any body
 	ApproveChatJoinRequestWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -9419,6 +9987,11 @@ type ClientInterface interface {
 	DeleteAllMessageReactionsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	DeleteAllMessageReactions(ctx context.Context, body DeleteAllMessageReactionsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteBusinessAccountGiftWithBody request with any body
+	DeleteBusinessAccountGiftWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DeleteBusinessAccountGift(ctx context.Context, body DeleteBusinessAccountGiftJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteBusinessMessagesWithBody request with any body
 	DeleteBusinessMessagesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -9555,6 +10128,16 @@ type ClientInterface interface {
 
 	EditMessageText(ctx context.Context, body EditMessageTextJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// EditMessageWidgetDataWithBody request with any body
+	EditMessageWidgetDataWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	EditMessageWidgetData(ctx context.Context, body EditMessageWidgetDataJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// EditSharedWidgetDataWithBody request with any body
+	EditSharedWidgetDataWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	EditSharedWidgetData(ctx context.Context, body EditSharedWidgetDataJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// EditStoryWithBody request with any body
 	EditStoryWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -9628,6 +10211,9 @@ type ClientInterface interface {
 
 	GetChatMenuButton(ctx context.Context, body GetChatMenuButtonJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetChatShareThemeBackdrops request
+	GetChatShareThemeBackdrops(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetCustomEmojiStickersWithBody request with any body
 	GetCustomEmojiStickersWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -9696,6 +10282,11 @@ type ClientInterface interface {
 	GetStickerSetWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	GetStickerSet(ctx context.Context, body GetStickerSetJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetUniqueGiftWithBody request with any body
+	GetUniqueGiftWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	GetUniqueGift(ctx context.Context, body GetUniqueGiftJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetUpdatesWithBody request with any body
 	GetUpdatesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -9941,6 +10532,11 @@ type ClientInterface interface {
 
 	SendRichMessageDraft(ctx context.Context, body SendRichMessageDraftJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// SendSharedWidgetWithBody request with any body
+	SendSharedWidgetWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SendSharedWidget(ctx context.Context, body SendSharedWidgetJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// SendStickerWithBody request with any body
 	SendStickerWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -9965,6 +10561,11 @@ type ClientInterface interface {
 	SendVoiceWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	SendVoice(ctx context.Context, body SendVoiceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SendWidgetWithBody request with any body
+	SendWidgetWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SendWidget(ctx context.Context, body SendWidgetJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// SetBusinessAccountBioWithBody request with any body
 	SetBusinessAccountBioWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -10075,6 +10676,11 @@ type ClientInterface interface {
 	SetMyProfilePhotoWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	SetMyProfilePhoto(ctx context.Context, body SetMyProfilePhotoJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SetMySettingsWithBody request with any body
+	SetMySettingsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SetMySettings(ctx context.Context, body SetMySettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// SetMyShortDescriptionWithBody request with any body
 	SetMyShortDescriptionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -10384,6 +10990,30 @@ func (c *Client) AnswerWebAppQueryWithBody(ctx context.Context, contentType stri
 
 func (c *Client) AnswerWebAppQuery(ctx context.Context, body AnswerWebAppQueryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAnswerWebAppQueryRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AnswerWidgetQueryWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAnswerWidgetQueryRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AnswerWidgetQuery(ctx context.Context, body AnswerWidgetQueryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAnswerWidgetQueryRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -10804,6 +11434,30 @@ func (c *Client) DeleteAllMessageReactionsWithBody(ctx context.Context, contentT
 
 func (c *Client) DeleteAllMessageReactions(ctx context.Context, body DeleteAllMessageReactionsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteAllMessageReactionsRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteBusinessAccountGiftWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteBusinessAccountGiftRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteBusinessAccountGift(ctx context.Context, body DeleteBusinessAccountGiftJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteBusinessAccountGiftRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -11462,6 +12116,54 @@ func (c *Client) EditMessageText(ctx context.Context, body EditMessageTextJSONRe
 	return c.Client.Do(req)
 }
 
+func (c *Client) EditMessageWidgetDataWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewEditMessageWidgetDataRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) EditMessageWidgetData(ctx context.Context, body EditMessageWidgetDataJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewEditMessageWidgetDataRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) EditSharedWidgetDataWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewEditSharedWidgetDataRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) EditSharedWidgetData(ctx context.Context, body EditSharedWidgetDataJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewEditSharedWidgetDataRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) EditStoryWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewEditStoryRequestWithBody(c.Server, contentType, body)
 	if err != nil {
@@ -11810,6 +12512,18 @@ func (c *Client) GetChatMenuButton(ctx context.Context, body GetChatMenuButtonJS
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetChatShareThemeBackdrops(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetChatShareThemeBackdropsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetCustomEmojiStickersWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetCustomEmojiStickersRequestWithBody(c.Server, contentType, body)
 	if err != nil {
@@ -12124,6 +12838,30 @@ func (c *Client) GetStickerSetWithBody(ctx context.Context, contentType string, 
 
 func (c *Client) GetStickerSet(ctx context.Context, body GetStickerSetJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetStickerSetRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetUniqueGiftWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetUniqueGiftRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetUniqueGift(ctx context.Context, body GetUniqueGiftJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetUniqueGiftRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -13298,6 +14036,30 @@ func (c *Client) SendRichMessageDraft(ctx context.Context, body SendRichMessageD
 	return c.Client.Do(req)
 }
 
+func (c *Client) SendSharedWidgetWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSendSharedWidgetRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SendSharedWidget(ctx context.Context, body SendSharedWidgetJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSendSharedWidgetRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) SendStickerWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewSendStickerRequestWithBody(c.Server, contentType, body)
 	if err != nil {
@@ -13408,6 +14170,30 @@ func (c *Client) SendVoiceWithBody(ctx context.Context, contentType string, body
 
 func (c *Client) SendVoice(ctx context.Context, body SendVoiceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewSendVoiceRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SendWidgetWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSendWidgetRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SendWidget(ctx context.Context, body SendWidgetJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSendWidgetRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -13936,6 +14722,30 @@ func (c *Client) SetMyProfilePhotoWithBody(ctx context.Context, contentType stri
 
 func (c *Client) SetMyProfilePhoto(ctx context.Context, body SetMyProfilePhotoJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewSetMyProfilePhotoRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SetMySettingsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSetMySettingsRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SetMySettings(ctx context.Context, body SetMySettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSetMySettingsRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -14866,6 +15676,46 @@ func NewAnswerWebAppQueryRequestWithBody(server string, contentType string, body
 	return req, nil
 }
 
+// NewAnswerWidgetQueryRequest calls the generic AnswerWidgetQuery builder with application/json body
+func NewAnswerWidgetQueryRequest(server string, body AnswerWidgetQueryJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAnswerWidgetQueryRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewAnswerWidgetQueryRequestWithBody generates requests for AnswerWidgetQuery with any type of body
+func NewAnswerWidgetQueryRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/answerWidgetQuery")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewApproveChatJoinRequestRequest calls the generic ApproveChatJoinRequest builder with application/json body
 func NewApproveChatJoinRequestRequest(server string, body ApproveChatJoinRequestJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -15554,6 +16404,46 @@ func NewDeleteAllMessageReactionsRequestWithBody(server string, contentType stri
 	}
 
 	operationPath := fmt.Sprintf("/deleteAllMessageReactions")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteBusinessAccountGiftRequest calls the generic DeleteBusinessAccountGift builder with application/json body
+func NewDeleteBusinessAccountGiftRequest(server string, body DeleteBusinessAccountGiftJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDeleteBusinessAccountGiftRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewDeleteBusinessAccountGiftRequestWithBody generates requests for DeleteBusinessAccountGift with any type of body
+func NewDeleteBusinessAccountGiftRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/deleteBusinessAccountGift")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -16653,6 +17543,86 @@ func NewEditMessageTextRequestWithBody(server string, contentType string, body i
 	return req, nil
 }
 
+// NewEditMessageWidgetDataRequest calls the generic EditMessageWidgetData builder with application/json body
+func NewEditMessageWidgetDataRequest(server string, body EditMessageWidgetDataJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewEditMessageWidgetDataRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewEditMessageWidgetDataRequestWithBody generates requests for EditMessageWidgetData with any type of body
+func NewEditMessageWidgetDataRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/editMessageWidgetData")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewEditSharedWidgetDataRequest calls the generic EditSharedWidgetData builder with application/json body
+func NewEditSharedWidgetDataRequest(server string, body EditSharedWidgetDataJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewEditSharedWidgetDataRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewEditSharedWidgetDataRequestWithBody generates requests for EditSharedWidgetData with any type of body
+func NewEditSharedWidgetDataRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/editSharedWidgetData")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewEditStoryRequest calls the generic EditStory builder with application/json body
 func NewEditStoryRequest(server string, body EditStoryJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -17240,6 +18210,33 @@ func NewGetChatMenuButtonRequestWithBody(server string, contentType string, body
 	return req, nil
 }
 
+// NewGetChatShareThemeBackdropsRequest generates requests for GetChatShareThemeBackdrops
+func NewGetChatShareThemeBackdropsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/getChatShareThemeBackdrops")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetCustomEmojiStickersRequest calls the generic GetCustomEmojiStickers builder with application/json body
 func NewGetCustomEmojiStickersRequest(server string, body GetCustomEmojiStickersJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -17782,6 +18779,46 @@ func NewGetStickerSetRequestWithBody(server string, contentType string, body io.
 	}
 
 	operationPath := fmt.Sprintf("/getStickerSet")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetUniqueGiftRequest calls the generic GetUniqueGift builder with application/json body
+func NewGetUniqueGiftRequest(server string, body GetUniqueGiftJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewGetUniqueGiftRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewGetUniqueGiftRequestWithBody generates requests for GetUniqueGift with any type of body
+func NewGetUniqueGiftRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/getUniqueGift")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19762,6 +20799,46 @@ func NewSendRichMessageDraftRequestWithBody(server string, contentType string, b
 	return req, nil
 }
 
+// NewSendSharedWidgetRequest calls the generic SendSharedWidget builder with application/json body
+func NewSendSharedWidgetRequest(server string, body SendSharedWidgetJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSendSharedWidgetRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewSendSharedWidgetRequestWithBody generates requests for SendSharedWidget with any type of body
+func NewSendSharedWidgetRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/sendSharedWidget")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewSendStickerRequest calls the generic SendSticker builder with application/json body
 func NewSendStickerRequest(server string, body SendStickerJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -19943,6 +21020,46 @@ func NewSendVoiceRequestWithBody(server string, contentType string, body io.Read
 	}
 
 	operationPath := fmt.Sprintf("/sendVoice")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewSendWidgetRequest calls the generic SendWidget builder with application/json body
+func NewSendWidgetRequest(server string, body SendWidgetJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSendWidgetRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewSendWidgetRequestWithBody generates requests for SendWidget with any type of body
+func NewSendWidgetRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/sendWidget")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20823,6 +21940,46 @@ func NewSetMyProfilePhotoRequestWithBody(server string, contentType string, body
 	}
 
 	operationPath := fmt.Sprintf("/setMyProfilePhoto")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewSetMySettingsRequest calls the generic SetMySettings builder with application/json body
+func NewSetMySettingsRequest(server string, body SetMySettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSetMySettingsRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewSetMySettingsRequestWithBody generates requests for SetMySettings with any type of body
+func NewSetMySettingsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/setMySettings")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -21925,6 +23082,11 @@ type ClientWithResponsesInterface interface {
 
 	AnswerWebAppQueryWithResponse(ctx context.Context, body AnswerWebAppQueryJSONRequestBody, reqEditors ...RequestEditorFn) (*AnswerWebAppQueryResponse, error)
 
+	// AnswerWidgetQueryWithBodyWithResponse request with any body
+	AnswerWidgetQueryWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AnswerWidgetQueryResponse, error)
+
+	AnswerWidgetQueryWithResponse(ctx context.Context, body AnswerWidgetQueryJSONRequestBody, reqEditors ...RequestEditorFn) (*AnswerWidgetQueryResponse, error)
+
 	// ApproveChatJoinRequestWithBodyWithResponse request with any body
 	ApproveChatJoinRequestWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ApproveChatJoinRequestResponse, error)
 
@@ -22012,6 +23174,11 @@ type ClientWithResponsesInterface interface {
 	DeleteAllMessageReactionsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteAllMessageReactionsResponse, error)
 
 	DeleteAllMessageReactionsWithResponse(ctx context.Context, body DeleteAllMessageReactionsJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteAllMessageReactionsResponse, error)
+
+	// DeleteBusinessAccountGiftWithBodyWithResponse request with any body
+	DeleteBusinessAccountGiftWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteBusinessAccountGiftResponse, error)
+
+	DeleteBusinessAccountGiftWithResponse(ctx context.Context, body DeleteBusinessAccountGiftJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteBusinessAccountGiftResponse, error)
 
 	// DeleteBusinessMessagesWithBodyWithResponse request with any body
 	DeleteBusinessMessagesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteBusinessMessagesResponse, error)
@@ -22148,6 +23315,16 @@ type ClientWithResponsesInterface interface {
 
 	EditMessageTextWithResponse(ctx context.Context, body EditMessageTextJSONRequestBody, reqEditors ...RequestEditorFn) (*EditMessageTextResponse, error)
 
+	// EditMessageWidgetDataWithBodyWithResponse request with any body
+	EditMessageWidgetDataWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditMessageWidgetDataResponse, error)
+
+	EditMessageWidgetDataWithResponse(ctx context.Context, body EditMessageWidgetDataJSONRequestBody, reqEditors ...RequestEditorFn) (*EditMessageWidgetDataResponse, error)
+
+	// EditSharedWidgetDataWithBodyWithResponse request with any body
+	EditSharedWidgetDataWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditSharedWidgetDataResponse, error)
+
+	EditSharedWidgetDataWithResponse(ctx context.Context, body EditSharedWidgetDataJSONRequestBody, reqEditors ...RequestEditorFn) (*EditSharedWidgetDataResponse, error)
+
 	// EditStoryWithBodyWithResponse request with any body
 	EditStoryWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditStoryResponse, error)
 
@@ -22221,6 +23398,9 @@ type ClientWithResponsesInterface interface {
 
 	GetChatMenuButtonWithResponse(ctx context.Context, body GetChatMenuButtonJSONRequestBody, reqEditors ...RequestEditorFn) (*GetChatMenuButtonResponse, error)
 
+	// GetChatShareThemeBackdropsWithResponse request
+	GetChatShareThemeBackdropsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetChatShareThemeBackdropsResponse, error)
+
 	// GetCustomEmojiStickersWithBodyWithResponse request with any body
 	GetCustomEmojiStickersWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetCustomEmojiStickersResponse, error)
 
@@ -22289,6 +23469,11 @@ type ClientWithResponsesInterface interface {
 	GetStickerSetWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetStickerSetResponse, error)
 
 	GetStickerSetWithResponse(ctx context.Context, body GetStickerSetJSONRequestBody, reqEditors ...RequestEditorFn) (*GetStickerSetResponse, error)
+
+	// GetUniqueGiftWithBodyWithResponse request with any body
+	GetUniqueGiftWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetUniqueGiftResponse, error)
+
+	GetUniqueGiftWithResponse(ctx context.Context, body GetUniqueGiftJSONRequestBody, reqEditors ...RequestEditorFn) (*GetUniqueGiftResponse, error)
 
 	// GetUpdatesWithBodyWithResponse request with any body
 	GetUpdatesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetUpdatesResponse, error)
@@ -22534,6 +23719,11 @@ type ClientWithResponsesInterface interface {
 
 	SendRichMessageDraftWithResponse(ctx context.Context, body SendRichMessageDraftJSONRequestBody, reqEditors ...RequestEditorFn) (*SendRichMessageDraftResponse, error)
 
+	// SendSharedWidgetWithBodyWithResponse request with any body
+	SendSharedWidgetWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendSharedWidgetResponse, error)
+
+	SendSharedWidgetWithResponse(ctx context.Context, body SendSharedWidgetJSONRequestBody, reqEditors ...RequestEditorFn) (*SendSharedWidgetResponse, error)
+
 	// SendStickerWithBodyWithResponse request with any body
 	SendStickerWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendStickerResponse, error)
 
@@ -22558,6 +23748,11 @@ type ClientWithResponsesInterface interface {
 	SendVoiceWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendVoiceResponse, error)
 
 	SendVoiceWithResponse(ctx context.Context, body SendVoiceJSONRequestBody, reqEditors ...RequestEditorFn) (*SendVoiceResponse, error)
+
+	// SendWidgetWithBodyWithResponse request with any body
+	SendWidgetWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendWidgetResponse, error)
+
+	SendWidgetWithResponse(ctx context.Context, body SendWidgetJSONRequestBody, reqEditors ...RequestEditorFn) (*SendWidgetResponse, error)
 
 	// SetBusinessAccountBioWithBodyWithResponse request with any body
 	SetBusinessAccountBioWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetBusinessAccountBioResponse, error)
@@ -22668,6 +23863,11 @@ type ClientWithResponsesInterface interface {
 	SetMyProfilePhotoWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetMyProfilePhotoResponse, error)
 
 	SetMyProfilePhotoWithResponse(ctx context.Context, body SetMyProfilePhotoJSONRequestBody, reqEditors ...RequestEditorFn) (*SetMyProfilePhotoResponse, error)
+
+	// SetMySettingsWithBodyWithResponse request with any body
+	SetMySettingsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetMySettingsResponse, error)
+
+	SetMySettingsWithResponse(ctx context.Context, body SetMySettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*SetMySettingsResponse, error)
 
 	// SetMyShortDescriptionWithBodyWithResponse request with any body
 	SetMyShortDescriptionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetMyShortDescriptionResponse, error)
@@ -23017,6 +24217,34 @@ func (r AnswerWebAppQueryResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r AnswerWebAppQueryResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AnswerWidgetQueryResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     AnswerWidgetQuery200Ok `json:"ok"`
+		Result bool                   `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type AnswerWidgetQuery200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r AnswerWidgetQueryResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AnswerWidgetQueryResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -23529,6 +24757,34 @@ func (r DeleteAllMessageReactionsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r DeleteAllMessageReactionsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteBusinessAccountGiftResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     DeleteBusinessAccountGift200Ok `json:"ok"`
+		Result bool                           `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type DeleteBusinessAccountGift200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r DeleteBusinessAccountGiftResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteBusinessAccountGiftResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -24131,17 +25387,15 @@ type EditMessageCaptionResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Ok     EditMessageCaption200Ok       `json:"ok"`
-		Result EditMessageCaption_200_Result `json:"result"`
+		Ok EditMessageCaption200Ok `json:"ok"`
+
+		// Result This object represents a message.
+		Result Message `json:"result"`
 	}
 	JSON400 *ErrorResponse
 	JSON401 *ErrorResponse
 }
 type EditMessageCaption200Ok bool
-type EditMessageCaption200Result1 = bool
-type EditMessageCaption_200_Result struct {
-	union json.RawMessage
-}
 
 // Status returns HTTPResponse.Status
 func (r EditMessageCaptionResponse) Status() string {
@@ -24193,17 +25447,15 @@ type EditMessageLiveLocationResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Ok     EditMessageLiveLocation200Ok       `json:"ok"`
-		Result EditMessageLiveLocation_200_Result `json:"result"`
+		Ok EditMessageLiveLocation200Ok `json:"ok"`
+
+		// Result This object represents a message.
+		Result Message `json:"result"`
 	}
 	JSON400 *ErrorResponse
 	JSON401 *ErrorResponse
 }
 type EditMessageLiveLocation200Ok bool
-type EditMessageLiveLocation200Result1 = bool
-type EditMessageLiveLocation_200_Result struct {
-	union json.RawMessage
-}
 
 // Status returns HTTPResponse.Status
 func (r EditMessageLiveLocationResponse) Status() string {
@@ -24225,17 +25477,15 @@ type EditMessageMediaResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Ok     EditMessageMedia200Ok       `json:"ok"`
-		Result EditMessageMedia_200_Result `json:"result"`
+		Ok EditMessageMedia200Ok `json:"ok"`
+
+		// Result This object represents a message.
+		Result Message `json:"result"`
 	}
 	JSON400 *ErrorResponse
 	JSON401 *ErrorResponse
 }
 type EditMessageMedia200Ok bool
-type EditMessageMedia200Result1 = bool
-type EditMessageMedia_200_Result struct {
-	union json.RawMessage
-}
 
 // Status returns HTTPResponse.Status
 func (r EditMessageMediaResponse) Status() string {
@@ -24257,17 +25507,15 @@ type EditMessageReplyMarkupResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Ok     EditMessageReplyMarkup200Ok       `json:"ok"`
-		Result EditMessageReplyMarkup_200_Result `json:"result"`
+		Ok EditMessageReplyMarkup200Ok `json:"ok"`
+
+		// Result This object represents a message.
+		Result Message `json:"result"`
 	}
 	JSON400 *ErrorResponse
 	JSON401 *ErrorResponse
 }
 type EditMessageReplyMarkup200Ok bool
-type EditMessageReplyMarkup200Result1 = bool
-type EditMessageReplyMarkup_200_Result struct {
-	union json.RawMessage
-}
 
 // Status returns HTTPResponse.Status
 func (r EditMessageReplyMarkupResponse) Status() string {
@@ -24289,17 +25537,15 @@ type EditMessageTextResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Ok     EditMessageText200Ok       `json:"ok"`
-		Result EditMessageText_200_Result `json:"result"`
+		Ok EditMessageText200Ok `json:"ok"`
+
+		// Result This object represents a message.
+		Result Message `json:"result"`
 	}
 	JSON400 *ErrorResponse
 	JSON401 *ErrorResponse
 }
 type EditMessageText200Ok bool
-type EditMessageText200Result1 = bool
-type EditMessageText_200_Result struct {
-	union json.RawMessage
-}
 
 // Status returns HTTPResponse.Status
 func (r EditMessageTextResponse) Status() string {
@@ -24311,6 +25557,62 @@ func (r EditMessageTextResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r EditMessageTextResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type EditMessageWidgetDataResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     EditMessageWidgetData200Ok `json:"ok"`
+		Result bool                       `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type EditMessageWidgetData200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r EditMessageWidgetDataResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r EditMessageWidgetDataResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type EditSharedWidgetDataResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     EditSharedWidgetData200Ok `json:"ok"`
+		Result bool                      `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type EditSharedWidgetData200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r EditSharedWidgetDataResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r EditSharedWidgetDataResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -24467,7 +25769,7 @@ type GetAvailableGiftsResponse struct {
 	JSON200      *struct {
 		Ok GetAvailableGifts200Ok `json:"ok"`
 
-		// Result This object represent a list of gifts.
+		// Result This object represents a list of gifts.
 		Result Gifts `json:"result"`
 	}
 	JSON400 *ErrorResponse
@@ -24767,6 +26069,36 @@ func (r GetChatMenuButtonResponse) StatusCode() int {
 	return 0
 }
 
+type GetChatShareThemeBackdropsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok GetChatShareThemeBackdrops200Ok `json:"ok"`
+
+		// Result This object contains a list of backdrops, which can be used as the background of a theme of the screen for sharing a link to a user or a chat.
+		Result ChatShareThemeBackdrops `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type GetChatShareThemeBackdrops200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r GetChatShareThemeBackdropsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetChatShareThemeBackdropsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetCustomEmojiStickersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -24945,8 +26277,8 @@ type GetMeResponse struct {
 	JSON200      *struct {
 		Ok GetMe200Ok `json:"ok"`
 
-		// Result This object represents a Telegram user or bot.
-		Result User `json:"result"`
+		// Result This object contains full information about the bot itself.
+		Result BotFullInfo `json:"result"`
 	}
 	JSON400 *ErrorResponse
 	JSON401 *ErrorResponse
@@ -25207,6 +26539,36 @@ func (r GetStickerSetResponse) StatusCode() int {
 	return 0
 }
 
+type GetUniqueGiftResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok GetUniqueGift200Ok `json:"ok"`
+
+		// Result This object describes a unique gift that was upgraded from a regular gift.
+		Result UniqueGift `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type GetUniqueGift200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r GetUniqueGiftResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetUniqueGiftResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetUpdatesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -25359,7 +26721,7 @@ type GetUserProfilePhotosResponse struct {
 	JSON200      *struct {
 		Ok GetUserProfilePhotos200Ok `json:"ok"`
 
-		// Result This object represent a user's profile pictures.
+		// Result This object represents a user's profile pictures.
 		Result UserProfilePhotos `json:"result"`
 	}
 	JSON400 *ErrorResponse
@@ -26657,6 +28019,36 @@ func (r SendRichMessageDraftResponse) StatusCode() int {
 	return 0
 }
 
+type SendSharedWidgetResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok SendSharedWidget200Ok `json:"ok"`
+
+		// Result This object represents a message.
+		Result Message `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type SendSharedWidget200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r SendSharedWidgetResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SendSharedWidgetResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type SendStickerResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -26801,6 +28193,36 @@ func (r SendVoiceResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r SendVoiceResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SendWidgetResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok SendWidget200Ok `json:"ok"`
+
+		// Result This object represents a message.
+		Result Message `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type SendWidget200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r SendWidgetResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SendWidgetResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -27203,17 +28625,15 @@ type SetGameScoreResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Ok     SetGameScore200Ok       `json:"ok"`
-		Result SetGameScore_200_Result `json:"result"`
+		Ok SetGameScore200Ok `json:"ok"`
+
+		// Result This object represents a message.
+		Result Message `json:"result"`
 	}
 	JSON400 *ErrorResponse
 	JSON401 *ErrorResponse
 }
 type SetGameScore200Ok bool
-type SetGameScore200Result1 = bool
-type SetGameScore_200_Result struct {
-	union json.RawMessage
-}
 
 // Status returns HTTPResponse.Status
 func (r SetGameScoreResponse) Status() string {
@@ -27421,6 +28841,34 @@ func (r SetMyProfilePhotoResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r SetMyProfilePhotoResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SetMySettingsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Ok     SetMySettings200Ok `json:"ok"`
+		Result bool               `json:"result"`
+	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+}
+type SetMySettings200Ok bool
+
+// Status returns HTTPResponse.Status
+func (r SetMySettingsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SetMySettingsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -27711,17 +29159,15 @@ type StopMessageLiveLocationResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Ok     StopMessageLiveLocation200Ok       `json:"ok"`
-		Result StopMessageLiveLocation_200_Result `json:"result"`
+		Ok StopMessageLiveLocation200Ok `json:"ok"`
+
+		// Result This object represents a message.
+		Result Message `json:"result"`
 	}
 	JSON400 *ErrorResponse
 	JSON401 *ErrorResponse
 }
 type StopMessageLiveLocation200Ok bool
-type StopMessageLiveLocation200Result1 = bool
-type StopMessageLiveLocation_200_Result struct {
-	union json.RawMessage
-}
 
 // Status returns HTTPResponse.Status
 func (r StopMessageLiveLocationResponse) Status() string {
@@ -28271,6 +29717,23 @@ func (c *ClientWithResponses) AnswerWebAppQueryWithResponse(ctx context.Context,
 	return ParseAnswerWebAppQueryResponse(rsp)
 }
 
+// AnswerWidgetQueryWithBodyWithResponse request with arbitrary body returning *AnswerWidgetQueryResponse
+func (c *ClientWithResponses) AnswerWidgetQueryWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AnswerWidgetQueryResponse, error) {
+	rsp, err := c.AnswerWidgetQueryWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAnswerWidgetQueryResponse(rsp)
+}
+
+func (c *ClientWithResponses) AnswerWidgetQueryWithResponse(ctx context.Context, body AnswerWidgetQueryJSONRequestBody, reqEditors ...RequestEditorFn) (*AnswerWidgetQueryResponse, error) {
+	rsp, err := c.AnswerWidgetQuery(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAnswerWidgetQueryResponse(rsp)
+}
+
 // ApproveChatJoinRequestWithBodyWithResponse request with arbitrary body returning *ApproveChatJoinRequestResponse
 func (c *ClientWithResponses) ApproveChatJoinRequestWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ApproveChatJoinRequestResponse, error) {
 	rsp, err := c.ApproveChatJoinRequestWithBody(ctx, contentType, body, reqEditors...)
@@ -28567,6 +30030,23 @@ func (c *ClientWithResponses) DeleteAllMessageReactionsWithResponse(ctx context.
 		return nil, err
 	}
 	return ParseDeleteAllMessageReactionsResponse(rsp)
+}
+
+// DeleteBusinessAccountGiftWithBodyWithResponse request with arbitrary body returning *DeleteBusinessAccountGiftResponse
+func (c *ClientWithResponses) DeleteBusinessAccountGiftWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteBusinessAccountGiftResponse, error) {
+	rsp, err := c.DeleteBusinessAccountGiftWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteBusinessAccountGiftResponse(rsp)
+}
+
+func (c *ClientWithResponses) DeleteBusinessAccountGiftWithResponse(ctx context.Context, body DeleteBusinessAccountGiftJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteBusinessAccountGiftResponse, error) {
+	rsp, err := c.DeleteBusinessAccountGift(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteBusinessAccountGiftResponse(rsp)
 }
 
 // DeleteBusinessMessagesWithBodyWithResponse request with arbitrary body returning *DeleteBusinessMessagesResponse
@@ -29028,6 +30508,40 @@ func (c *ClientWithResponses) EditMessageTextWithResponse(ctx context.Context, b
 	return ParseEditMessageTextResponse(rsp)
 }
 
+// EditMessageWidgetDataWithBodyWithResponse request with arbitrary body returning *EditMessageWidgetDataResponse
+func (c *ClientWithResponses) EditMessageWidgetDataWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditMessageWidgetDataResponse, error) {
+	rsp, err := c.EditMessageWidgetDataWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseEditMessageWidgetDataResponse(rsp)
+}
+
+func (c *ClientWithResponses) EditMessageWidgetDataWithResponse(ctx context.Context, body EditMessageWidgetDataJSONRequestBody, reqEditors ...RequestEditorFn) (*EditMessageWidgetDataResponse, error) {
+	rsp, err := c.EditMessageWidgetData(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseEditMessageWidgetDataResponse(rsp)
+}
+
+// EditSharedWidgetDataWithBodyWithResponse request with arbitrary body returning *EditSharedWidgetDataResponse
+func (c *ClientWithResponses) EditSharedWidgetDataWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditSharedWidgetDataResponse, error) {
+	rsp, err := c.EditSharedWidgetDataWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseEditSharedWidgetDataResponse(rsp)
+}
+
+func (c *ClientWithResponses) EditSharedWidgetDataWithResponse(ctx context.Context, body EditSharedWidgetDataJSONRequestBody, reqEditors ...RequestEditorFn) (*EditSharedWidgetDataResponse, error) {
+	rsp, err := c.EditSharedWidgetData(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseEditSharedWidgetDataResponse(rsp)
+}
+
 // EditStoryWithBodyWithResponse request with arbitrary body returning *EditStoryResponse
 func (c *ClientWithResponses) EditStoryWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EditStoryResponse, error) {
 	rsp, err := c.EditStoryWithBody(ctx, contentType, body, reqEditors...)
@@ -29275,6 +30789,15 @@ func (c *ClientWithResponses) GetChatMenuButtonWithResponse(ctx context.Context,
 	return ParseGetChatMenuButtonResponse(rsp)
 }
 
+// GetChatShareThemeBackdropsWithResponse request returning *GetChatShareThemeBackdropsResponse
+func (c *ClientWithResponses) GetChatShareThemeBackdropsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetChatShareThemeBackdropsResponse, error) {
+	rsp, err := c.GetChatShareThemeBackdrops(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetChatShareThemeBackdropsResponse(rsp)
+}
+
 // GetCustomEmojiStickersWithBodyWithResponse request with arbitrary body returning *GetCustomEmojiStickersResponse
 func (c *ClientWithResponses) GetCustomEmojiStickersWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetCustomEmojiStickersResponse, error) {
 	rsp, err := c.GetCustomEmojiStickersWithBody(ctx, contentType, body, reqEditors...)
@@ -29504,6 +31027,23 @@ func (c *ClientWithResponses) GetStickerSetWithResponse(ctx context.Context, bod
 		return nil, err
 	}
 	return ParseGetStickerSetResponse(rsp)
+}
+
+// GetUniqueGiftWithBodyWithResponse request with arbitrary body returning *GetUniqueGiftResponse
+func (c *ClientWithResponses) GetUniqueGiftWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetUniqueGiftResponse, error) {
+	rsp, err := c.GetUniqueGiftWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetUniqueGiftResponse(rsp)
+}
+
+func (c *ClientWithResponses) GetUniqueGiftWithResponse(ctx context.Context, body GetUniqueGiftJSONRequestBody, reqEditors ...RequestEditorFn) (*GetUniqueGiftResponse, error) {
+	rsp, err := c.GetUniqueGift(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetUniqueGiftResponse(rsp)
 }
 
 // GetUpdatesWithBodyWithResponse request with arbitrary body returning *GetUpdatesResponse
@@ -30332,6 +31872,23 @@ func (c *ClientWithResponses) SendRichMessageDraftWithResponse(ctx context.Conte
 	return ParseSendRichMessageDraftResponse(rsp)
 }
 
+// SendSharedWidgetWithBodyWithResponse request with arbitrary body returning *SendSharedWidgetResponse
+func (c *ClientWithResponses) SendSharedWidgetWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendSharedWidgetResponse, error) {
+	rsp, err := c.SendSharedWidgetWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSendSharedWidgetResponse(rsp)
+}
+
+func (c *ClientWithResponses) SendSharedWidgetWithResponse(ctx context.Context, body SendSharedWidgetJSONRequestBody, reqEditors ...RequestEditorFn) (*SendSharedWidgetResponse, error) {
+	rsp, err := c.SendSharedWidget(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSendSharedWidgetResponse(rsp)
+}
+
 // SendStickerWithBodyWithResponse request with arbitrary body returning *SendStickerResponse
 func (c *ClientWithResponses) SendStickerWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendStickerResponse, error) {
 	rsp, err := c.SendStickerWithBody(ctx, contentType, body, reqEditors...)
@@ -30415,6 +31972,23 @@ func (c *ClientWithResponses) SendVoiceWithResponse(ctx context.Context, body Se
 		return nil, err
 	}
 	return ParseSendVoiceResponse(rsp)
+}
+
+// SendWidgetWithBodyWithResponse request with arbitrary body returning *SendWidgetResponse
+func (c *ClientWithResponses) SendWidgetWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SendWidgetResponse, error) {
+	rsp, err := c.SendWidgetWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSendWidgetResponse(rsp)
+}
+
+func (c *ClientWithResponses) SendWidgetWithResponse(ctx context.Context, body SendWidgetJSONRequestBody, reqEditors ...RequestEditorFn) (*SendWidgetResponse, error) {
+	rsp, err := c.SendWidget(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSendWidgetResponse(rsp)
 }
 
 // SetBusinessAccountBioWithBodyWithResponse request with arbitrary body returning *SetBusinessAccountBioResponse
@@ -30789,6 +32363,23 @@ func (c *ClientWithResponses) SetMyProfilePhotoWithResponse(ctx context.Context,
 		return nil, err
 	}
 	return ParseSetMyProfilePhotoResponse(rsp)
+}
+
+// SetMySettingsWithBodyWithResponse request with arbitrary body returning *SetMySettingsResponse
+func (c *ClientWithResponses) SetMySettingsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetMySettingsResponse, error) {
+	rsp, err := c.SetMySettingsWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSetMySettingsResponse(rsp)
+}
+
+func (c *ClientWithResponses) SetMySettingsWithResponse(ctx context.Context, body SetMySettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*SetMySettingsResponse, error) {
+	rsp, err := c.SetMySettings(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSetMySettingsResponse(rsp)
 }
 
 // SetMyShortDescriptionWithBodyWithResponse request with arbitrary body returning *SetMyShortDescriptionResponse
@@ -31539,6 +33130,49 @@ func ParseAnswerWebAppQueryResponse(rsp *http.Response) (*AnswerWebAppQueryRespo
 
 			// Result Describes an inline message sent by a Web App on behalf of a user.
 			Result SentWebAppMessage `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAnswerWidgetQueryResponse parses an HTTP response from a AnswerWidgetQueryWithResponse call
+func ParseAnswerWidgetQueryResponse(rsp *http.Response) (*AnswerWidgetQueryResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AnswerWidgetQueryResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     AnswerWidgetQuery200Ok `json:"ok"`
+			Result bool                   `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -32320,6 +33954,49 @@ func ParseDeleteAllMessageReactionsResponse(rsp *http.Response) (*DeleteAllMessa
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
 			Ok     DeleteAllMessageReactions200Ok `json:"ok"`
+			Result bool                           `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteBusinessAccountGiftResponse parses an HTTP response from a DeleteBusinessAccountGiftWithResponse call
+func ParseDeleteBusinessAccountGiftResponse(rsp *http.Response) (*DeleteBusinessAccountGiftResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteBusinessAccountGiftResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     DeleteBusinessAccountGift200Ok `json:"ok"`
 			Result bool                           `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -33269,8 +34946,10 @@ func ParseEditMessageCaptionResponse(rsp *http.Response) (*EditMessageCaptionRes
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Ok     EditMessageCaption200Ok       `json:"ok"`
-			Result EditMessageCaption_200_Result `json:"result"`
+			Ok EditMessageCaption200Ok `json:"ok"`
+
+			// Result This object represents a message.
+			Result Message `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -33357,8 +35036,10 @@ func ParseEditMessageLiveLocationResponse(rsp *http.Response) (*EditMessageLiveL
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Ok     EditMessageLiveLocation200Ok       `json:"ok"`
-			Result EditMessageLiveLocation_200_Result `json:"result"`
+			Ok EditMessageLiveLocation200Ok `json:"ok"`
+
+			// Result This object represents a message.
+			Result Message `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -33400,8 +35081,10 @@ func ParseEditMessageMediaResponse(rsp *http.Response) (*EditMessageMediaRespons
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Ok     EditMessageMedia200Ok       `json:"ok"`
-			Result EditMessageMedia_200_Result `json:"result"`
+			Ok EditMessageMedia200Ok `json:"ok"`
+
+			// Result This object represents a message.
+			Result Message `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -33443,8 +35126,10 @@ func ParseEditMessageReplyMarkupResponse(rsp *http.Response) (*EditMessageReplyM
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Ok     EditMessageReplyMarkup200Ok       `json:"ok"`
-			Result EditMessageReplyMarkup_200_Result `json:"result"`
+			Ok EditMessageReplyMarkup200Ok `json:"ok"`
+
+			// Result This object represents a message.
+			Result Message `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -33486,8 +35171,96 @@ func ParseEditMessageTextResponse(rsp *http.Response) (*EditMessageTextResponse,
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Ok     EditMessageText200Ok       `json:"ok"`
-			Result EditMessageText_200_Result `json:"result"`
+			Ok EditMessageText200Ok `json:"ok"`
+
+			// Result This object represents a message.
+			Result Message `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseEditMessageWidgetDataResponse parses an HTTP response from a EditMessageWidgetDataWithResponse call
+func ParseEditMessageWidgetDataResponse(rsp *http.Response) (*EditMessageWidgetDataResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &EditMessageWidgetDataResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     EditMessageWidgetData200Ok `json:"ok"`
+			Result bool                       `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseEditSharedWidgetDataResponse parses an HTTP response from a EditSharedWidgetDataWithResponse call
+func ParseEditSharedWidgetDataResponse(rsp *http.Response) (*EditSharedWidgetDataResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &EditSharedWidgetDataResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     EditSharedWidgetData200Ok `json:"ok"`
+			Result bool                      `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -33750,7 +35523,7 @@ func ParseGetAvailableGiftsResponse(rsp *http.Response) (*GetAvailableGiftsRespo
 		var dest struct {
 			Ok GetAvailableGifts200Ok `json:"ok"`
 
-			// Result This object represent a list of gifts.
+			// Result This object represents a list of gifts.
 			Result Gifts `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -34188,6 +35961,51 @@ func ParseGetChatMenuButtonResponse(rsp *http.Response) (*GetChatMenuButtonRespo
 	return response, nil
 }
 
+// ParseGetChatShareThemeBackdropsResponse parses an HTTP response from a GetChatShareThemeBackdropsWithResponse call
+func ParseGetChatShareThemeBackdropsResponse(rsp *http.Response) (*GetChatShareThemeBackdropsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetChatShareThemeBackdropsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok GetChatShareThemeBackdrops200Ok `json:"ok"`
+
+			// Result This object contains a list of backdrops, which can be used as the background of a theme of the screen for sharing a link to a user or a chat.
+			Result ChatShareThemeBackdrops `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetCustomEmojiStickersResponse parses an HTTP response from a GetCustomEmojiStickersWithResponse call
 func ParseGetCustomEmojiStickersResponse(rsp *http.Response) (*GetCustomEmojiStickersResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -34468,8 +36286,8 @@ func ParseGetMeResponse(rsp *http.Response) (*GetMeResponse, error) {
 		var dest struct {
 			Ok GetMe200Ok `json:"ok"`
 
-			// Result This object represents a Telegram user or bot.
-			Result User `json:"result"`
+			// Result This object contains full information about the bot itself.
+			Result BotFullInfo `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -34853,6 +36671,51 @@ func ParseGetStickerSetResponse(rsp *http.Response) (*GetStickerSetResponse, err
 	return response, nil
 }
 
+// ParseGetUniqueGiftResponse parses an HTTP response from a GetUniqueGiftWithResponse call
+func ParseGetUniqueGiftResponse(rsp *http.Response) (*GetUniqueGiftResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetUniqueGiftResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok GetUniqueGift200Ok `json:"ok"`
+
+			// Result This object describes a unique gift that was upgraded from a regular gift.
+			Result UniqueGift `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetUpdatesResponse parses an HTTP response from a GetUpdatesWithResponse call
 func ParseGetUpdatesResponse(rsp *http.Response) (*GetUpdatesResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -35092,7 +36955,7 @@ func ParseGetUserProfilePhotosResponse(rsp *http.Response) (*GetUserProfilePhoto
 		var dest struct {
 			Ok GetUserProfilePhotos200Ok `json:"ok"`
 
-			// Result This object represent a user's profile pictures.
+			// Result This object represents a user's profile pictures.
 			Result UserProfilePhotos `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -37053,6 +38916,51 @@ func ParseSendRichMessageDraftResponse(rsp *http.Response) (*SendRichMessageDraf
 	return response, nil
 }
 
+// ParseSendSharedWidgetResponse parses an HTTP response from a SendSharedWidgetWithResponse call
+func ParseSendSharedWidgetResponse(rsp *http.Response) (*SendSharedWidgetResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SendSharedWidgetResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok SendSharedWidget200Ok `json:"ok"`
+
+			// Result This object represents a message.
+			Result Message `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseSendStickerResponse parses an HTTP response from a SendStickerWithResponse call
 func ParseSendStickerResponse(rsp *http.Response) (*SendStickerResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -37250,6 +39158,51 @@ func ParseSendVoiceResponse(rsp *http.Response) (*SendVoiceResponse, error) {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
 			Ok SendVoice200Ok `json:"ok"`
+
+			// Result This object represents a message.
+			Result Message `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSendWidgetResponse parses an HTTP response from a SendWidgetWithResponse call
+func ParseSendWidgetResponse(rsp *http.Response) (*SendWidgetResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SendWidgetResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok SendWidget200Ok `json:"ok"`
 
 			// Result This object represents a message.
 			Result Message `json:"result"`
@@ -37896,8 +39849,10 @@ func ParseSetGameScoreResponse(rsp *http.Response) (*SetGameScoreResponse, error
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Ok     SetGameScore200Ok       `json:"ok"`
-			Result SetGameScore_200_Result `json:"result"`
+			Ok SetGameScore200Ok `json:"ok"`
+
+			// Result This object represents a message.
+			Result Message `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -38199,6 +40154,49 @@ func ParseSetMyProfilePhotoResponse(rsp *http.Response) (*SetMyProfilePhotoRespo
 		var dest struct {
 			Ok     SetMyProfilePhoto200Ok `json:"ok"`
 			Result bool                   `json:"result"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSetMySettingsResponse parses an HTTP response from a SetMySettingsWithResponse call
+func ParseSetMySettingsResponse(rsp *http.Response) (*SetMySettingsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SetMySettingsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Ok     SetMySettings200Ok `json:"ok"`
+			Result bool               `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -38670,8 +40668,10 @@ func ParseStopMessageLiveLocationResponse(rsp *http.Response) (*StopMessageLiveL
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Ok     StopMessageLiveLocation200Ok       `json:"ok"`
-			Result StopMessageLiveLocation_200_Result `json:"result"`
+			Ok StopMessageLiveLocation200Ok `json:"ok"`
+
+			// Result This object represents a message.
+			Result Message `json:"result"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err

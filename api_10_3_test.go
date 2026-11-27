@@ -11,22 +11,24 @@ func TestEphemeralMessageParametersSerialization(t *testing.T) {
 	t.Parallel()
 
 	callbackQueryID := "callback-1"
+	chatID := int64(-100123)
+	receiverUserID := 42
 	replace := true
 	markdown := "Working"
 	parameters := &client.EphemeralMessageParameters{
 		CallbackQueryId:             &callbackQueryID,
-		ReceiverUserId:              42,
+		ReceiverUserId:              &receiverUserID,
 		ReplaceCallbackQueryMessage: &replace,
 	}
 
 	tests := map[string]any{
 		"sendMessage": client.SendMessageJSONRequestBody{
-			ChatId:                     -100123,
+			ChatId:                     &chatID,
 			EphemeralMessageParameters: parameters,
 			Text:                       "Working",
 		},
 		"sendRichMessage": client.SendRichMessageJSONRequestBody{
-			ChatId:                     -100123,
+			ChatId:                     &chatID,
 			EphemeralMessageParameters: parameters,
 			RichMessage:                client.InputRichMessage{Markdown: &markdown},
 		},
